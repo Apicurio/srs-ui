@@ -28,7 +28,8 @@
     "bundle-profile:analyze": "npm run build:bundle-profile && webpack-bundle-analyzer ./stats.json",
     "clean": "rimraf dist",
     "storybook": "start-storybook -p 7001",
-    "build:storybook": "build-storybook"
+    "build:storybook": "build-storybook",
+    "i18n": "i18next 'src/**/**/*.{ts,tsx}' [-oc] -c './i18next-parser.config.js' -o './src/locales/$LOCALE/$NAMESPACE.json'"
   },
   "devDependencies": {
     "@bf2/ui-shared": "0.0.20",
