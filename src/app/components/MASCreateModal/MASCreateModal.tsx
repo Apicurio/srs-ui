@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
-import { getModalAppendTo } from '@app/utils/utils';
+import { getModalAppendTo } from '@app/utils';
 
 export type MASCreateModalProps = {
   id?: string;
@@ -39,7 +39,7 @@ export const MASCreateModal: React.FunctionComponent<MASCreateModalProps> = ({
       title={title}
       isOpen={isModalOpen}
       onClose={handleModalToggle}
-      appendTo={getModalAppendTo}
+      appendTo={getModalAppendTo()}
       actions={[
         <Button
           key="create"

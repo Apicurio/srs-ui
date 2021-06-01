@@ -6,7 +6,7 @@ const webpack = require('webpack');
 const { port } = require('./package.json');
 const HOST = process.env.HOST || 'prod.foo.redhat.com';
 const PORT = process.env.PORT || port;
-const PROTOCOL = process.env.PROTOCOL;
+const PROTOCOL = process.env.PROTOCOL || "https";
 
 module.exports = merge(common('development'), {
   mode: 'development',

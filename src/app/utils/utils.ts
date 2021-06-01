@@ -1,4 +1,4 @@
-export function accessibleRouteChangeHandler() {
+function accessibleRouteChangeHandler() {
   return window.setTimeout(() => {
     const mainContainer = document.getElementById('primary-app-container');
     if (mainContainer) {
@@ -6,3 +6,11 @@ export function accessibleRouteChangeHandler() {
     }
   }, 50);
 }
+
+
+const getModalAppendTo = (): HTMLElement | undefined => document.querySelector('#qs-content') as HTMLElement || document.body;
+
+export {
+  accessibleRouteChangeHandler,
+  getModalAppendTo
+};

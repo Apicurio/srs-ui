@@ -11,7 +11,7 @@ import {
   TextInput,
   TextInputProps,
 } from '@patternfly/react-core';
-import { getModalAppendTo } from '@app/utils/utils';
+import { getModalAppendTo } from '@app/utils';
 import './MASDeleteModal.css';
 
 export type MASDeleteModalProps = {
@@ -94,7 +94,7 @@ export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
       titleIconVariant={titleIconVariant}
       showClose={showClose}
       onClose={handleModalToggle}
-      appendTo={getModalAppendTo}
+      appendTo={getModalAppendTo()}
       actions={[
         <Button
           id={id}
