@@ -63,10 +63,10 @@ If you want to add an additional language, you need to import the dayjs locale i
 ```
 # Turn on pseudolocalization
 # This will let you check components to make sure they can accomodate longer text and ensure that all text is internationalized.
-http://localhost:9003/?pseudolocalization=true&lng=en
+http://localhost:9005/?pseudolocalization=true&lng=en
 
 # Change language to Japanese (if you don't want to change your browser language)
-http://localhost:9003/?lng=ja
+http://localhost:9005/?lng=ja
 ```
 
 ## API
