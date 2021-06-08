@@ -15,7 +15,7 @@
     "build": "webpack --config webpack.prod.js && npm run dr:surge",
     "start": "node server.js",
     "start:dev": "webpack serve --https --hot --color --progress --config webpack.dev.js",
-    "start:federate": "HOST=localhost PORT=9003 PROTOCOL=http webpack serve --hot --color --progress --config webpack.dev.js",
+    "start:federate": "HOST=localhost PORT=9005 PROTOCOL=http webpack serve --hot --color --progress --config webpack.dev.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
