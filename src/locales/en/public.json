@@ -37,7 +37,8 @@
     "sasl_oauthbearer": "SASL/OAUTHBEARER",
     "recommended": "Recommended",
     "token_endpoint_url": "Token endpoint URL",
-    "sasl_plain": "SASL/PLAIN"
+    "sasl_plain": "SASL/PLAIN",
+    "go_to_kafka_instances": "Go to Kafka instance"
   },
   "serviceRegistry": {
     "service_registry": "Service Registry",

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { accessibleRouteChangeHandler } from '@app/utils/utils';
 import { MASPageNotFound } from '@app/components/MASPageNotFound';
@@ -34,6 +34,30 @@ const routes: AppRouteConfig[] = [
     path: '/',
     title: 'Service Registry',
   },
+  {
+    component: ServiceRegistryConnected,
+    exact: true,
+    path: '/t/:tenantId/artifacts',
+    title: 'Service Registry',
+  },
+  {
+    component: ServiceRegistryConnected,
+    exact: true,
+    path: '/t/:tenantId/rules',
+    title: 'Service Registry',
+  },
+  {
+    component: ServiceRegistryConnected,
+    exact: true,
+    path: '/t/:tenantId/artifacts/:groupId/:artifactId',
+    title: 'Service Registry',
+  },
+  {
+    component: ServiceRegistryConnected,
+    exact: true,
+    path: '/t/:tenantId/artifacts/:groupId/:artifactId/versions/:version',
+    title: 'Service Registry',
+  },
 ];
 
 // a custom hook for sending focus to the primary content container
@@ -59,7 +83,7 @@ const RouteWithTitleUpdates = ({ component: Component, isAsync = false, title, .
     return <Component {...rest} {...routeProps} />;
   }
 
-  return <Route render={routeWithTitle} />;
+  return <Route render={routeWithTitle} {...rest} />;
 };
 
 const PageNotFound = ({ title }: { title: string }) => {

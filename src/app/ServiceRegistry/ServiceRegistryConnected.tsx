@@ -1,19 +1,27 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { ServiceRegistry } from './ServiceRegistry';
+import { ServiceRegistryParams } from './components';
 import { AlertProvider } from '@app/components/MASAlerts';
-import { Config, ConfigContext } from "@bf2/ui-shared";
+import { Config, ConfigContext } from '@bf2/ui-shared';
 
 declare const __BASE_PATH__: string;
 
 export const ServiceRegistryConnected: React.FunctionComponent = () => {
+  const params = useParams<ServiceRegistryParams>();
+
   return (
-    <ConfigContext.Provider value={{
-      srs: {
-        apiBasePath: __BASE_PATH__
+    <ConfigContext.Provider
+      value={
+        {
+          kas: {
+            apiBasePath: __BASE_PATH__,
+          },
+        } as Config
       }
-    } as Config}>
+    >
       <AlertProvider>
-        <ServiceRegistry />
+        <ServiceRegistry params={params} />
       </AlertProvider>
     </ConfigContext.Provider>
   );

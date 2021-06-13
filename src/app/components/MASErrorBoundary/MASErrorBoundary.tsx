@@ -55,7 +55,7 @@ class MASErrorBoundary extends Component<Props, State> {
               body: t('unexpected_error'),
             }}
           >
-            <Button onClick={this.onClickButton}>{t('go_to_kafka_instances')}</Button>
+            <Button onClick={this.onClickButton}>{t('common.go_to_kafka_instances')}</Button>
           </MASEmptyState>
         </PageSection>
       );
