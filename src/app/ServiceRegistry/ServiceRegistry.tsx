@@ -22,9 +22,9 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
   activeBreadcrumbItemLabel,
 }) => {
   const auth = useAuth();
-  // const {
-  //   srs: { apiBasePath: basePath },
-  // } = useConfig();
+  const {
+    srs: { apiBasePath: basePath },
+  } = useConfig();
   const history = useHistory();
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
@@ -33,7 +33,6 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
   const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
   const [registry, setRegistry] = useState<Registry>();
-  const basePath = 'https://api.stage.openshift.com';
   const { name: tenantId } = registry || {};
   const registryId = 'tenant-15';
 

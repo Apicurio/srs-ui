@@ -18,7 +18,7 @@ export const ServiceRegistryConnected: React.FC<ServiceRegistryConnectedProps> =
     <ConfigContext.Provider
       value={
         {
-          kas: {
+          srs: {
             apiBasePath: __BASE_PATH__,
           },
         } as Config

@@ -33,7 +33,7 @@
     "i18n": "i18next 'src/**/**/*.{ts,tsx}' [-oc] -c './i18next-parser.config.js' -o './src/locales/$LOCALE/$NAMESPACE.json'"
   },
   "devDependencies": {
-    "@bf2/ui-shared": "^0.1.2",
+    "@bf2/ui-shared": "^0.2.0",
     "@redhat-cloud-services/frontend-components-config": "4.1.9",
     "@rhoas/api-mock": "^0.4.0-dev3",
     "@rhoas/registry-management-sdk": "^0.3.2",
