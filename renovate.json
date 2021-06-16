@@ -3,5 +3,20 @@
     "config:base",
     ":pinAllExceptPeerDependencies"
   ],
-  "groupName": "all"
+  "groupName": "all",
+  "ignoreDeps": [],
+  "automerge": false,
+  "major": {
+    "automerge": false
+  },
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^@rhoas"],
+      "groupName": "RHOAS SDK packages"
+    },
+    {
+      "matchPackagePatterns": ["^@bf2"],
+      "groupName": "Shared components packages"
+    }
+  ]
 }
