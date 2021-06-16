@@ -1,2 +1,12 @@
-node_modules
-dist
+
+# dependencies
+/node_modules
+/.idea
+/.work
+
+# testing
+/coverage
+
+# production
+/build
+/dist

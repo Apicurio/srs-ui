@@ -7,7 +7,11 @@ import { Config, ConfigContext } from '@bf2/ui-shared';
 
 declare const __BASE_PATH__: string;
 
-export const ServiceRegistryConnected: React.FunctionComponent = () => {
+type ServiceRegistryConnectedProps = {
+  federatedComponent?: string;
+};
+
+export const ServiceRegistryConnected: React.FC<ServiceRegistryConnectedProps> = ({ federatedComponent }) => {
   const params = useParams<ServiceRegistryParams>();
 
   return (
@@ -21,7 +25,7 @@ export const ServiceRegistryConnected: React.FunctionComponent = () => {
       }
     >
       <AlertProvider>
-        <ServiceRegistry params={params} />
+        <ServiceRegistry params={params} activeFederatedModule={federatedComponent} />
       </AlertProvider>
     </ConfigContext.Provider>
   );

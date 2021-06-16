@@ -17,13 +17,22 @@ function getBaseName() {
   return `${release}application-services/sr`;
 }
 
-const ServiceRegistryFederated: React.FunctionComponent<ServiceRegistryProps> = ({ params }) => {
+type ServiceRegistryFederatedProps = ServiceRegistryProps & {
+  federatedModule?: string;
+};
+
+const ServiceRegistryFederated: React.FC<ServiceRegistryFederatedProps> = ({ params, federatedModule }) => {
   const baseName = getBaseName();
   return (
     <BrowserRouter>
       <I18nextProvider i18n={srsi18n}>
         <RootModal>
-          <ServiceRegistry baseUIPath={baseName} params={params} homeLinkPath={baseName} />
+          <ServiceRegistry
+            baseUIPath={baseName}
+            params={params}
+            homeLinkPath={baseName}
+            activeFederatedModule={federatedModule}
+          />
         </RootModal>
       </I18nextProvider>
     </BrowserRouter>
