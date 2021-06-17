@@ -1,43 +1,94 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { PageSection, PageSectionVariants, ButtonVariant } from '@patternfly/react-core';
-import { MASEmptyState, MASEmptyStateVariant } from '@app/components';
-import { ServiceRegistryHeader, ServiceRegistryDrawer } from './components';
+import { useHistory } from 'react-router-dom';
+import { DefaultApi, Configuration, Registry } from '@rhoas/registry-management-sdk';
+import { useAuth, useConfig } from '@bf2/ui-shared';
+import { ServiceRegistryDrawer, UnauthrizedUser, WelcomeEmptyState } from './components';
+import { ServiceRegistryHeader, ServiceRegistryHeaderProps } from '@app/ServiceRegistry/components';
 
-export type ServiceRegistryProps = {
+export type ServiceRegistryProps = ServiceRegistryHeaderProps & {
+  fetchRegistry: () => Promise<void>;
+  registry: Registry;
 };
 
-export const ServiceRegistry:React.FC = () => {
-  const { t } = useTranslation();
+export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
+  navPrefixPath,
+  showBreadcrumb,
+  activeBreadcrumbItemLabel,
+  registry,
+  fetchRegistry,
+  federatedModule,
+  children,
+}) => {
+  const auth = useAuth();
+  const {
+    srs: { apiBasePath: basePath },
+  } = useConfig();
+  const history = useHistory();
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
-  const [isServiceRegistryLoading, setIsServiceRegistryLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [serviceAccountDetails, setServiceAccountDetails] = useState<any>(undefined);
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
   const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
+  const { name: tenantId } = registry || {};
+
+  const createServiceRegistry = async () => {
+    /**
+     * Todo: update getToken from auth?.srs.getToken() when available in ui-shared
+     */
+    const accessToken = await auth?.kas.getToken();
+    const api = new DefaultApi(
+      new Configuration({
+        accessToken,
+        basePath,
+      })
+    );
+    try {
+      setIsLoading(true);
+      await api.createRegistry({ name: tenantId }).then(() => {
+        fetchRegistry();
+        setIsLoading(false);
+      });
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
 
   const onConnectToRegistry = () => {
     setIsExpandedDrawer(true);
     /**
      * Todo: Dummy test-data will remove after integrate API
      */
-    setServiceAccountDetails('test-data');
+    setServiceAccountDetails(registry);
   };
 
   const onCloseDrawer = () => {
     setIsExpandedDrawer(false);
   };
 
-  const onDeleteRegistry = () => {
+  const deleteRegistry = async () => {
     /**
-     * Todo: integrate delete registry api
+     * Todo: update getToken from auth?.srs.getToken() when available in ui-shared
      */
+    const accessToken = await auth?.kas.getToken();
+    if (registry?.id) {
+      const api = new DefaultApi(
+        new Configuration({
+          accessToken,
+          basePath,
+        })
+      );
+      try {
+        await api.deleteRegistry(registry?.id).then(() => {
+          history.push(navPrefixPath || '/');
+          fetchRegistry();
+        });
+      } catch (error) {}
+    }
   };
 
-  const onCreateServiceRegistry = () => {
-    /**
-     * Todo: integrate create service registry api
-     */
+  const onDeleteRegistry = () => {
+    deleteRegistry();
   };
 
   const getAccessToServiceRegistry = () => {
@@ -46,67 +97,34 @@ export const ServiceRegistry:React.FC = () => {
      */
   };
 
-  const renderWelcomeEmptyState = () => {
-    return (
-      <PageSection padding={{ default: 'noPadding' }} isFilled>
-        <MASEmptyState
-          emptyStateProps={{ variant: MASEmptyStateVariant.GettingStarted }}
-          titleProps={{ title: t('serviceRegistry.welcome_to_service_registry') }}
-          emptyStateBodyProps={{
-            body: t('serviceRegistry.welcome_empty_state_body'),
-          }}
-          buttonProps={{
-            title: t('serviceRegistry.create_service_registry'),
-            variant: ButtonVariant.primary,
-            onClick: onCreateServiceRegistry,
-            isLoading: isServiceRegistryLoading,
-            spinnerAriaValueText: isServiceRegistryLoading ? t('common.loading') : undefined,
-          }}
-        />
-      </PageSection>
-    );
-  };
+  if (isUnauthorizedUser) {
+    return <UnauthrizedUser getAccessToServiceRegistry={getAccessToServiceRegistry} />;
+  }
 
-  const renderUnauthorizedUserEmptyState = () => {
-    return (
-      <PageSection padding={{ default: 'noPadding' }} isFilled>
-        <MASEmptyState
-          emptyStateProps={{ variant: MASEmptyStateVariant.NoAccess }}
-          titleProps={{ title: t('serviceRegistry.unauthorized_empty_state_title') }}
-          emptyStateBodyProps={{
-            body: t('serviceRegistry.unauthorized_empty_state_body'),
-          }}
-          buttonProps={{
-            title: t('serviceRegistry.get_access_to_service_registry'),
-            variant: ButtonVariant.primary,
-            onClick: getAccessToServiceRegistry,
-          }}
-        />
-      </PageSection>
-    );
-  };
-
-  return (
-    <>
-      {serviceAccountDetails ? (
+  const renderView = () => {
+    if (registry) {
+      return (
         <ServiceRegistryDrawer
           isExpanded={isExpandedDrawer}
           isLoading={serviceAccountDetails === undefined}
           notRequiredDrawerContentBackground={notRequiredDrawerContentBackground}
           onClose={onCloseDrawer}
         >
-          <PageSection variant={PageSectionVariants.light}>
-            <ServiceRegistryHeader
-              name={''}
-              onConnectToRegistry={onConnectToRegistry}
-              onDeleteRegistry={onDeleteRegistry}
-            />
-          </PageSection>
-          {isUnauthorizedUser && renderUnauthorizedUserEmptyState()}
+          <ServiceRegistryHeader
+            onConnectToRegistry={onConnectToRegistry}
+            onDeleteRegistry={onDeleteRegistry}
+            showBreadcrumb={showBreadcrumb}
+            activeBreadcrumbItemLabel={activeBreadcrumbItemLabel}
+            navPrefixPath={navPrefixPath}
+            federatedModule={federatedModule}
+          />
+          {children}
         </ServiceRegistryDrawer>
-      ) : (
-        renderWelcomeEmptyState()
-      )}
-    </>
-  );
+      );
+    } else {
+      return <WelcomeEmptyState createServiceRegistry={createServiceRegistry} isLoading={isLoading} />;
+    }
+  };
+
+  return <>{renderView()}</>;
 };

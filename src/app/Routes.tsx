@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { accessibleRouteChangeHandler } from '@app/utils/utils';
 import { MASPageNotFound } from '@app/components/MASPageNotFound';
@@ -17,6 +17,7 @@ export interface IAppRoute {
   title: string;
   isAsync?: boolean;
   routes?: undefined;
+  federatedComponent?: string;
 }
 
 export interface IAppRouteGroup {
@@ -33,6 +34,35 @@ const routes: AppRouteConfig[] = [
     label: 'Service Registry',
     path: '/',
     title: 'Service Registry',
+    federatedComponent: 'artifacts',
+  },
+  {
+    component: ServiceRegistryConnected,
+    exact: true,
+    path: '/t/:tenantId/artifacts',
+    title: 'Service Registry',
+    federatedComponent: 'artifacts',
+  },
+  {
+    component: ServiceRegistryConnected,
+    exact: true,
+    path: '/t/:tenantId/rules',
+    title: 'Service Registry',
+    federatedComponent: 'rules',
+  },
+  {
+    component: ServiceRegistryConnected,
+    exact: true,
+    path: '/t/:tenantId/artifacts/:groupId/:artifactId',
+    title: 'Service Registry',
+    federatedComponent: 'artifact-redirect',
+  },
+  {
+    component: ServiceRegistryConnected,
+    exact: true,
+    path: '/t/:tenantId/artifacts/:groupId/:artifactId/versions/:version',
+    title: 'Service Registry',
+    federatedComponent: 'artifacts-details',
   },
 ];
 
@@ -59,7 +89,7 @@ const RouteWithTitleUpdates = ({ component: Component, isAsync = false, title, .
     return <Component {...rest} {...routeProps} />;
   }
 
-  return <Route render={routeWithTitle} />;
+  return <Route render={routeWithTitle} {...rest} />;
 };
 
 const PageNotFound = ({ title }: { title: string }) => {
@@ -75,7 +105,7 @@ const flattenedRoutes: IAppRoute[] = routes.reduce(
 const AppRoutes = (): React.ReactElement => (
   <LastLocationProvider>
     <Switch>
-      {flattenedRoutes.map(({ path, exact, component, title, isAsync }, idx) => (
+      {flattenedRoutes.map(({ path, exact, component, title, isAsync, ...rest }, idx) => (
         <RouteWithTitleUpdates
           path={path}
           exact={exact}
@@ -83,6 +113,7 @@ const AppRoutes = (): React.ReactElement => (
           key={idx}
           title={title}
           isAsync={isAsync}
+          {...rest}
         />
       ))}
       <PageNotFound title="404 Page Not Found" />

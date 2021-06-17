@@ -107,9 +107,9 @@ module.exports = (env, argv) => {
       }),
       new webpack.container.ModuleFederationPlugin({
         name: federatedModuleName,
-        filename: `${federatedModuleName}${isProduction ? '[chunkhash:8]' : ''}.js`,
+        filename: `${federatedModuleName}${isProduction ? '.[chunkhash:8]' : ''}.js`,
         exposes: {    
-          "./ServiceRegistry":"./src/app/ServiceRegistry/ServiceRegistryFederated",      
+          "./ServiceRegistry":"./src/app/ServiceRegistry/ServiceRegistryFederated"
         },
         shared: {
           ...dependencies,

@@ -37,9 +37,10 @@
     "sasl_oauthbearer": "SASL/OAUTHBEARER",
     "recommended": "Recommended",
     "token_endpoint_url": "Token endpoint URL",
-    "sasl_plain": "SASL/PLAIN"
+    "sasl_plain": "SASL/PLAIN",
+    "go_to_kafka_instances": "Go to Kafka instance"
   },
-  "serviceRegistry": {
+  "srs": {
     "service_registry": "Service Registry",
     "connect_to_registry": "Connect to Registry",
     "delete_registry": "Delete Registry",
@@ -53,6 +54,8 @@
     "tab_sample_code_title_info": "Below are example configuration snippets for accessing Service Registry from different runtimes.",
     "tab_resources_title_info": "To connect an application or tool to this service registry, you will need the information below.",
     "tab_resources_content_1": "Registry REST API URL",
-    "tab_resources_content_2": "MAS-SSO Instance URL"
+    "tab_resources_content_2": "MAS-SSO Instance URL",
+    "artifacts_details": "Artifacts Details",
+    "global_rules": "Global Rules"
   }
 }
