@@ -25,7 +25,7 @@ export const ServiceRegistryConnected: React.FC<ServiceRegistryConnectedProps> =
       }
     >
       <AlertProvider>
-        <ServiceRegistry params={params} activeFederatedModule={federatedComponent} />
+        <ServiceRegistry />
       </AlertProvider>
     </ConfigContext.Provider>
   );
