@@ -21,21 +21,37 @@ export type ServiceRegistryHeaderProps = {
   onDeleteRegistry?: () => void;
   showBreadcrumb?: boolean;
   activeBreadcrumbItemLabel?: string;
-  homeLinkPath?: string;
+  navPrefixPath?: string;
   showKebab?: boolean;
+  federatedModule?: string;
 };
+
+export enum FederatedModuleActions {
+  Artifacts = 'artifacts',
+  ArtifactsDetails = 'artifacts-details',
+  Rules = 'rules',
+  ArtifactRedirect = 'artifact-redirect',
+}
 
 export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
   onConnectToRegistry,
   onDeleteRegistry,
-  showBreadcrumb = false,
   activeBreadcrumbItemLabel,
-  homeLinkPath,
+  navPrefixPath,
   showKebab = true,
+  federatedModule,
 }: ServiceRegistryHeaderProps) => {
   const { t } = useTranslation();
-
+  let showBreadcrumb = false;
   const [isOpen, setIsOpen] = useState<boolean>();
+
+  if (federatedModule === FederatedModuleActions.ArtifactsDetails) {
+    showBreadcrumb = true;
+    activeBreadcrumbItemLabel = t('srs.artifacts_details');
+  } else if (federatedModule === FederatedModuleActions.Rules) {
+    showBreadcrumb = true;
+    activeBreadcrumbItemLabel =t('srs.global_rules');
+  }
 
   const onToggle = (isOpen: boolean) => {
     setIsOpen(isOpen);
@@ -47,10 +63,10 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
 
   const dropdownItems = [
     <DropdownItem key="connect-registry" onClick={onConnectToRegistry}>
-      {t('serviceRegistry.connect_to_registry')}
+      {t('srs.connect_to_registry')}
     </DropdownItem>,
     <DropdownItem key="delete-registry" onClick={onDeleteRegistry}>
-      {t('serviceRegistry.delete_registry')}
+      {t('srs.delete_registry')}
     </DropdownItem>,
   ];
 
@@ -61,13 +77,13 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
           {showBreadcrumb ? (
             <Breadcrumb>
               <BreadcrumbItem>
-                <Link to={homeLinkPath || '/'}> {t('serviceRegistry.service_registry')}</Link>
+                <Link to={navPrefixPath || '/'}> {t('srs.service_registry')}</Link>
               </BreadcrumbItem>
               <BreadcrumbItem isActive={true}>{activeBreadcrumbItemLabel}</BreadcrumbItem>
             </Breadcrumb>
           ) : (
             <TextContent>
-              <Text component="h1"> {t('serviceRegistry.service_registry')}</Text>
+              <Text component="h1"> {t('srs.service_registry')}</Text>
             </TextContent>
           )}
         </LevelItem>

@@ -16,7 +16,7 @@ export const SampleCodeTab: React.FunctionComponent = () => {
     <>
       <div className="mas--details__drawer--tab-content">
         <TextContent className="pf-u-pb-sm">
-          <Text component={TextVariants.small}>{t('serviceRegistry.tab_sample_code_title_info')}</Text>
+          <Text component={TextVariants.small}>{t('srs.tab_sample_code_title_info')}</Text>
         </TextContent>
         {editors?.map(({ type, code }) => (
           <div className="pf-c-code-editor pf-m-read-only" key={type}>

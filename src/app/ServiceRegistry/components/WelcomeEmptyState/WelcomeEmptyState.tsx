@@ -15,12 +15,12 @@ const WelcomeEmptyState: React.FC<WelcomeEmptyStateProps> = ({ createServiceRegi
     <PageSection padding={{ default: 'noPadding' }} isFilled>
       <MASEmptyState
         emptyStateProps={{ variant: MASEmptyStateVariant.GettingStarted }}
-        titleProps={{ title: t('serviceRegistry.welcome_to_service_registry') }}
+        titleProps={{ title: t('srs.welcome_to_service_registry') }}
         emptyStateBodyProps={{
-          body: t('serviceRegistry.welcome_empty_state_body'),
+          body: t('srs.welcome_empty_state_body'),
         }}
         buttonProps={{
-          title: t('serviceRegistry.create_service_registry'),
+          title: t('srs.create_service_registry'),
           variant: ButtonVariant.primary,
           onClick: createServiceRegistry,
           isLoading: isLoading,

@@ -10,10 +10,6 @@ const webpack = require('webpack');
 const ChunkMapper = require('@redhat-cloud-services/frontend-components-config/chunk-mapper');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-function getRemoteEntryUrl(port) {
-  return `/localhost:${port}/remoteEntry.js`;
-}
-
 module.exports = (env, argv) => {
   const isProduction = argv && argv.mode === 'production';
   return {
@@ -113,10 +109,7 @@ module.exports = (env, argv) => {
         name: federatedModuleName,
         filename: `${federatedModuleName}${isProduction ? '[chunkhash:8]' : ''}.js`,
         exposes: {    
-          "./ServiceRegistry":"./src/app/ServiceRegistry/ServiceRegistryFederated",      
-        },
-        remotes: {
-          '@apicurio/registry': isProduction? 'apicurio_registry@/modules/registry/remoteEntry.js' : 'apicurio_registry@http://localhost:8888/remoteEntry.js',
+          "./ServiceRegistry":"./src/app/ServiceRegistry/ServiceRegistryFederated"
         },
         shared: {
           ...dependencies,

@@ -17,12 +17,12 @@ const UnauthrizedUser: React.FC<UnauthrizedUserProps> = ({ getAccessToServiceReg
       <PageSection padding={{ default: 'noPadding' }} isFilled>
         <MASEmptyState
           emptyStateProps={{ variant: MASEmptyStateVariant.NoAccess }}
-          titleProps={{ title: t('serviceRegistry.unauthorized_empty_state_title') }}
+          titleProps={{ title: t('srs.unauthorized_empty_state_title') }}
           emptyStateBodyProps={{
-            body: t('serviceRegistry.unauthorized_empty_state_body'),
+            body: t('srs.unauthorized_empty_state_body'),
           }}
           buttonProps={{
-            title: t('serviceRegistry.get_access_to_service_registry'),
+            title: t('srs.get_access_to_service_registry'),
             variant: ButtonVariant.primary,
             onClick: getAccessToServiceRegistry,
           }}

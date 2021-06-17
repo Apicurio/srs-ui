@@ -5,7 +5,7 @@ import { ServiceRegistry, ServiceRegistryProps } from './ServiceRegistry';
 import { RootModal } from '@app/components';
 import srsi18n from '@i18n/i18n';
 
-function getBaseName() {
+const getNavPrefixPath = () => {
   const pathname = window.location.pathname;
   let release = '/';
   const pathName = pathname.split('/');
@@ -15,24 +15,31 @@ function getBaseName() {
     release = `/beta/`;
   }
   return `${release}application-services/sr`;
-}
+};
 
 type ServiceRegistryFederatedProps = ServiceRegistryProps & {
   federatedModule?: string;
 };
 
-const ServiceRegistryFederated: React.FC<ServiceRegistryFederatedProps> = ({ params, federatedModule }) => {
-  const baseName = getBaseName();
+const ServiceRegistryFederated: React.FC<ServiceRegistryFederatedProps> = ({
+  federatedModule,
+  fetchRegistry,
+  registry,
+  children,
+}) => {
+  const navPrefixPath = getNavPrefixPath();
   return (
     <BrowserRouter>
       <I18nextProvider i18n={srsi18n}>
         <RootModal>
           <ServiceRegistry
-            baseUIPath={baseName}
-            params={params}
-            homeLinkPath={baseName}
-            activeFederatedModule={federatedModule}
-          />
+            navPrefixPath={navPrefixPath}
+            fetchRegistry={fetchRegistry}
+            registry={registry}
+            federatedModule={federatedModule}
+          >
+            {children}
+          </ServiceRegistry>
         </RootModal>
       </I18nextProvider>
     </BrowserRouter>

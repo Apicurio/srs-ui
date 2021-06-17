@@ -9,8 +9,8 @@ export type ResourcesTabProps = {
 export const ResourcesTab: React.FC<ResourcesTabProps> = () => {
   const { t } = useTranslation();
   const registriesInfo = [
-    { title: t('serviceRegistry.tab_resources_content_1'), code: 'https://registry.my-domain.com/api' },
-    { title: t('serviceRegistry.tab_resources_content_2'), code: 'https://mass-sso.url' },
+    { title: t('srs.tab_resources_content_1'), code: 'https://registry.my-domain.com/api' },
+    { title: t('srs.tab_resources_content_2'), code: 'https://mass-sso.url' },
     { title: t('common.client_key'), code: 'srvc-reg-7f7f8f7f87f-3634-c2e-879877988787' },
     { title: t('common.client_secret'), code: '2d668686876-8768786-8766686-8787jhjh88' },
   ];
@@ -18,7 +18,7 @@ export const ResourcesTab: React.FC<ResourcesTabProps> = () => {
   return (
     <div className="mas--details__drawer--tab-content">
       <TextContent className="pf-u-pb-sm">
-        <Text component={TextVariants.small}>{t('serviceRegistry.tab_resources_title_info')}</Text>
+        <Text component={TextVariants.small}>{t('srs.tab_resources_title_info')}</Text>
       </TextContent>
       <Form>
         {registriesInfo?.map(({ title, code }, index) => (

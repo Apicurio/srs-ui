@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DefaultApi, Configuration, Registry } from '@rhoas/registry-management-sdk';
 import { useAuth, useConfig } from '@bf2/ui-shared';
-import {
-  ServiceRegistryDrawer,
-  FederatedModuleManager,
-  FederatedModuleManagerProps,
-  UnauthrizedUser,
-  WelcomeEmptyState,
-} from './components';
-import { ServiceRegistryHeader } from '@app/ServiceRegistry/components';
+import { ServiceRegistryDrawer, UnauthrizedUser, WelcomeEmptyState } from './components';
+import { ServiceRegistryHeader, ServiceRegistryHeaderProps } from '@app/ServiceRegistry/components';
 
-export type ServiceRegistryProps = FederatedModuleManagerProps;
+export type ServiceRegistryProps = ServiceRegistryHeaderProps & {
+  fetchRegistry: () => Promise<void>;
+  registry: Registry;
+};
 
 export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
-  baseUIPath,
-  params,
-  homeLinkPath,
+  navPrefixPath,
   showBreadcrumb,
-  activeFederatedModule,
   activeBreadcrumbItemLabel,
+  registry,
+  fetchRegistry,
+  federatedModule,
+  children,
 }) => {
   const auth = useAuth();
   const {
@@ -32,27 +30,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
   const [serviceAccountDetails, setServiceAccountDetails] = useState<any>(undefined);
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
   const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
-  const [registry, setRegistry] = useState<Registry>();
   const { name: tenantId } = registry || {};
-  const registryId = 'tenant-15';
-
-  useEffect(() => {
-    fetchRegistry();
-  }, []);
-
-  const fetchRegistry = async () => {
-    const accessToken = await auth?.kas.getToken();
-    const api = new DefaultApi(
-      new Configuration({
-        accessToken,
-        basePath,
-      })
-    );
-    await api.getRegistries().then((res) => {
-      const response = res?.data && res.data[0];
-      setRegistry(response);
-    });
-  };
 
   const createServiceRegistry = async () => {
     const accessToken = await auth?.kas.getToken();
@@ -64,7 +42,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
     );
     try {
       setIsLoading(true);
-      await api.createRegistry({ name: registryId }).then(() => {
+      await api.createRegistry({ name: tenantId }).then(() => {
         fetchRegistry();
         setIsLoading(false);
       });
@@ -96,7 +74,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
       );
       try {
         await api.deleteRegistry(registry?.id).then(() => {
-          history.push(homeLinkPath || '/');
+          history.push(navPrefixPath || '/');
           fetchRegistry();
         });
       } catch (error) {}
@@ -126,22 +104,15 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
           notRequiredDrawerContentBackground={notRequiredDrawerContentBackground}
           onClose={onCloseDrawer}
         >
-          {/* <FederatedModuleManager
-            tenantId={tenantId}
-            baseUIPath={baseUIPath}
-            params={params}
-            onConnectToRegistry={onConnectToRegistry}
-            onDeleteRegistry={onDeleteRegistry}
-            homeLinkPath={homeLinkPath}
-            activeFederatedModule={activeFederatedModule}
-          /> */}
           <ServiceRegistryHeader
             onConnectToRegistry={onConnectToRegistry}
             onDeleteRegistry={onDeleteRegistry}
             showBreadcrumb={showBreadcrumb}
             activeBreadcrumbItemLabel={activeBreadcrumbItemLabel}
-            homeLinkPath={homeLinkPath}
+            navPrefixPath={navPrefixPath}
+            federatedModule={federatedModule}
           />
+          {children}
         </ServiceRegistryDrawer>
       );
     } else {
