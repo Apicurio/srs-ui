@@ -33,6 +33,9 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
   const { name: tenantId } = registry || {};
 
   const createServiceRegistry = async () => {
+    /**
+     * Todo: update getToken from auth?.srs.getToken() when available in ui-shared
+     */
     const accessToken = await auth?.kas.getToken();
     const api = new DefaultApi(
       new Configuration({
@@ -64,6 +67,9 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
   };
 
   const deleteRegistry = async () => {
+    /**
+     * Todo: update getToken from auth?.srs.getToken() when available in ui-shared
+     */
     const accessToken = await auth?.kas.getToken();
     if (registry?.id) {
       const api = new DefaultApi(
