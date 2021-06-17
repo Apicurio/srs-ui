@@ -6,8 +6,8 @@ import { ServiceRegistryDrawer, UnauthrizedUser, WelcomeEmptyState } from './com
 import { ServiceRegistryHeader, ServiceRegistryHeaderProps } from '@app/ServiceRegistry/components';
 
 export type ServiceRegistryProps = ServiceRegistryHeaderProps & {
-  fetchRegistry: () => Promise<void>;
-  registry: Registry;
+  fetchRegistry?: () => Promise<void>;
+  registry?: Registry;
 };
 
 export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
@@ -46,7 +46,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
     try {
       setIsLoading(true);
       await api.createRegistry({ name: tenantId }).then(() => {
-        fetchRegistry();
+        fetchRegistry && fetchRegistry();
         setIsLoading(false);
       });
     } catch (error) {
@@ -81,7 +81,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
       try {
         await api.deleteRegistry(registry?.id).then(() => {
           history.push(navPrefixPath || '/');
-          fetchRegistry();
+          fetchRegistry && fetchRegistry();
         });
       } catch (error) {}
     }

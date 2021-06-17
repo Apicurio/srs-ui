@@ -34,35 +34,6 @@ const routes: AppRouteConfig[] = [
     label: 'Service Registry',
     path: '/',
     title: 'Service Registry',
-    federatedComponent: 'artifacts',
-  },
-  {
-    component: ServiceRegistryConnected,
-    exact: true,
-    path: '/t/:tenantId/artifacts',
-    title: 'Service Registry',
-    federatedComponent: 'artifacts',
-  },
-  {
-    component: ServiceRegistryConnected,
-    exact: true,
-    path: '/t/:tenantId/rules',
-    title: 'Service Registry',
-    federatedComponent: 'rules',
-  },
-  {
-    component: ServiceRegistryConnected,
-    exact: true,
-    path: '/t/:tenantId/artifacts/:groupId/:artifactId',
-    title: 'Service Registry',
-    federatedComponent: 'artifact-redirect',
-  },
-  {
-    component: ServiceRegistryConnected,
-    exact: true,
-    path: '/t/:tenantId/artifacts/:groupId/:artifactId/versions/:version',
-    title: 'Service Registry',
-    federatedComponent: 'artifacts-details',
   },
 ];
 
