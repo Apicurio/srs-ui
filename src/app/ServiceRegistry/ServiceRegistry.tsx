@@ -30,13 +30,13 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
   const [serviceAccountDetails, setServiceAccountDetails] = useState<any>(undefined);
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
   const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
-  const { name: tenantId } = registry || {};
 
   const createServiceRegistry = async () => {
     /**
-     * Todo: update getToken from auth?.srs.getToken() when available in ui-shared
+     * Todo: remove registryName hard code after create fomr integrate
      */
-    const accessToken = await auth?.kas.getToken();
+    const registryName = 'tenant-15';
+    const accessToken = await auth?.srs.getToken();
     const api = new DefaultApi(
       new Configuration({
         accessToken,
@@ -45,7 +45,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
     );
     try {
       setIsLoading(true);
-      await api.createRegistry({ name: tenantId }).then(() => {
+      await api.createRegistry({ name: registryName }).then(() => {
         fetchRegistry && fetchRegistry();
         setIsLoading(false);
       });
@@ -67,10 +67,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
   };
 
   const deleteRegistry = async () => {
-    /**
-     * Todo: update getToken from auth?.srs.getToken() when available in ui-shared
-     */
-    const accessToken = await auth?.kas.getToken();
+    const accessToken = await auth?.srs.getToken();
     if (registry?.id) {
       const api = new DefaultApi(
         new Configuration({

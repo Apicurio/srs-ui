@@ -1,7 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { ServiceRegistry } from './ServiceRegistry';
-import { ServiceRegistryParams } from './components';
 import { AlertProvider } from '@app/components/MASAlerts';
 import { Config, ConfigContext } from '@bf2/ui-shared';
 
@@ -12,8 +10,6 @@ type ServiceRegistryConnectedProps = {
 };
 
 export const ServiceRegistryConnected: React.FC<ServiceRegistryConnectedProps> = ({ federatedComponent }) => {
-  const params = useParams<ServiceRegistryParams>();
-
   return (
     <ConfigContext.Provider
       value={
