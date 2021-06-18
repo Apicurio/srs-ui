@@ -15,41 +15,31 @@ import {
   PageSection,
   PageSectionVariants,
 } from '@patternfly/react-core';
+import {useBasename} from "@bf2/ui-shared";
 
 export type ServiceRegistryHeaderProps = {
   onConnectToRegistry?: () => void;
   onDeleteRegistry?: () => void;
-  activeBreadcrumbItemLabel?: string;
-  navPrefixPath?: string;
+  breadcrumbId?: string;
   showKebab?: boolean;
-  federatedModule?: string;
 };
-
-export enum FederatedModuleActions {
-  Artifacts = 'FederatedArtifactsPage',
-  ArtifactsDetails = 'FederatedArtifactVersionPage',
-  Rules = 'FederatedRulesPage',
-  ArtifactRedirect = 'FederatedArtifactRedirectPage',
-}
 
 export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
   onConnectToRegistry,
   onDeleteRegistry,
-  activeBreadcrumbItemLabel,
-  navPrefixPath,
+  breadcrumbId,
   showKebab = true,
-  federatedModule,
 }: ServiceRegistryHeaderProps) => {
   const { t } = useTranslation();
   let showBreadcrumb = false;
+  let activeBreadcrumbItemLabel = "";
   const [isOpen, setIsOpen] = useState<boolean>();
+  const basename = useBasename();
 
-  if (federatedModule === FederatedModuleActions.ArtifactsDetails) {
+  if (breadcrumbId != undefined) {
     showBreadcrumb = true;
-    activeBreadcrumbItemLabel = t('srs.artifacts_details');
-  } else if (federatedModule === FederatedModuleActions.Rules) {
-    showBreadcrumb = true;
-    activeBreadcrumbItemLabel = t('srs.global_rules');
+    //activeBreadcrumbItemLabel = t('srs.artifacts_details');
+    activeBreadcrumbItemLabel = t(breadcrumbId);
   }
 
   const onToggle = (isOpen: boolean) => {
@@ -76,7 +66,7 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
           {showBreadcrumb ? (
             <Breadcrumb>
               <BreadcrumbItem>
-                <Link to={navPrefixPath || '/'}> {t('srs.service_registry')}</Link>
+                <Link to={basename.getBasename() || '/'}> {t('srs.service_registry')}</Link>
               </BreadcrumbItem>
               <BreadcrumbItem isActive={true}>{activeBreadcrumbItemLabel}</BreadcrumbItem>
             </Breadcrumb>

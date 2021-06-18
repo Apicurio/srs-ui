@@ -1,18 +1,11 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { ServiceRegistry } from './ServiceRegistry';
-import { ServiceRegistryParams } from './components';
-import { AlertProvider } from '@app/components/MASAlerts';
-import { Config, ConfigContext } from '@bf2/ui-shared';
+import {ServiceRegistry} from './ServiceRegistry';
+import {AlertProvider} from '@app/components/MASAlerts';
+import {Config, ConfigContext} from '@bf2/ui-shared';
 
 declare const __BASE_PATH__: string;
 
-type ServiceRegistryConnectedProps = {
-  federatedComponent?: string;
-};
-
-export const ServiceRegistryConnected: React.FC<ServiceRegistryConnectedProps> = ({ federatedComponent }) => {
-  const params = useParams<ServiceRegistryParams>();
+export const ServiceRegistryConnected: React.FC = () => {
 
   return (
     <ConfigContext.Provider
@@ -25,7 +18,7 @@ export const ServiceRegistryConnected: React.FC<ServiceRegistryConnectedProps> =
       }
     >
       <AlertProvider>
-        <ServiceRegistry />
+        <ServiceRegistry render={() => (<></>)} />
       </AlertProvider>
     </ConfigContext.Provider>
   );
