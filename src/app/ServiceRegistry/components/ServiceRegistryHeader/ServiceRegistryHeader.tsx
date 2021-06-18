@@ -19,7 +19,6 @@ import {
 export type ServiceRegistryHeaderProps = {
   onConnectToRegistry?: () => void;
   onDeleteRegistry?: () => void;
-  showBreadcrumb?: boolean;
   activeBreadcrumbItemLabel?: string;
   navPrefixPath?: string;
   showKebab?: boolean;
@@ -27,10 +26,10 @@ export type ServiceRegistryHeaderProps = {
 };
 
 export enum FederatedModuleActions {
-  Artifacts = 'artifacts',
-  ArtifactsDetails = 'artifacts-details',
-  Rules = 'rules',
-  ArtifactRedirect = 'artifact-redirect',
+  Artifacts = 'FederatedArtifactsPage',
+  ArtifactsDetails = 'FederatedArtifactVersionPage',
+  Rules = 'FederatedRulesPage',
+  ArtifactRedirect = 'FederatedArtifactRedirectPage',
 }
 
 export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
@@ -50,7 +49,7 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
     activeBreadcrumbItemLabel = t('srs.artifacts_details');
   } else if (federatedModule === FederatedModuleActions.Rules) {
     showBreadcrumb = true;
-    activeBreadcrumbItemLabel =t('srs.global_rules');
+    activeBreadcrumbItemLabel = t('srs.global_rules');
   }
 
   const onToggle = (isOpen: boolean) => {
