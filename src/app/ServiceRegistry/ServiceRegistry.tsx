@@ -1,36 +1,52 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { DefaultApi, Configuration, Registry } from '@rhoas/registry-management-sdk';
-import { useAuth, useConfig } from '@bf2/ui-shared';
-import { ServiceRegistryDrawer, UnauthrizedUser, WelcomeEmptyState } from './components';
-import { ServiceRegistryHeader, ServiceRegistryHeaderProps } from '@app/ServiceRegistry/components';
+import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
+import {Configuration, DefaultApi, Registry} from '@rhoas/registry-management-sdk';
+import {useAuth, useBasename, useConfig} from '@bf2/ui-shared';
+import {ServiceRegistryDrawer, UnauthrizedUser, WelcomeEmptyState} from './components';
+import {ServiceRegistryHeader, ServiceRegistryHeaderProps} from '@app/ServiceRegistry/components';
+import {MASLoading} from "@app/components";
 
 export type ServiceRegistryProps = ServiceRegistryHeaderProps & {
-  fetchRegistry?: () => Promise<void>;
-  registry?: Registry;
+  render: (registry: Registry) => JSX.Element
 };
 
 export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
-  navPrefixPath,
-  showBreadcrumb,
-  activeBreadcrumbItemLabel,
-  registry,
-  fetchRegistry,
-  federatedModule,
-  children,
-}) => {
+                                                                  activeBreadcrumbItemLabel,
+                                                                  render,
+                                                                }) => {
   const auth = useAuth();
   const {
-    srs: { apiBasePath: basePath },
+    srs: {apiBasePath: basePath},
   } = useConfig();
   const history = useHistory();
+  const basename = useBasename();
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [serviceAccountDetails, setServiceAccountDetails] = useState<any>(undefined);
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
   const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
-  const { name: tenantId } = registry || {};
+  const [registry, setRegistry] = useState<Registry | undefined>(undefined);
+
+  useEffect(() => {
+    fetchRegistries();
+  }, []);
+
+  const fetchRegistries = async () => {
+    const accessToken = await auth?.srs.getToken();
+    const api = new DefaultApi(
+      new Configuration({
+        accessToken,
+        basePath,
+      })
+    );
+    const registry = await api.getRegistries().then((res) => {
+      return res?.data && res.data?.items[0];
+    });
+    setRegistry(registry);
+    setLoading(false);
+  };
 
   const createServiceRegistry = async () => {
     /**
@@ -44,13 +60,13 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
       })
     );
     try {
-      setIsLoading(true);
-      await api.createRegistry({ name: tenantId }).then(() => {
-        fetchRegistry && fetchRegistry();
-        setIsLoading(false);
+      setIsCreating(true);
+      await api.createRegistry({name: ""}).then(() => {
+        fetchRegistries && fetchRegistries();
+        setIsCreating(false);
       });
     } catch (error) {
-      setIsLoading(false);
+      setIsCreating(false);
     }
   };
 
@@ -80,10 +96,11 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
       );
       try {
         await api.deleteRegistry(registry?.id).then(() => {
-          history.push(navPrefixPath || '/');
-          fetchRegistry && fetchRegistry();
+          history.push(basename.getBasename());
+          fetchRegistries && fetchRegistries();
         });
-      } catch (error) {}
+      } catch (error) {
+      }
     }
   };
 
@@ -98,33 +115,28 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
   };
 
   if (isUnauthorizedUser) {
-    return <UnauthrizedUser getAccessToServiceRegistry={getAccessToServiceRegistry} />;
+    return <UnauthrizedUser getAccessToServiceRegistry={getAccessToServiceRegistry}/>;
   }
 
-  const renderView = () => {
-    if (registry) {
-      return (
-        <ServiceRegistryDrawer
-          isExpanded={isExpandedDrawer}
-          isLoading={serviceAccountDetails === undefined}
-          notRequiredDrawerContentBackground={notRequiredDrawerContentBackground}
-          onClose={onCloseDrawer}
-        >
-          <ServiceRegistryHeader
-            onConnectToRegistry={onConnectToRegistry}
-            onDeleteRegistry={onDeleteRegistry}
-            showBreadcrumb={showBreadcrumb}
-            activeBreadcrumbItemLabel={activeBreadcrumbItemLabel}
-            navPrefixPath={navPrefixPath}
-            federatedModule={federatedModule}
-          />
-          {children}
-        </ServiceRegistryDrawer>
-      );
-    } else {
-      return <WelcomeEmptyState createServiceRegistry={createServiceRegistry} isLoading={isLoading} />;
-    }
-  };
-
-  return <>{renderView()}</>;
+  if (loading) {
+    return <MASLoading/>
+  } else if (registry) {
+    return (
+      <ServiceRegistryDrawer
+        isExpanded={isExpandedDrawer}
+        isLoading={serviceAccountDetails === undefined}
+        notRequiredDrawerContentBackground={notRequiredDrawerContentBackground}
+        onClose={onCloseDrawer}
+      >
+        <ServiceRegistryHeader
+          onConnectToRegistry={onConnectToRegistry}
+          onDeleteRegistry={onDeleteRegistry}
+          activeBreadcrumbItemLabel={activeBreadcrumbItemLabel}
+        />
+        {render(registry)}
+      </ServiceRegistryDrawer>
+    );
+  } else {
+    return <WelcomeEmptyState createServiceRegistry={createServiceRegistry} isLoading={isCreating}/>;
+  }
 };

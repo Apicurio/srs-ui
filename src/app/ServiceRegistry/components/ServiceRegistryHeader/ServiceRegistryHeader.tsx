@@ -22,7 +22,6 @@ export type ServiceRegistryHeaderProps = {
   activeBreadcrumbItemLabel?: string;
   navPrefixPath?: string;
   showKebab?: boolean;
-  federatedModule?: string;
 };
 
 export enum FederatedModuleActions {
@@ -38,19 +37,18 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
   activeBreadcrumbItemLabel,
   navPrefixPath,
   showKebab = true,
-  federatedModule,
 }: ServiceRegistryHeaderProps) => {
   const { t } = useTranslation();
   let showBreadcrumb = false;
   const [isOpen, setIsOpen] = useState<boolean>();
 
-  if (federatedModule === FederatedModuleActions.ArtifactsDetails) {
+  /*if (federatedModule === FederatedModuleActions.ArtifactsDetails) {
     showBreadcrumb = true;
     activeBreadcrumbItemLabel = t('srs.artifacts_details');
   } else if (federatedModule === FederatedModuleActions.Rules) {
     showBreadcrumb = true;
     activeBreadcrumbItemLabel = t('srs.global_rules');
-  }
+  }*/
 
   const onToggle = (isOpen: boolean) => {
     setIsOpen(isOpen);
