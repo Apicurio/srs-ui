@@ -33,7 +33,7 @@
     "i18n": "i18next 'src/**/**/*.{ts,tsx}' [-oc] -c './i18next-parser.config.js' -o './src/locales/$LOCALE/$NAMESPACE.json'"
   },
   "devDependencies": {
-    "@rhoas/api-mock": "^0.4.0-dev3",
+    "@rhoas/api-mock": "0.4.0-dev3",
     "@storybook/addon-actions": "6.1.14",
     "@storybook/addon-info": "5.3.21",
     "@storybook/addon-links": "6.1.14",
@@ -88,7 +88,7 @@
     "webpack-merge": "5.8.0"
   },
   "dependencies": {
-    "@bf2/ui-shared": "^0.2.2",
+    "@bf2/ui-shared": "0.2.2",
     "@redhat-cloud-services/frontend-components-config": "4.1.10",
     "@patternfly/react-core": "4.128.2",
     "@patternfly/react-icons": "4.10.11",
