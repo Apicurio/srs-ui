@@ -89,7 +89,7 @@
   },
   "dependencies": {
     "@bf2/ui-shared": "0.2.2",
-    "@redhat-cloud-services/frontend-components-config": "4.1.10",
+    "@redhat-cloud-services/frontend-components-config": "4.2.0",
     "@patternfly/react-core": "4.128.2",
     "@patternfly/react-icons": "4.10.11",
     "@patternfly/react-styles": "4.10.11",
