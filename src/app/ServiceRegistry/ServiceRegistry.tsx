@@ -99,6 +99,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
           fetchRegistries && fetchRegistries();
         });
       } catch (error) {
+        // TODO Swallowing the error
       }
     }
   };
