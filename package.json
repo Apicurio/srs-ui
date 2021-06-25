@@ -88,12 +88,12 @@
     "webpack-merge": "5.8.0"
   },
   "dependencies": {
-    "@bf2/ui-shared": "0.2.2",
+    "@bf2/ui-shared": "0.3.0",
+    "@redhat-cloud-services/frontend-components-config": "4.2.4",
     "@patternfly/react-core": "4.128.2",
     "@patternfly/react-icons": "4.10.11",
     "@patternfly/react-styles": "4.10.11",
-    "@patternfly/react-table": "4.27.24",
-    "@redhat-cloud-services/frontend-components-config": "4.2.3",
+    "@patternfly/react-table": "4.27.24",    
     "@rhoas/registry-management-sdk": "0.3.2",
     "@testing-library/dom": "7.31.2",
     "@testing-library/jest-dom": "5.14.1",
