@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Configuration, Registry, RegistriesApi } from '@rhoas/registry-management-sdk';
+import { useTranslation } from 'react-i18next';
+import { Configuration, RegistryListRest, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { useAuth, useBasename, useConfig } from '@bf2/ui-shared';
 import { ServiceRegistryDrawer, UnauthrizedUser, WelcomeEmptyState } from './components';
 import { ServiceRegistryHeader, ServiceRegistryHeaderProps } from '@app/ServiceRegistry/components';
-import { MASLoading } from '@app/components';
+import { MASLoading, useRootModalContext, MODAL_TYPES } from '@app/components';
 
 export type ServiceRegistryProps = ServiceRegistryHeaderProps & {
-  render: (registry: Registry) => JSX.Element;
+  render: (registry: RegistryRest) => JSX.Element;
 };
 
 export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadcrumbId }) => {
+  const { t } = useTranslation();
   const auth = useAuth();
   const {
     srs: { apiBasePath: basePath },
   } = useConfig();
   const history = useHistory();
   const basename = useBasename();
+  const { showModal } = useRootModalContext();
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
   const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -24,7 +27,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
   const [serviceAccountDetails, setServiceAccountDetails] = useState<any>(undefined);
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
   const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
-  const [registry, setRegistry] = useState<Registry | undefined>(undefined);
+  const [registry, setRegistry] = useState<RegistryListRest | undefined>(undefined);
 
   useEffect(() => {
     fetchRegistries();
@@ -64,6 +67,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
      */
     const accessToken = await auth?.srs.getToken();
     if (registry?.id) {
+      setLoading(true);
       const api = new RegistriesApi(
         new Configuration({
           accessToken,
@@ -72,17 +76,32 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
       );
       try {
         await api.deleteRegistry(registry?.id).then(() => {
+          setLoading(false);
           history.push(basename.getBasename());
           fetchRegistries && fetchRegistries();
         });
       } catch (error) {
+        setLoading(false);
         // TODO Swallowing the error
       }
     }
   };
 
   const onDeleteRegistry = () => {
-    deleteRegistry();
+    const { name, status } = registry;
+    showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
+      serviceRegistryStatus: status,
+      selectedItemData: registry,
+      title: `${t('common.delete_service_registry_title')}?`,
+      confirmButtonProps: {
+        onClick: deleteRegistry,
+        label: t('common.delete'),
+        isLoading:loading
+      },
+      textProps: {
+        description: t('common.delete_service_registry_description', { name }),
+      },
+    });
   };
 
   const getAccessToServiceRegistry = () => {
@@ -115,6 +134,6 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
       </ServiceRegistryDrawer>
     );
   } else {
-    return <WelcomeEmptyState fetchServiceRegistries={fetchRegistries}/>;
+    return <WelcomeEmptyState fetchServiceRegistries={fetchRegistries} />;
   }
 };

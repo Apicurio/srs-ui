@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext } from 'react';
-import { CreateServiceRegistry } from '@app/ServiceRegistry/dialogs';
+import { CreateServiceRegistry, DeleteServiceRegistry } from '@app/ServiceRegistry/dialogs';
 
 export const MODAL_TYPES = {
   CREATE_SERVICE_REGISTRY: 'CREATE_SERVICE_REGISTRY',
@@ -8,6 +8,7 @@ export const MODAL_TYPES = {
 
 const MODAL_COMPONENTS: any = {
   [MODAL_TYPES.CREATE_SERVICE_REGISTRY]: CreateServiceRegistry,
+  [MODAL_TYPES.DELETE_SERVICE_REGISTRY]:DeleteServiceRegistry
 };
 
 type RootModalContext = {

@@ -39,7 +39,11 @@
     "token_endpoint_url": "Token endpoint URL",
     "sasl_plain": "SASL/PLAIN",
     "go_to_kafka_instances": "Go to Kafka instance",
-    "connection":"Connection"
+    "connection": "Connection",
+    "delete": "Delete",
+    "delete_service_registry_title": "Delete Service Registry instance",
+    "delete_service_registry_description": "<b>{{name}}</b> will be deleted.",
+    "service_registry_name_label": "Type <b>{{name}}</b> to confirm:"
   },
   "srs": {
     "service_registry": "Service Registry",
@@ -59,11 +63,11 @@
     "connection_content_3": "CNCF schema registry API",
     "artifacts_details": "Artifacts Details",
     "global_rules": "Global Rules",
-    "create_service_registry_instance":"Create a service registry instance",
-    "service_registry_creation_success_message": "Service registry successfully created",
+    "create_service_registry_instance": "Create a service registry instance",
+    "service_registry_creation_success_message": "Service Registry instance created",
     "service_registry_name_length_is_greater_than_expected": "Service account name cannot exceed {{maxLength}} characters.",
     "service_registry_desc_length_is_greater_than_expected": "Service account description cannot exceed {{maxLength}} characters.",
     "service_registry_description_length_is_greater_than_expected": "Service account description cannot exceed {{maxLength}} characters.",
-    "service_registry_successfully_deleted": "{{name}} service registry instance successfully deleted"
+    "service_registry_successfully_deleted": "{{name}} Service Registry instance deleted"    
   }
 }
