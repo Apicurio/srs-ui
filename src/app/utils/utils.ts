@@ -10,7 +10,12 @@ function accessibleRouteChangeHandler() {
 
 const getModalAppendTo = (): HTMLElement | undefined => document.querySelector('#qs-content') as HTMLElement || document.body;
 
+const MAX_SERVICE_REGISTRY_NAME_LENGTH = 50;
+const MAX_SERVICE_REGISTRY_DESC_LENGTH = 255;
+
 export {
   accessibleRouteChangeHandler,
-  getModalAppendTo
+  getModalAppendTo,
+  MAX_SERVICE_REGISTRY_NAME_LENGTH,
+  MAX_SERVICE_REGISTRY_DESC_LENGTH
 };

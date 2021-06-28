@@ -1,24 +1,39 @@
 import React from 'react';
-import { TextContent, Text, TextVariants, ClipboardCopy, Form, FormGroup } from '@patternfly/react-core';
+import {
+  TextContent,
+  Text,
+  TextVariants,
+  ClipboardCopy,
+  Form,
+  FormGroup,
+  Title,
+  TitleSizes,
+} from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 
-export type ResourcesTabProps = {
-  mainToggle?: boolean;
+type ConnectionInfoProps = {
+  registryApisUrl: string;
 };
 
-export const ResourcesTab: React.FC<ResourcesTabProps> = () => {
+export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl }) => {
   const { t } = useTranslation();
+
   const registriesInfo = [
-    { title: t('srs.tab_resources_content_1'), code: 'https://registry.my-domain.com/api' },
-    { title: t('srs.tab_resources_content_2'), code: 'https://mass-sso.url' },
-    { title: t('common.client_key'), code: 'srvc-reg-7f7f8f7f87f-3634-c2e-879877988787' },
-    { title: t('common.client_secret'), code: '2d668686876-8768786-8766686-8787jhjh88' },
+    { title: t('srs.connection_content_1'), code: `${registryApisUrl}/registry/v2` },
+    { title: t('srs.connection_content_2'), code: `${registryApisUrl}/ccompat/v6` },
+    { title: t('srs.connection_content_3'), code: `${registryApisUrl}/cncf/v0` },
   ];
 
   return (
     <div className="mas--details__drawer--tab-content">
       <TextContent className="pf-u-pb-sm">
-        <Text component={TextVariants.small}>{t('srs.tab_resources_title_info')}</Text>
+        <Title headingLevel={'h2'} size={TitleSizes['lg']}>
+          {t('common.connection')}
+        </Title>
+      </TextContent>
+
+      <TextContent className="pf-u-pb-sm">
+        <Text component={TextVariants.small}>{t('srs.connection_title_info')}</Text>
       </TextContent>
       <Form>
         {registriesInfo?.map(({ title, code }, index) => (

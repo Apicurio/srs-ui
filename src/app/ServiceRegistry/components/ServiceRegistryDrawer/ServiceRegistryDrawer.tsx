@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Tabs, Tab, TabTitleText } from '@patternfly/react-core';
+import { Registry } from '@rhoas/registry-management-sdk';
 import { MASDrawer, MASDrawerProps } from '@app/components';
-import { ResourcesTab } from './ResourcesTab';
-import { SampleCodeTab } from './SampleCodeTab';
+import { ConnectionInfo } from './ConnectionInfo';
 
 export type ServiceRegistryDrawerProps = Omit<
   MASDrawerProps,
   'drawerHeaderProps' | 'panelBodyContent' | '[data-ouia-app-id]'
 > & {
   activeTab?: React.ReactText;
+  registry: Registry;
 };
 
 const ServiceRegistryDrawer: React.FC<ServiceRegistryDrawerProps> = ({
@@ -19,32 +19,12 @@ const ServiceRegistryDrawer: React.FC<ServiceRegistryDrawerProps> = ({
   'data-ouia-app-id': dataOuiaAppId,
   children,
   notRequiredDrawerContentBackground,
+  registry,
 }: ServiceRegistryDrawerProps) => {
   const { t } = useTranslation();
-  const [activeKey, setActiveKey] = useState<React.ReactText>(0);
+  const { registryUrl } = registry;
 
-  const handleTabClick = (_, eventKey: React.ReactText) => {
-    setActiveKey(eventKey);
-  };
-
-  const panelBodyContent = (
-    <Tabs activeKey={activeKey} onSelect={handleTabClick}>
-      <Tab
-        eventKey={0}
-        title={<TabTitleText>{t('common.resources')}</TabTitleText>}
-        data-testid="serviceRegustry-tabResources"
-      >
-        <ResourcesTab />
-      </Tab>
-      <Tab
-        eventKey={1}
-        title={<TabTitleText>{t('common.sample_code')}</TabTitleText>}
-        data-testid="serviceRegistry-tabSampleCode"
-      >
-        <SampleCodeTab />
-      </Tab>
-    </Tabs>
-  );
+  const panelBodyContent = <ConnectionInfo registryApisUrl={registryUrl} />;
 
   return (
     <MASDrawer
@@ -53,7 +33,7 @@ const ServiceRegistryDrawer: React.FC<ServiceRegistryDrawerProps> = ({
       onClose={onClose}
       panelBodyContent={panelBodyContent}
       drawerHeaderProps={{
-        text: { label: t('srs.connection_details') },
+        text: { label: t('srs.service_registry_instance_name') },
         title: { value: name, headingLevel: 'h1' },
       }}
       data-ouia-app-id={dataOuiaAppId}

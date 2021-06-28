@@ -1,21 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import {useHistory} from 'react-router-dom';
-import {Configuration, DefaultApi, Registry} from '@rhoas/registry-management-sdk';
-import {useAuth, useBasename, useConfig} from '@bf2/ui-shared';
-import {ServiceRegistryDrawer, UnauthrizedUser, WelcomeEmptyState} from './components';
-import {ServiceRegistryHeader, ServiceRegistryHeaderProps} from '@app/ServiceRegistry/components';
-import {MASLoading} from "@app/components";
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Configuration, Registry, RegistriesApi } from '@rhoas/registry-management-sdk';
+import { useAuth, useBasename, useConfig } from '@bf2/ui-shared';
+import { ServiceRegistryDrawer, UnauthrizedUser, WelcomeEmptyState } from './components';
+import { ServiceRegistryHeader, ServiceRegistryHeaderProps } from '@app/ServiceRegistry/components';
+import { MASLoading } from '@app/components';
 
 export type ServiceRegistryProps = ServiceRegistryHeaderProps & {
-  render: (registry: Registry) => JSX.Element
+  render: (registry: Registry) => JSX.Element;
 };
 
-export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
-                                                                  render, breadcrumbId
-                                                                }) => {
+export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadcrumbId }) => {
   const auth = useAuth();
   const {
-    srs: {apiBasePath: basePath},
+    srs: { apiBasePath: basePath },
   } = useConfig();
   const history = useHistory();
   const basename = useBasename();
@@ -34,39 +32,18 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
 
   const fetchRegistries = async () => {
     const accessToken = await auth?.srs.getToken();
-    const api = new DefaultApi(
+    const api = new RegistriesApi(
       new Configuration({
         accessToken,
         basePath,
       })
     );
+
     const registry = await api.getRegistries().then((res) => {
       return res?.data && res.data?.items[0];
     });
     setRegistry(registry);
     setLoading(false);
-  };
-
-  const createServiceRegistry = async () => {
-    /**
-     * Todo: update getToken from auth?.srs.getToken() when available in ui-shared
-     */
-    const accessToken = await auth?.kas.getToken();
-    const api = new DefaultApi(
-      new Configuration({
-        accessToken,
-        basePath,
-      })
-    );
-    try {
-      setIsCreating(true);
-      await api.createRegistry({name: ""}).then(() => {
-        fetchRegistries && fetchRegistries();
-        setIsCreating(false);
-      });
-    } catch (error) {
-      setIsCreating(false);
-    }
   };
 
   const onConnectToRegistry = () => {
@@ -85,9 +62,9 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
     /**
      * Todo: update getToken from auth?.srs.getToken() when available in ui-shared
      */
-    const accessToken = await auth?.kas.getToken();
+    const accessToken = await auth?.srs.getToken();
     if (registry?.id) {
-      const api = new DefaultApi(
+      const api = new RegistriesApi(
         new Configuration({
           accessToken,
           basePath,
@@ -115,11 +92,11 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
   };
 
   if (isUnauthorizedUser) {
-    return <UnauthrizedUser getAccessToServiceRegistry={getAccessToServiceRegistry}/>;
+    return <UnauthrizedUser getAccessToServiceRegistry={getAccessToServiceRegistry} />;
   }
 
   if (loading) {
-    return <MASLoading/>
+    return <MASLoading />;
   } else if (registry) {
     return (
       <ServiceRegistryDrawer
@@ -127,6 +104,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
         isLoading={serviceAccountDetails === undefined}
         notRequiredDrawerContentBackground={notRequiredDrawerContentBackground}
         onClose={onCloseDrawer}
+        registry={registry}
       >
         <ServiceRegistryHeader
           onConnectToRegistry={onConnectToRegistry}
@@ -137,6 +115,6 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({
       </ServiceRegistryDrawer>
     );
   } else {
-    return <WelcomeEmptyState createServiceRegistry={createServiceRegistry} isLoading={isCreating}/>;
+    return <WelcomeEmptyState fetchServiceRegistries={fetchRegistries}/>;
   }
 };

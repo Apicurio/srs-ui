@@ -1,15 +1,21 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageSection, ButtonVariant } from '@patternfly/react-core';
-import { MASEmptyState, MASEmptyStateVariant } from '@app/components';
+import { MASEmptyState, MASEmptyStateVariant, useRootModalContext, MODAL_TYPES } from '@app/components';
 
-export type WelcomeEmptyStateProps = {
-  createServiceRegistry: () => void;
-  isLoading: boolean;
+type WelcomeEmptyStateProps = {
+  fetchServiceRegistries: () => void;
 };
 
-const WelcomeEmptyState: React.FC<WelcomeEmptyStateProps> = ({ createServiceRegistry, isLoading }) => {
+const WelcomeEmptyState: React.FC<WelcomeEmptyStateProps> = ({ fetchServiceRegistries }) => {
   const { t } = useTranslation();
+  const { showModal } = useRootModalContext();
+
+  const onCreateserviceRegistry = () => {
+    showModal(MODAL_TYPES.CREATE_SERVICE_REGISTRY, {
+      fetchServiceRegistries,
+    });
+  };
 
   return (
     <PageSection padding={{ default: 'noPadding' }} isFilled>
@@ -22,9 +28,7 @@ const WelcomeEmptyState: React.FC<WelcomeEmptyStateProps> = ({ createServiceRegi
         buttonProps={{
           title: t('srs.create_service_registry'),
           variant: ButtonVariant.primary,
-          onClick: createServiceRegistry,
-          isLoading: isLoading,
-          spinnerAriaValueText: isLoading ? t('common.loading') : undefined,
+          onClick: onCreateserviceRegistry,
         }}
       />
     </PageSection>
