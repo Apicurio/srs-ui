@@ -60,7 +60,9 @@
     "to_last_page": "Go to last page",
     "to_next_page": "Go to next page",
     "options_toggle": "Items per page",
-    "curr_page": "Current page"
+    "curr_page": "Current page",
+    "no_permission_to_connect_registry": "Ask the Service Registry instance owner for connection information.",
+    "no_permission_to_delete_service_registry": "Ask the Service Registry instance owner to delete this Service Registry instance."
   },
   "srs": {
     "service_registry": "Service Registry",
@@ -82,6 +84,7 @@
     "global_rules": "Global Rules",
     "create_service_registry_instance": "Create a Service Registry instance",
     "service_registry_creation_success_message": "Service Registry instance created",
+    "service_registry_deletion_success_message": "{{name}} Service Registry instance deleted",
     "service_registry_name_length_is_greater_than_expected": "Service account name cannot exceed {{maxLength}} characters.",
     "service_registry_desc_length_is_greater_than_expected": "Service account description cannot exceed {{maxLength}} characters.",
     "service_registry_description_length_is_greater_than_expected": "Service account description cannot exceed {{maxLength}} characters.",

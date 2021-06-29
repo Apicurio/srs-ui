@@ -8,6 +8,7 @@ import {
   FormGroup,
   Title,
   TitleSizes,
+  Skeleton,
 } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 
@@ -36,19 +37,23 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl 
         <Text component={TextVariants.small}>{t('srs.connection_title_info')}</Text>
       </TextContent>
       <Form>
-        {registriesInfo?.map(({ title, code }, index) => (
-          <FormGroup label={title} fieldId={`copy-clipboard-${index}`} key={`${code}'-'${index}`}>
-            <ClipboardCopy
-              id={`copy-clipboard-${index}`}
-              hoverTip={t('common.copy_clipboard')}
-              clickTip={t('common.copy_clipboard_successfully')}
-              textAriaLabel={title}
-              isReadOnly
-            >
-              {code}
-            </ClipboardCopy>
-          </FormGroup>
-        ))}
+        {registriesInfo?.map(({ title, code }, index) =>
+          registryApisUrl ? (
+            <FormGroup label={title} fieldId={`copy-clipboard-${index}`} key={`${code}'-'${index}`}>
+              <ClipboardCopy
+                id={`copy-clipboard-${index}`}
+                hoverTip={t('common.copy_clipboard')}
+                clickTip={t('common.copy_clipboard_successfully')}
+                textAriaLabel={title}
+                isReadOnly
+              >
+                {code}
+              </ClipboardCopy>
+            </FormGroup>
+          ) : (
+            <Skeleton fontSize="2xl" />
+          )
+        )}
       </Form>
     </div>
   );

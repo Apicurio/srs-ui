@@ -1,31 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { Configuration, RegistryListRest, RegistryRest, ListRest, RegistriesApi } from '@rhoas/registry-management-sdk';
-import { useAuth, useBasename, useConfig } from '@bf2/ui-shared';
+import { useAuth, useConfig } from '@bf2/ui-shared';
 import {
   ServiceRegistryDrawer,
   UnauthrizedUser,
   ServiceRegistryEmptyState,
   ServiceRegistryTableView,
 } from './components';
-import { ServiceRegistryHeader, ServiceRegistryHeaderProps } from '@app/ServiceRegistry/components';
+import { ServiceRegistryHeader } from '@app/ServiceRegistry/components';
 import { MASLoading, useRootModalContext, MODAL_TYPES } from '@app/components';
+import { useTimeout } from '@app/hooks';
+import { MAX_POLL_INTERVAL } from '@app/constants';
 
-export type ServiceRegistryProps = ServiceRegistryHeaderProps & {
-  render: (registry: RegistryRest) => JSX.Element;
-};
-
-export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadcrumbId }) => {
+export const ServiceRegistry: React.FC = () => {
   const { t } = useTranslation();
   const auth = useAuth();
   const {
     srs: { apiBasePath: basePath },
   } = useConfig();
-  const history = useHistory();
-  const basename = useBasename();
   const { showModal } = useRootModalContext();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -33,9 +28,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
   const perPage = parseInt(searchParams.get('perPage') || '', 10) || 10;
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
-  const [isCreating, setIsCreating] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [serviceRegistryDetails, setServiceRegistryDetails] = useState<RegistryRest>(undefined);
+  const [selectedRegistryInstance, setSelectedRegistryInstance] = useState<RegistryRest>(undefined);
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
   const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
   const [registry, setRegistry] = useState<ListRest | undefined>(undefined);
@@ -51,60 +44,49 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
     auth?.getUsername().then((username) => setLoggedInUser(username));
   }, [auth]);
 
+  useEffect(() => {
+    updateServiceRegistryInstance();
+  }, [registryItems]);
+
+  const updateServiceRegistryInstance = () => {
+    if (registryItems && registryItems?.length > 0) {
+      const selectedRegistryItem = registryItems?.filter(
+        (registry) => registry?.id === selectedRegistryInstance?.id
+      )[0];
+      const newState: any = { ...selectedRegistryInstance, instanceDetail: selectedRegistryItem };
+      selectedRegistryItem && setSelectedRegistryInstance(newState);
+    }
+  };
+
   const fetchRegistries = async () => {
     const accessToken = await auth?.srs.getToken();
-    setLoading(true);
     const api = new RegistriesApi(
       new Configuration({
         accessToken,
         basePath,
       })
     );
-
     await api
       .getRegistries()
       .then((res) => {
-        setLoading(false);
         const registry = res?.data;
         setRegistry(registry);
         setRegistryItems(registry?.items);
       })
       .catch((error) => {
-        setLoading(false);
         //todo: handle error
       });
   };
 
+  useTimeout(() => fetchRegistries(), MAX_POLL_INTERVAL);
+
   const onConnectToRegistry = (instance: RegistryRest) => {
     setIsExpandedDrawer(true);
-    setServiceRegistryDetails(instance);
+    setSelectedRegistryInstance(instance);
   };
 
   const onCloseDrawer = () => {
     setIsExpandedDrawer(false);
-  };
-
-  const deleteRegistry = async (registry: RegistryRest) => {
-    const accessToken = await auth?.srs.getToken();
-    if (registry?.id) {
-      setLoading(true);
-      const api = new RegistriesApi(
-        new Configuration({
-          accessToken,
-          basePath,
-        })
-      );
-      try {
-        await api.deleteRegistry(registry?.id).then(() => {
-          setLoading(false);
-          history.push(basename.getBasename());
-          fetchRegistries && fetchRegistries();
-        });
-      } catch (error) {
-        setLoading(false);
-        // TODO Swallowing the error
-      }
-    }
   };
 
   const onDeleteRegistry = (registry: RegistryRest) => {
@@ -112,11 +94,10 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
     showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
       serviceRegistryStatus: status,
       selectedItemData: registry,
+      fetchRegistries,
       title: `${t('common.delete_service_registry_title')}?`,
       confirmButtonProps: {
-        onClick: deleteRegistry,
         label: t('common.delete'),
-        isLoading: loading,
       },
       textProps: {
         description: t('common.delete_service_registry_description', { name }),
@@ -158,16 +139,15 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
       return (
         <ServiceRegistryDrawer
           isExpanded={isExpandedDrawer}
-          isLoading={serviceRegistryDetails === undefined}
+          isLoading={selectedRegistryInstance === undefined}
           notRequiredDrawerContentBackground={notRequiredDrawerContentBackground}
           onClose={onCloseDrawer}
-          registry={serviceRegistryDetails}
+          registry={selectedRegistryInstance}
         >
           <ServiceRegistryHeader
             onConnectToRegistry={onConnectToRegistry}
             onDeleteRegistry={onDeleteRegistry}
-            breadcrumbId={breadcrumbId}
-            serviceRegistryDetails={serviceRegistryDetails}
+            serviceRegistryDetails={selectedRegistryInstance}
           />
           <ServiceRegistryTableView
             page={page}
@@ -184,8 +164,8 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
             handleCreateModal={createServiceRegistry}
             refresh={fetchRegistries}
             registryDataLoaded={false}
+            setServiceRegistryDetails={setSelectedRegistryInstance}
           />
-          {/* {render(registry)} */}
         </ServiceRegistryDrawer>
       );
     }

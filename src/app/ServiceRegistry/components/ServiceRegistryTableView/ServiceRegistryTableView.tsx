@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { IAction, IExtraColumnData, IRowData, ISeparator, ISortBy, SortByDirection } from '@patternfly/react-table';
 import { PageSection, PageSectionVariants, Card } from '@patternfly/react-core';
 import { PaginationVariant } from '@patternfly/react-core';
 import { RegistryListRest, RegistryRest } from '@rhoas/registry-management-sdk';
-import { AlertVariant, useAlert, useAuth, useConfig, useBasename } from '@bf2/ui-shared';
-import { isServiceApiError, ServiceRegistryStatus, getFormattedDate } from '@app/utils';
+import { useBasename } from '@bf2/ui-shared';
+import { ServiceRegistryStatus, getFormattedDate } from '@app/utils';
 import { MASEmptyState, MASEmptyStateVariant, MASPagination, MASTable } from '@app/components';
 import { StatusColumn } from './StatusColumn';
 import { ServiceRegistryToolbar, ServiceRegistryToolbarProps } from './ServiceRegistryToolbar';
@@ -23,6 +23,7 @@ export type ServiceRegistryTableViewProps = ServiceRegistryToolbarProps & {
   isDrawerOpen?: boolean;
   loggedInUser: string | undefined;
   currentUserkafkas: RegistryListRest | undefined;
+  setServiceRegistryDetails: (instance: RegistryRest) => void;
 };
 
 const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
@@ -41,13 +42,11 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   page,
   perPage,
   handleCreateModal,
+  setServiceRegistryDetails,
 }) => {
   const { getBasename } = useBasename();
   const basename = getBasename();
   const { t } = useTranslation();
-  const history = useHistory();
-  const { addAlert } = useAlert();
-
   const [activeRow, setActiveRow] = useState<string>();
 
   const tableColumns = [
@@ -58,6 +57,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   ];
 
   const renderNameLink = ({ name, row }) => {
+    setServiceRegistryDetails(row);
     return (
       <Link to={`${basename}/t/${row?.name}`} data-testid="tableRegistries-linkKafka">
         {name}
@@ -83,7 +83,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
             //getFormattedDate(created_at, t('ago')),
           },
         ],
-        originalData: row,
+        originalData: { ...row, rowId: row?.id },
       });
     });
     return tableRow;
@@ -107,8 +107,8 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     }
   };
 
-  const actionResolver = (rowData: IRowData) => {  
-    const originalData: RegistryRest = rowData.originalData;   
+  const actionResolver = (rowData: IRowData) => {
+    const originalData: RegistryRest = rowData.originalData;
     /**
      * Todo; remove hard code true when backend provide owner field
      */
@@ -134,7 +134,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
         ...additionalProps,
         tooltipProps: {
           position: 'left',
-          content: t('no_permission_to_connect_kafka'),
+          content: t('common.no_permission_to_connect_registry'),
         },
       },
       {
@@ -146,7 +146,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
         ...additionalProps,
         tooltipProps: {
           position: 'left',
-          content: t('no_permission_to_delete_kafka'),
+          content: t('common.no_permission_to_delete_service_registry'),
         },
       },
     ];
@@ -212,7 +212,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     // Open modal on row click except kebab button click
     if (clickedEventType !== 'button' && tagName?.toLowerCase() !== 'a') {
       onViewConnection(originalData);
-      setActiveRow(originalData?.name);
+      setActiveRow(originalData?.id);
     }
   };
 

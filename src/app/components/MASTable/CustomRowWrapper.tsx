@@ -31,7 +31,7 @@ export const CustomRowWrapper = (rowWrapperProps) => {
       className={css(
         className,
         'pf-c-table-row__item',
-        activeRow && activeRow === originalData?.name && 'pf-m-selected'
+        activeRow && activeRow === originalData?.rowId && 'pf-m-selected'
       )}
       hidden={isExpanded !== undefined && !isExpanded}
       onClick={(event: MouseEvent) => onRowClick && onRowClick(event, rowIndex, row)}

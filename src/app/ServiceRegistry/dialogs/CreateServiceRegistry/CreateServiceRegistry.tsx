@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Form, FormAlert, FormGroup, TextInput, TextArea, AlertVariant } from '@patternfly/react-core';
+import { Alert, Form, FormAlert, FormGroup, TextInput, TextArea } from '@patternfly/react-core';
 import { Configuration, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { NewServiceregistry, FormDataValidationState } from '@app/models';
 import { MASCreateModal, useRootModalContext } from '@app/components';
 import { useTranslation } from 'react-i18next';
 import { isServiceApiError, MAX_SERVICE_REGISTRY_NAME_LENGTH, MAX_SERVICE_REGISTRY_DESC_LENGTH } from '@app/utils';
-import { useAlert, useAuth, useConfig } from '@bf2/ui-shared';
+import { useAlert, AlertVariant, useAuth, useConfig } from '@bf2/ui-shared';
 
 const CreateServiceRegistry: React.FC = () => {
   const newServiceRegistry: NewServiceregistry = new NewServiceregistry();

@@ -94,6 +94,7 @@
     "@patternfly/react-icons": "4.11.0",
     "@patternfly/react-styles": "4.11.0",
     "@patternfly/react-table": "4.29.0",
+    "@redhat-cloud-services/frontend-components-config": "^4.2.4",
     "@rhoas/registry-management-sdk": "0.8.1",
     "@testing-library/dom": "8.0.0",
     "@testing-library/jest-dom": "5.14.1",
