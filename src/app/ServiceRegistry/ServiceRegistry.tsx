@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Configuration, RegistryListRest, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
+import { PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { Configuration, RegistryListRest, RegistryRest, ListRest, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { useAuth, useBasename, useConfig } from '@bf2/ui-shared';
-import { ServiceRegistryDrawer, UnauthrizedUser, WelcomeEmptyState } from './components';
+import {
+  ServiceRegistryDrawer,
+  UnauthrizedUser,
+  ServiceRegistryEmptyState,
+  ServiceRegistryTableView,
+} from './components';
 import { ServiceRegistryHeader, ServiceRegistryHeaderProps } from '@app/ServiceRegistry/components';
 import { MASLoading, useRootModalContext, MODAL_TYPES } from '@app/components';
 
@@ -20,21 +27,33 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
   const history = useHistory();
   const basename = useBasename();
   const { showModal } = useRootModalContext();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const page = parseInt(searchParams.get('page') || '', 10) || 1;
+  const perPage = parseInt(searchParams.get('perPage') || '', 10) || 10;
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
   const [isCreating, setIsCreating] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [serviceAccountDetails, setServiceAccountDetails] = useState<any>(undefined);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [serviceRegistryDetails, setServiceRegistryDetails] = useState<RegistryRest>(undefined);
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
   const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
-  const [registry, setRegistry] = useState<RegistryListRest | undefined>(undefined);
+  const [registry, setRegistry] = useState<ListRest | undefined>(undefined);
+  const [registryItems, setRegistryItems] = useState<RegistryListRest | undefined>(undefined);
+  const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined);
+  const [orderBy, setOrderBy] = useState<string>('name asc');
 
   useEffect(() => {
     fetchRegistries();
   }, []);
 
+  useEffect(() => {
+    auth?.getUsername().then((username) => setLoggedInUser(username));
+  }, [auth]);
+
   const fetchRegistries = async () => {
     const accessToken = await auth?.srs.getToken();
+    setLoading(true);
     const api = new RegistriesApi(
       new Configuration({
         accessToken,
@@ -42,29 +61,30 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
       })
     );
 
-    const registry = await api.getRegistries().then((res) => {
-      return res?.data && res.data?.items[0];
-    });
-    setRegistry(registry);
-    setLoading(false);
+    await api
+      .getRegistries()
+      .then((res) => {
+        setLoading(false);
+        const registry = res?.data;
+        setRegistry(registry);
+        setRegistryItems(registry?.items);
+      })
+      .catch((error) => {
+        setLoading(false);
+        //todo: handle error
+      });
   };
 
-  const onConnectToRegistry = () => {
+  const onConnectToRegistry = (instance: RegistryRest) => {
     setIsExpandedDrawer(true);
-    /**
-     * Todo: Dummy test-data will remove after integrate API
-     */
-    setServiceAccountDetails(registry);
+    setServiceRegistryDetails(instance);
   };
 
   const onCloseDrawer = () => {
     setIsExpandedDrawer(false);
   };
 
-  const deleteRegistry = async () => {
-    /**
-     * Todo: update getToken from auth?.srs.getToken() when available in ui-shared
-     */
+  const deleteRegistry = async (registry: RegistryRest) => {
     const accessToken = await auth?.srs.getToken();
     if (registry?.id) {
       setLoading(true);
@@ -87,7 +107,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
     }
   };
 
-  const onDeleteRegistry = () => {
+  const onDeleteRegistry = (registry: RegistryRest) => {
     const { name, status } = registry;
     showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
       serviceRegistryStatus: status,
@@ -96,7 +116,7 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
       confirmButtonProps: {
         onClick: deleteRegistry,
         label: t('common.delete'),
-        isLoading:loading
+        isLoading: loading,
       },
       textProps: {
         description: t('common.delete_service_registry_description', { name }),
@@ -110,30 +130,64 @@ export const ServiceRegistry: React.FC<ServiceRegistryProps> = ({ render, breadc
      */
   };
 
+  const createServiceRegistry = () => {
+    showModal(MODAL_TYPES.CREATE_SERVICE_REGISTRY, {
+      fetchServiceRegistries: fetchRegistries,
+    });
+  };
+
   if (isUnauthorizedUser) {
     return <UnauthrizedUser getAccessToServiceRegistry={getAccessToServiceRegistry} />;
   }
 
-  if (loading) {
-    return <MASLoading />;
-  } else if (registry) {
+  if (registryItems === undefined) {
     return (
-      <ServiceRegistryDrawer
-        isExpanded={isExpandedDrawer}
-        isLoading={serviceAccountDetails === undefined}
-        notRequiredDrawerContentBackground={notRequiredDrawerContentBackground}
-        onClose={onCloseDrawer}
-        registry={registry}
-      >
-        <ServiceRegistryHeader
-          onConnectToRegistry={onConnectToRegistry}
-          onDeleteRegistry={onDeleteRegistry}
-          breadcrumbId={breadcrumbId}
-        />
-        {render(registry)}
-      </ServiceRegistryDrawer>
+      <PageSection variant={PageSectionVariants.light} padding={{ default: 'noPadding' }}>
+        <MASLoading />
+      </PageSection>
     );
   } else {
-    return <WelcomeEmptyState fetchServiceRegistries={fetchRegistries} />;
+    if (!registryItems?.length) {
+      return (
+        <>
+          <ServiceRegistryHeader />
+          <ServiceRegistryEmptyState onCreateserviceRegistry={createServiceRegistry} />
+        </>
+      );
+    } else {
+      return (
+        <ServiceRegistryDrawer
+          isExpanded={isExpandedDrawer}
+          isLoading={serviceRegistryDetails === undefined}
+          notRequiredDrawerContentBackground={notRequiredDrawerContentBackground}
+          onClose={onCloseDrawer}
+          registry={serviceRegistryDetails}
+        >
+          <ServiceRegistryHeader
+            onConnectToRegistry={onConnectToRegistry}
+            onDeleteRegistry={onDeleteRegistry}
+            breadcrumbId={breadcrumbId}
+            serviceRegistryDetails={serviceRegistryDetails}
+          />
+          <ServiceRegistryTableView
+            page={page}
+            perPage={perPage}
+            serviceRegistryItems={registryItems}
+            total={registry?.total}
+            onViewConnection={onConnectToRegistry}
+            onDelete={onDeleteRegistry}
+            expectedTotal={0}
+            orderBy={orderBy}
+            setOrderBy={setOrderBy}
+            loggedInUser={loggedInUser}
+            currentUserkafkas={registryItems}
+            handleCreateModal={createServiceRegistry}
+            refresh={fetchRegistries}
+            registryDataLoaded={false}
+          />
+          {/* {render(registry)} */}
+        </ServiceRegistryDrawer>
+      );
+    }
   }
 };

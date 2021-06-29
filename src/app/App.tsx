@@ -10,10 +10,10 @@ import '@patternfly/patternfly/utilities/Display/display.css';
 import '@patternfly/patternfly/utilities/Flex/flex.css';
 import { AppLayout } from '@app/AppLayout/AppLayout';
 import { AppRoutes } from '@app/Routes';
-import { MASErrorBoundary, MASLoading } from '@app/components';
+import { MASErrorBoundary, MASLoading, RootModal, AlertProvider } from '@app/components';
 import srsi18n from '@i18n/i18n';
 import { KeycloakAuthProvider, KeycloakContext, getKeycloakInstance } from './auth';
-import { Config, ConfigContext } from '@bf2/ui-shared';
+import { Config, ConfigContext, BasenameContext } from '@bf2/ui-shared';
 import '@app/App.css';
 
 declare const __BASE_PATH__: string;
@@ -43,21 +43,27 @@ const App: React.FunctionComponent = () => {
         } as Config
       }
     >
-      <I18nextProvider i18n={srsi18n}>
-        <KeycloakContext.Provider value={{ keycloak, profile: keycloak?.profile }}>
-          <KeycloakAuthProvider>
-            <Router>
-              <React.Suspense fallback={<MASLoading />}>
-                <MASErrorBoundary>
-                  <AppLayout>
-                    <AppRoutes />
-                  </AppLayout>
-                </MASErrorBoundary>
-              </React.Suspense>
-            </Router>
-          </KeycloakAuthProvider>
-        </KeycloakContext.Provider>
-      </I18nextProvider>
+      <BasenameContext.Provider value={{ getBasename: () => '' }}>
+        <I18nextProvider i18n={srsi18n}>
+          <AlertProvider>
+            <KeycloakContext.Provider value={{ keycloak, profile: keycloak?.profile }}>
+              <KeycloakAuthProvider>
+                <Router>
+                  <React.Suspense fallback={<MASLoading />}>
+                    <MASErrorBoundary>
+                      <RootModal>
+                        <AppLayout>
+                          <AppRoutes />
+                        </AppLayout>
+                      </RootModal>
+                    </MASErrorBoundary>
+                  </React.Suspense>
+                </Router>
+              </KeycloakAuthProvider>
+            </KeycloakContext.Provider>
+          </AlertProvider>
+        </I18nextProvider>
+      </BasenameContext.Provider>
     </ConfigContext.Provider>
   );
 };

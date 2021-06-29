@@ -22,7 +22,7 @@ const ServiceRegistryDrawer: React.FC<ServiceRegistryDrawerProps> = ({
   registry,
 }: ServiceRegistryDrawerProps) => {
   const { t } = useTranslation();
-  const { registryUrl } = registry;
+  const { registryUrl, name } = registry || {};
 
   const panelBodyContent = <ConnectionInfo registryApisUrl={registryUrl} />;
 

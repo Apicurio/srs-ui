@@ -1,4 +1,5 @@
 export * from './ServiceRegistryHeader';
 export * from './ServiceRegistryDrawer';
 export * from './UnauthrizedUser';
-export * from './WelcomeEmptyState';
+export * from './ServiceRegistryEmptyState';
+export * from './ServiceRegistryTableView';

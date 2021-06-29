@@ -14,7 +14,7 @@ const CreateServiceRegistry: React.FC = () => {
   const { t } = useTranslation();
   const auth = useAuth();
   const {
-    kas: { apiBasePath: basePath },
+    srs: { apiBasePath: basePath },
   } = useConfig();
   const { addAlert } = useAlert();
 
@@ -147,7 +147,6 @@ const CreateServiceRegistry: React.FC = () => {
       return;
     }
     if (accessToken) {
-      const accessToken = await auth?.kas.getToken();
       const api = new RegistriesApi(
         new Configuration({
           accessToken,

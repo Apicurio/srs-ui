@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MASDeleteModal, useRootModalContext } from '@app/components';
-import { ServiceRegistrytatus } from '@app/utils';
+import { ServiceRegistryStatus } from '@app/utils';
 
 export const DeleteServiceRegistry: React.FC = () => {
   const { t } = useTranslation();
@@ -18,7 +18,7 @@ export const DeleteServiceRegistry: React.FC = () => {
   };
 
   const isConfirmButtonDisabled = () => {
-    if (serviceRegistryStatus === ServiceRegistrytatus.Available) {
+    if (serviceRegistryStatus?.toLowerCase() === ServiceRegistryStatus.Available) {
       if (instanceNameInput?.toLowerCase() === selectedInstanceName?.toLowerCase()) {
         return false;
       }
@@ -53,7 +53,7 @@ export const DeleteServiceRegistry: React.FC = () => {
       textProps={textProps}
       selectedItemData={selectedItemData}
       textInputProps={{
-        showTextInput: serviceRegistryStatus === ServiceRegistrytatus.Available,
+        showTextInput: serviceRegistryStatus?.toLowerCase() === ServiceRegistryStatus.Available,
         label: t('common.service_registry_name_label', { name: selectedInstanceName }),
         value: instanceNameInput,
         onChange: handleInstanceName,
