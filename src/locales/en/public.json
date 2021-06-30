@@ -41,7 +41,7 @@
     "token_endpoint_url": "Token endpoint URL",
     "sasl_plain": "SASL/PLAIN",
     "go_to_kafka_instances": "Go to Kafka instance",
-    "connection": "Connection Info",
+    "connection": "Connection",
     "delete": "Delete",
     "delete_service_registry_title": "Delete Service Registry instance",
     "delete_service_registry_description": "<b>{{name}}</b> will be deleted.",
@@ -65,9 +65,10 @@
     "no_permission_to_delete_service_registry": "Ask the Service Registry instance owner to delete this Service Registry instance."
   },
   "srs": {
-    "service_registry": "Service registry",
-    "connect_to_registry": "Connect to Registry",
-    "delete_registry": "Delete Registry",
+    "service_registry": "Service Registry",
+    "service_registry_breadcrumb": "Service Registry",
+    "view_connection_information": "View connection information",
+    "delete_registry": "Delete Service Registry instance",
     "empty_state_registry_title": "No Service Registry instances yet",
     "empty_state_registry_description": "To get started, create a Service Registry instance.",
     "create_service_registry": "Create Service Registry instance",

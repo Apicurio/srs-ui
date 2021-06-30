@@ -129,7 +129,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     }
     const resolver: (IAction | ISeparator)[] = [
       {
-        title: t('srs.connect_to_registry'),
+        title: t('srs.view_connection_information'),
         id: 'connect-instance',
         ['data-testid']: 'tableRegistry-actionConnection',
         onClick: (event: any) =>

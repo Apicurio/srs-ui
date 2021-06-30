@@ -6,11 +6,11 @@ import srsi18n from '@i18n/i18n';
 
 type ApicurioRegistryFederatedProps = ApicurioRegistryProps;
 
-const ApicurioRegistryFederated: React.FC<ApicurioRegistryFederatedProps> = ({ render, breadcrumbId, registry }) => {
+const ApicurioRegistryFederated: React.FC<ApicurioRegistryFederatedProps> = ({ render, breadcrumbId }) => {
   return (
     <I18nextProvider i18n={srsi18n}>
       <RootModal>
-        <ApicurioRegistry render={render} breadcrumbId={breadcrumbId} registry={registry} />
+        <ApicurioRegistry render={render} breadcrumbId={breadcrumbId} />
       </RootModal>
     </I18nextProvider>
   );
