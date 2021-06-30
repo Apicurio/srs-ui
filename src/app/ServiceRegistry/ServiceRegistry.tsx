@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
-import { Configuration, RegistryListRest, RegistryRest, ListRest, RegistriesApi } from '@rhoas/registry-management-sdk';
+import { Configuration, RegistryListRest, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { useAuth, useConfig } from '@bf2/ui-shared';
 import {
   ServiceRegistryDrawer,
@@ -28,7 +28,7 @@ export const ServiceRegistry: React.FC = () => {
   const perPage = parseInt(searchParams.get('perPage') || '', 10) || 10;
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
-  const [selectedRegistryInstance, setSelectedRegistryInstance] = useState<RegistryRest>(undefined);
+  const [selectedRegistryInstance, setSelectedRegistryInstance] = useState<RegistryRest | undefined>(undefined);
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
   const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
   const [registries, setRegistries] = useState<RegistryListRest | undefined>(undefined);
