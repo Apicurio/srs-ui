@@ -84,15 +84,18 @@ export const DeleteServiceRegistry: React.FC = () => {
       );
 
       await api
-        .deleteRegistry('')
+        .deleteRegistry(id)
         .then(() => {
           setLoading(false);
           addAlert({
             title: t('srs.service_registry_deletion_success_message', { name }),
             variant: AlertVariant.success,
           });
-          fetchRegistries && fetchRegistries();
-          shouldRedirect && history.push(basename.getBasename());
+          if (shouldRedirect) {
+            history.push(basename.getBasename());
+          } else {
+            fetchRegistries && fetchRegistries();
+          }
           handleToggle();
         })
         .catch((error) => {

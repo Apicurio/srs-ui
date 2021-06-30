@@ -18,10 +18,11 @@ const CustomRowWrapperContext = createContext<CustomRowWrapperContextProps>({
 export const CustomRowWrapperProvider = CustomRowWrapperContext.Provider;
 
 export const CustomRowWrapper = (rowWrapperProps) => {
-  const { activeRow, onRowClick, rowDataTestId } = useContext(CustomRowWrapperContext);
+  const { activeRow, onRowClick, rowDataTestId, loggedInUser } = useContext(CustomRowWrapperContext);
   const { trRef, className, rowProps, row, ...props } = rowWrapperProps || {};
   const { rowIndex } = rowProps;
   const { isExpanded, originalData } = row;
+  const isLoggedInUserOwner = loggedInUser === originalData?.owner;
 
   return (
     <tr

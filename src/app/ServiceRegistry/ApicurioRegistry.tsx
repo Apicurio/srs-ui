@@ -1,21 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { RegistryRest } from '@rhoas/registry-management-sdk';
+import { PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { Configuration, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
+import { useAuth, useConfig } from '@bf2/ui-shared';
 import { ServiceRegistryDrawer, ServiceRegistryHeader } from './components';
-import { useRootModalContext, MODAL_TYPES } from '@app/components';
+import { useRootModalContext, MODAL_TYPES, MASLoading } from '@app/components';
 
 export type ApicurioRegistryProps = {
-  render: (registry: RegistryRest) => JSX.Element;
-  registry: RegistryRest;
+  render: (registry: RegistryRest | undefined) => JSX.Element;
   breadcrumbId: string;
 };
 
-const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({ render, registry, breadcrumbId }) => {
+const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({ render, breadcrumbId }) => {
   const { t } = useTranslation();
+  const auth = useAuth();
+  const {
+    srs: { apiBasePath: basePath },
+  } = useConfig();
+  const { tenantId } = useParams<{ tenantId: string }>();
   const { showModal } = useRootModalContext();
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
+  const [registry, setRegistry] = useState<RegistryRest | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const onConnectToRegistry = (instance: RegistryRest) => {
+  const fetchRegistry = async () => {
+    const accessToken = await auth?.srs.getToken();
+    setLoading(true);
+    const api = new RegistriesApi(
+      new Configuration({
+        accessToken,
+        basePath,
+      })
+    );
+    if (accessToken && tenantId) {
+      await api
+        .getRegistry(tenantId)
+        .then((res) => {
+          setRegistry(res?.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+          //todo: handle error
+        });
+    }
+  };
+
+  useEffect(() => {
+    fetchRegistry();
+  }, []);
+
+  const onConnectToRegistry = () => {
     setIsExpandedDrawer(true);
   };
 
@@ -23,8 +59,8 @@ const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({ render, registry, b
     setIsExpandedDrawer(false);
   };
 
-  const onDeleteRegistry = (registry: RegistryRest) => {
-    const { name, status } = registry;
+  const onDeleteRegistry = (registry: RegistryRest | undefined) => {
+    const { name, status } = registry || {};
     showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
       shouldRedirect: true,
       serviceRegistryStatus: status,
@@ -38,6 +74,14 @@ const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({ render, registry, b
       },
     });
   };
+
+  if (loading) {
+    return (
+      <PageSection variant={PageSectionVariants.light} padding={{ default: 'noPadding' }}>
+        <MASLoading />
+      </PageSection>
+    );
+  }
 
   return (
     <ServiceRegistryDrawer

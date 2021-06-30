@@ -31,8 +31,8 @@ export const ServiceRegistry: React.FC = () => {
   const [selectedRegistryInstance, setSelectedRegistryInstance] = useState<RegistryRest>(undefined);
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
   const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
-  const [registry, setRegistry] = useState<ListRest | undefined>(undefined);
-  const [registryItems, setRegistryItems] = useState<RegistryListRest | undefined>(undefined);
+  const [registries, setRegistries] = useState<RegistryListRest | undefined>(undefined);
+  const [registryItems, setRegistryItems] = useState<RegistryRest[] | undefined>(undefined);
   const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined);
   const [orderBy, setOrderBy] = useState<string>('name asc');
 
@@ -53,7 +53,7 @@ export const ServiceRegistry: React.FC = () => {
       const selectedRegistryItem = registryItems?.filter(
         (registry) => registry?.id === selectedRegistryInstance?.id
       )[0];
-      const newState: any = { ...selectedRegistryInstance, instanceDetail: selectedRegistryItem };
+      const newState: any = { ...selectedRegistryInstance, ...selectedRegistryItem };
       selectedRegistryItem && setSelectedRegistryInstance(newState);
     }
   };
@@ -70,7 +70,7 @@ export const ServiceRegistry: React.FC = () => {
       .getRegistries()
       .then((res) => {
         const registry = res?.data;
-        setRegistry(registry);
+        setRegistries(registry);
         setRegistryItems(registry?.items);
       })
       .catch((error) => {
@@ -80,7 +80,7 @@ export const ServiceRegistry: React.FC = () => {
 
   useTimeout(() => fetchRegistries(), MAX_POLL_INTERVAL);
 
-  const onConnectToRegistry = (instance: RegistryRest) => {
+  const onConnectToRegistry = (instance: RegistryRest | undefined) => {
     setIsExpandedDrawer(true);
     setSelectedRegistryInstance(instance);
   };
@@ -89,8 +89,8 @@ export const ServiceRegistry: React.FC = () => {
     setIsExpandedDrawer(false);
   };
 
-  const onDeleteRegistry = (registry: RegistryRest) => {
-    const { name, status } = registry;
+  const onDeleteRegistry = (registry: RegistryRest | undefined) => {
+    const { name, status } = registry || {};
     showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
       serviceRegistryStatus: status,
       selectedItemData: registry,
@@ -153,7 +153,7 @@ export const ServiceRegistry: React.FC = () => {
             page={page}
             perPage={perPage}
             serviceRegistryItems={registryItems}
-            total={registry?.total}
+            total={registries?.total}
             onViewConnection={onConnectToRegistry}
             onDelete={onDeleteRegistry}
             expectedTotal={0}
@@ -164,7 +164,7 @@ export const ServiceRegistry: React.FC = () => {
             handleCreateModal={createServiceRegistry}
             refresh={fetchRegistries}
             registryDataLoaded={false}
-            setServiceRegistryDetails={setSelectedRegistryInstance}
+            isDrawerOpen={isExpandedDrawer}
           />
         </ServiceRegistryDrawer>
       );

@@ -82,6 +82,7 @@
     "connection_content_3": "CNCF schema registry API",
     "artifacts_details": "Artifacts Details",
     "global_rules": "Global Rules",
+    "artifacts":"Artifacts",
     "create_service_registry_instance": "Create a Service Registry instance",
     "service_registry_creation_success_message": "Service Registry instance created",
     "service_registry_deletion_success_message": "{{name}} Service Registry instance deleted",

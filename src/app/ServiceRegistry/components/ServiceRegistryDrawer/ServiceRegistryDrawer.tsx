@@ -9,7 +9,7 @@ export type ServiceRegistryDrawerProps = Omit<
   'drawerHeaderProps' | 'panelBodyContent' | '[data-ouia-app-id]'
 > & {
   activeTab?: React.ReactText;
-  registry: RegistryRest;
+  registry: RegistryRest | undefined;
 };
 
 const ServiceRegistryDrawer: React.FC<ServiceRegistryDrawerProps> = ({

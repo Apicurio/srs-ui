@@ -19,8 +19,8 @@ import { RegistryRest } from '@rhoas/registry-management-sdk';
 import { useBasename } from '@bf2/ui-shared';
 
 export type ServiceRegistryHeaderProps = {
-  onConnectToRegistry?: (instance?: RegistryRest) => void;
-  onDeleteRegistry?: (instance?: RegistryRest) => void;
+  onConnectToRegistry?: (instance: RegistryRest | undefined) => void;
+  onDeleteRegistry?: (instance: RegistryRest | undefined) => void;
   breadcrumbId?: string;
   serviceRegistryDetails?: RegistryRest;
 };

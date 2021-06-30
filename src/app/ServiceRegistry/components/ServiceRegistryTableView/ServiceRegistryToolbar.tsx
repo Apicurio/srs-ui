@@ -4,7 +4,7 @@ import { Button } from '@patternfly/react-core';
 import { MASToolbar, ToolbarItemProps, MASPagination } from '@app/components';
 
 export type ServiceRegistryToolbarProps = {
-  total: number;
+  total: number | undefined;
   page: number;
   perPage: number;
   handleCreateModal: () => void;

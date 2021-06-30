@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { IAction, IExtraColumnData, IRowData, ISeparator, ISortBy, SortByDirection } from '@patternfly/react-table';
 import { PageSection, PageSectionVariants, Card } from '@patternfly/react-core';
 import { PaginationVariant } from '@patternfly/react-core';
-import { RegistryListRest, RegistryRest } from '@rhoas/registry-management-sdk';
+import { RegistryRest } from '@rhoas/registry-management-sdk';
 import { useBasename } from '@bf2/ui-shared';
 import { ServiceRegistryStatus, getFormattedDate } from '@app/utils';
 import { MASEmptyState, MASEmptyStateVariant, MASPagination, MASTable } from '@app/components';
@@ -12,7 +12,7 @@ import { StatusColumn } from './StatusColumn';
 import { ServiceRegistryToolbar, ServiceRegistryToolbarProps } from './ServiceRegistryToolbar';
 
 export type ServiceRegistryTableViewProps = ServiceRegistryToolbarProps & {
-  serviceRegistryItems: RegistryListRest;
+  serviceRegistryItems: RegistryRest[];
   onViewConnection: (instance: RegistryRest) => void;
   refresh: (arg0?: boolean) => void;
   registryDataLoaded: boolean;
@@ -22,8 +22,7 @@ export type ServiceRegistryTableViewProps = ServiceRegistryToolbarProps & {
   setOrderBy: (order: string) => void;
   isDrawerOpen?: boolean;
   loggedInUser: string | undefined;
-  currentUserkafkas: RegistryListRest | undefined;
-  setServiceRegistryDetails: (instance: RegistryRest) => void;
+  currentUserkafkas: RegistryRest[] | undefined;
 };
 
 const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
@@ -38,11 +37,10 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   isDrawerOpen,
   loggedInUser,
   currentUserkafkas,
-  total,
+  total = 0,
   page,
   perPage,
   handleCreateModal,
-  setServiceRegistryDetails,
 }) => {
   const { getBasename } = useBasename();
   const basename = getBasename();
@@ -56,10 +54,15 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     { title: t('common.time_created') },
   ];
 
+  useEffect(() => {
+    if (!isDrawerOpen) {
+      setActiveRow('');
+    }
+  }, [isDrawerOpen]);
+
   const renderNameLink = ({ name, row }) => {
-    setServiceRegistryDetails(row);
     return (
-      <Link to={`${basename}/t/${row?.name}`} data-testid="tableRegistries-linkKafka">
+      <Link to={`${basename}/t/${row?.id}`} data-testid="tableRegistries-linkKafka">
         {name}
       </Link>
     );
@@ -67,7 +70,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
 
   const preparedTableCells = () => {
     const tableRow: (IRowData | string[])[] | undefined = [];
-    serviceRegistryItems.forEach((row: IRowData) => {
+    serviceRegistryItems?.forEach((row: IRowData) => {
       const { name, created_at, status, owner } = row;
       tableRow.push({
         cells: [
@@ -96,7 +99,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   ) => {
     if (selectedOption === 'connect-instance') {
       onViewConnection(originalData);
-      setActiveRow(originalData?.name);
+      setActiveRow(originalData?.id);
     } else if (selectedOption === 'delete-instance') {
       onDelete(originalData);
     }
