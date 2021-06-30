@@ -55,7 +55,7 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
       key="connect-registry"
       onClick={() => onConnectToRegistry && onConnectToRegistry(serviceRegistryDetails)}
     >
-      {t('srs.connect_to_registry')}
+      {t('srs.view_connection_information')}
     </DropdownItem>,
     <DropdownItem key="delete-registry" onClick={() => onDeleteRegistry && onDeleteRegistry(serviceRegistryDetails)}>
       {t('srs.delete_registry')}
@@ -69,9 +69,9 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
           {showBreadcrumb ? (
             <Breadcrumb>
               <BreadcrumbItem>
-                <Link to={basename.getBasename() || '/'}> {t('srs.service_registry')}</Link>
+                <Link to={basename.getBasename() || '/'}> {t('srs.service_registry_breadcrumb')}</Link>
               </BreadcrumbItem>
-              <BreadcrumbItem isActive={true}>{activeBreadcrumbItemLabel}</BreadcrumbItem>
+              <BreadcrumbItem isActive={true}>{serviceRegistryDetails?.name}</BreadcrumbItem>
             </Breadcrumb>
           ) : (
             <TextContent>
