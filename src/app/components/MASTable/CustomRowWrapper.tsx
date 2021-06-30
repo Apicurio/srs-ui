@@ -18,10 +18,11 @@ const CustomRowWrapperContext = createContext<CustomRowWrapperContextProps>({
 export const CustomRowWrapperProvider = CustomRowWrapperContext.Provider;
 
 export const CustomRowWrapper = (rowWrapperProps) => {
-  const { activeRow, onRowClick, rowDataTestId } = useContext(CustomRowWrapperContext);
+  const { activeRow, onRowClick, rowDataTestId, loggedInUser } = useContext(CustomRowWrapperContext);
   const { trRef, className, rowProps, row, ...props } = rowWrapperProps || {};
   const { rowIndex } = rowProps;
   const { isExpanded, originalData } = row;
+  const isLoggedInUserOwner = loggedInUser === originalData?.owner;
 
   return (
     <tr
@@ -31,7 +32,7 @@ export const CustomRowWrapper = (rowWrapperProps) => {
       className={css(
         className,
         'pf-c-table-row__item',
-        activeRow && activeRow === originalData?.name && 'pf-m-selected'
+        activeRow && activeRow === originalData?.rowId && 'pf-m-selected'
       )}
       hidden={isExpanded !== undefined && !isExpanded}
       onClick={(event: MouseEvent) => onRowClick && onRowClick(event, rowIndex, row)}

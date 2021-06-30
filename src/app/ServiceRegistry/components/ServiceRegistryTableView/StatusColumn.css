@@ -1,0 +1,7 @@
+.mk--instances__table--icon--completed {
+  color: var(--pf-global--success-color--100);
+}
+
+.mk--instances__table--icon--failed {
+  color: var(--pf-global--danger-color--100);
+}

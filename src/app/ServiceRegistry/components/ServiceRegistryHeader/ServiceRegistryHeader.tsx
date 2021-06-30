@@ -15,30 +15,30 @@ import {
   PageSection,
   PageSectionVariants,
 } from '@patternfly/react-core';
-import {useBasename} from "@bf2/ui-shared";
+import { RegistryRest } from '@rhoas/registry-management-sdk';
+import { useBasename } from '@bf2/ui-shared';
 
 export type ServiceRegistryHeaderProps = {
-  onConnectToRegistry?: () => void;
-  onDeleteRegistry?: () => void;
+  onConnectToRegistry?: (instance: RegistryRest | undefined) => void;
+  onDeleteRegistry?: (instance: RegistryRest | undefined) => void;
   breadcrumbId?: string;
-  showKebab?: boolean;
+  serviceRegistryDetails?: RegistryRest;
 };
 
 export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
   onConnectToRegistry,
   onDeleteRegistry,
   breadcrumbId,
-  showKebab = true,
+  serviceRegistryDetails,
 }: ServiceRegistryHeaderProps) => {
   const { t } = useTranslation();
   let showBreadcrumb = false;
-  let activeBreadcrumbItemLabel = "";
+  let activeBreadcrumbItemLabel = '';
   const [isOpen, setIsOpen] = useState<boolean>();
   const basename = useBasename();
 
   if (breadcrumbId != undefined) {
     showBreadcrumb = true;
-    //activeBreadcrumbItemLabel = t('srs.artifacts_details');
     activeBreadcrumbItemLabel = t(breadcrumbId);
   }
 
@@ -51,10 +51,13 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
   };
 
   const dropdownItems = [
-    <DropdownItem key="connect-registry" onClick={onConnectToRegistry}>
+    <DropdownItem
+      key="connect-registry"
+      onClick={() => onConnectToRegistry && onConnectToRegistry(serviceRegistryDetails)}
+    >
       {t('srs.connect_to_registry')}
     </DropdownItem>,
-    <DropdownItem key="delete-registry" onClick={onDeleteRegistry}>
+    <DropdownItem key="delete-registry" onClick={() => onDeleteRegistry && onDeleteRegistry(serviceRegistryDetails)}>
       {t('srs.delete_registry')}
     </DropdownItem>,
   ];
@@ -76,7 +79,7 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
             </TextContent>
           )}
         </LevelItem>
-        {showKebab && (
+        {breadcrumbId && (
           <LevelItem>
             <Dropdown
               onSelect={onSelect}
