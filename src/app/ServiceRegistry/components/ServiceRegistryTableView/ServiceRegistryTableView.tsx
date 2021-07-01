@@ -223,7 +223,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     <PageSection
       className="registry--main-page__page-section--table pf-m-padding-on-xl"
       variant={PageSectionVariants.default}
-      padding={{ default: 'noPadding' }}
+      // padding={{ default: 'noPadding' }}
     >
       <Card>
         <ServiceRegistryToolbar page={page} perPage={perPage} total={total} handleCreateModal={handleCreateModal} />

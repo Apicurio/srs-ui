@@ -14,6 +14,7 @@ import { ServiceRegistryHeader } from '@app/ServiceRegistry/components';
 import { MASLoading, useRootModalContext, MODAL_TYPES } from '@app/components';
 import { useTimeout } from '@app/hooks';
 import { MAX_POLL_INTERVAL } from '@app/constants';
+import './ServiceRegistry.css';
 
 export const ServiceRegistry: React.FC = () => {
   const { t } = useTranslation();
@@ -144,28 +145,30 @@ export const ServiceRegistry: React.FC = () => {
           onClose={onCloseDrawer}
           registry={selectedRegistryInstance}
         >
-          <ServiceRegistryHeader
-            onConnectToRegistry={onConnectToRegistry}
-            onDeleteRegistry={onDeleteRegistry}
-            serviceRegistryDetails={selectedRegistryInstance}
-          />
-          <ServiceRegistryTableView
-            page={page}
-            perPage={perPage}
-            serviceRegistryItems={registryItems}
-            total={registries?.total}
-            onViewConnection={onConnectToRegistry}
-            onDelete={onDeleteRegistry}
-            expectedTotal={0}
-            orderBy={orderBy}
-            setOrderBy={setOrderBy}
-            loggedInUser={loggedInUser}
-            currentUserkafkas={registryItems}
-            handleCreateModal={createServiceRegistry}
-            refresh={fetchRegistries}
-            registryDataLoaded={false}
-            isDrawerOpen={isExpandedDrawer}
-          />
+          <main className="pf-c-page__main">
+            <ServiceRegistryHeader
+              onConnectToRegistry={onConnectToRegistry}
+              onDeleteRegistry={onDeleteRegistry}
+              serviceRegistryDetails={selectedRegistryInstance}
+            />
+            <ServiceRegistryTableView
+              page={page}
+              perPage={perPage}
+              serviceRegistryItems={registryItems}
+              total={registries?.total}
+              onViewConnection={onConnectToRegistry}
+              onDelete={onDeleteRegistry}
+              expectedTotal={0}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              loggedInUser={loggedInUser}
+              currentUserkafkas={registryItems}
+              handleCreateModal={createServiceRegistry}
+              refresh={fetchRegistries}
+              registryDataLoaded={false}
+              isDrawerOpen={isExpandedDrawer}
+            />
+          </main>
         </ServiceRegistryDrawer>
       );
     }
