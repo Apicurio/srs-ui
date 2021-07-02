@@ -82,8 +82,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
             title: <StatusColumn status={status} instanceName={name} />,
           },
           {
-            title: created_at,
-            //getFormattedDate(created_at, t('ago')),
+            title: getFormattedDate(created_at, t('ago')),
           },
         ],
         originalData: { ...row, rowId: row?.id },
