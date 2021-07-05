@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import { IAction, IExtraColumnData, IRowData, ISeparator, ISortBy, SortByDirection } from '@patternfly/react-table';
 import { PageSection, PageSectionVariants, Card } from '@patternfly/react-core';
 import { PaginationVariant } from '@patternfly/react-core';
-import { RegistryRest } from '@rhoas/registry-management-sdk';
-import { useBasename } from '@bf2/ui-shared';
-import { ServiceRegistryStatus, getFormattedDate } from '@app/utils';
+import { RegistryRest, RegistryStatusValueRest } from '@rhoas/registry-management-sdk';
+import { useBasename, useAlert, AlertVariant } from '@bf2/ui-shared';
+import { getFormattedDate } from '@app/utils';
 import { MASEmptyState, MASEmptyStateVariant, MASPagination, MASTable } from '@app/components';
 import { StatusColumn } from './StatusColumn';
 import { ServiceRegistryToolbar, ServiceRegistryToolbarProps } from './ServiceRegistryToolbar';
@@ -22,7 +22,7 @@ export type ServiceRegistryTableViewProps = ServiceRegistryToolbarProps & {
   setOrderBy: (order: string) => void;
   isDrawerOpen?: boolean;
   loggedInUser: string | undefined;
-  currentUserkafkas: RegistryRest[] | undefined;
+  currentUserRegistries: RegistryRest[] | undefined;
 };
 
 const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
@@ -36,16 +36,19 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   setOrderBy,
   isDrawerOpen,
   loggedInUser,
-  currentUserkafkas,
+  currentUserRegistries,
   total = 0,
   page,
   perPage,
   handleCreateModal,
 }) => {
+  const { addAlert } = useAlert();
   const { getBasename } = useBasename();
   const basename = getBasename();
   const { t } = useTranslation();
   const [activeRow, setActiveRow] = useState<string>();
+  const [deletedRegistries, setDeletedRegistries] = useState<string[]>([]);
+  const [instances, setInstances] = useState<Array<RegistryRest>>([]);
 
   const tableColumns = [
     { title: t('common.name') },
@@ -59,6 +62,95 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
       setActiveRow('');
     }
   }, [isDrawerOpen]);
+
+  const removeRegistryFromList = (name: string) => {
+    const index = deletedRegistries.findIndex((r) => r === name);
+    if (index > -1) {
+      const newDeletedRegistries = Object.assign([], deletedRegistries);
+      newDeletedRegistries.splice(index, 1);
+      setDeletedRegistries(newDeletedRegistries);
+    }
+  };
+
+  const addAlertAfterSuccessDeletion = () => {
+    if (currentUserRegistries) {
+      // filter all registry with status as deprovision or deleting
+      const deprovisonedRegistries: RegistryRest[] = currentUserRegistries.filter(
+        (r) => r.status === RegistryStatusValueRest.Deprovision || r.status === RegistryStatusValueRest.Deleting
+      );
+
+      // filter all new registry which is not in deleteRegistry state
+      const notPresentRegistries = deprovisonedRegistries
+        .filter((r) => deletedRegistries.findIndex((dr) => dr === r.name) < 0)
+        .map((r) => r.name || '');
+
+      // create new array by merging old and new registry with status as deprovion
+      const allDeletedRegistries: string[] = [...deletedRegistries, ...notPresentRegistries];
+      setDeletedRegistries(allDeletedRegistries);
+
+      // add alert for deleted registry which are completely deleted from the response
+      allDeletedRegistries.forEach((registryName) => {
+        const registryIndex = currentUserRegistries?.findIndex((item) => item.name === registryName);
+        if (registryIndex < 0) {
+          removeRegistryFromList(registryName);
+          addAlert({
+            title: t('srs.service_registry_successfully_deleted', { name: registryName }),
+            variant: AlertVariant.success,
+          });
+        }
+      });
+    }
+  };
+
+  const addAlertAfterSuccessCreation = () => {
+    const lastItemsState: RegistryRest[] = JSON.parse(JSON.stringify(instances));
+    if (instances && instances.length > 0) {
+      const completedOrFailedItems = Object.assign([], serviceRegistryItems).filter(
+        (item: RegistryRest) =>
+          item.status === RegistryStatusValueRest.Ready || item.status === RegistryStatusValueRest.Failed
+      );
+      lastItemsState.forEach((item: RegistryRest) => {
+        const filteredInstances: RegistryRest[] = completedOrFailedItems.filter(
+          (cfItem: RegistryRest) => item.id === cfItem.id
+        );
+        if (filteredInstances && filteredInstances.length > 0) {
+          const { status, name } = filteredInstances[0];
+
+          if (status === RegistryStatusValueRest.Ready) {
+            addAlert({
+              title: t('srs.registry_successfully_created'),
+              variant: AlertVariant.success,
+              description: <span dangerouslySetInnerHTML={{ __html: t('srs.registry_success_message', { name }) }} />,
+              dataTestId: 'toastCreateRegistry-success',
+            });
+          } else if (status === RegistryStatusValueRest.Failed) {
+            addAlert({
+              title: t('srs.registry_not_created'),
+              variant: AlertVariant.danger,
+              description: <span dangerouslySetInnerHTML={{ __html: t('srs.registry_failed_message', { name }) }} />,
+              dataTestId: 'toastCreateRegistry-failed',
+            });
+          }
+        }
+      });
+    }
+
+    const incompleteRegistry = Object.assign(
+      [],
+      serviceRegistryItems?.filter(
+        (r: RegistryRest) =>
+          r.status === RegistryStatusValueRest.Provisioning || r.status === RegistryStatusValueRest.Accepted
+      )
+    );
+    setInstances(incompleteRegistry);
+  };
+
+  useEffect(() => {
+    // handle success alert for deletion
+    addAlertAfterSuccessDeletion();
+    // handle success alert for creation
+    addAlertAfterSuccessCreation();
+  }, [page, perPage, serviceRegistryItems, currentUserRegistries]);
 
   const renderNameLink = ({ name, row }) => {
     return (
@@ -75,15 +167,14 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
       tableRow.push({
         cells: [
           {
-            title: status?.toLowerCase() !== ServiceRegistryStatus.Available ? name : renderNameLink({ name, row }),
+            title: status?.toLowerCase() !== RegistryStatusValueRest.Ready ? name : renderNameLink({ name, row }),
           },
           owner,
           {
             title: <StatusColumn status={status} instanceName={name} />,
           },
           {
-            title: created_at,
-            //getFormattedDate(created_at, t('ago')),
+            title: getFormattedDate(created_at, t('ago')),
           },
         ],
         originalData: { ...row, rowId: row?.id },

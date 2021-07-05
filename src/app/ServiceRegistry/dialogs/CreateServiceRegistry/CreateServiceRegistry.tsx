@@ -158,10 +158,6 @@ const CreateServiceRegistry: React.FC = () => {
         await api.createRegistry({ name: registryFormData.name }).then(() => {
           hideModal();
           resetForm();
-          addAlert({
-            title: t('srs.service_registry_creation_success_message'),
-            variant: AlertVariant.success,
-          });
           fetchServiceRegistries && fetchServiceRegistries();
           setCreationInProgress(false);
         });

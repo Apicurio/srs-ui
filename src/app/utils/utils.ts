@@ -15,16 +15,14 @@ const getModalAppendTo = (): HTMLElement | undefined => document.querySelector('
 const MAX_SERVICE_REGISTRY_NAME_LENGTH = 50;
 const MAX_SERVICE_REGISTRY_DESC_LENGTH = 255;
 
-enum ServiceRegistryStatus {
-  Provisioning = 'provisioning',
-  Available = 'available',
-  Unavailable = 'unavailable'
-}
-
 const statusOptions = [
-  { value: 'available', label: 'Ready' },
-  { value: 'unavailable', label: 'Failed' },
-  { value: 'provisioning', label: 'Creation in progress' }
+  { value: 'ready', label: 'Ready' },
+  { value: 'failed', label: 'Failed' },
+  { value: 'accepted', label: 'Creation pending' },
+  { value: 'provisioning', label: 'Creation in progress' },
+  { value: 'preparing', label: 'Creation in progress' },
+  { value: 'deprovision', label: 'Deletion in progress' },
+  { value: 'deleting', label: 'Deletion in progress' },
 ];
 
 const getFormattedDate = (date: string | Date, translatePostfix: string): string => {
@@ -37,7 +35,6 @@ export {
   getModalAppendTo,
   MAX_SERVICE_REGISTRY_NAME_LENGTH,
   MAX_SERVICE_REGISTRY_DESC_LENGTH,
-  ServiceRegistryStatus,
   statusOptions,
   getFormattedDate
 };
