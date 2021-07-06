@@ -26,7 +26,7 @@ export const CustomRowWrapper = (rowWrapperProps) => {
   const isRowDeleted =
     originalData?.status === RegistryStatusValueRest.Deprovision ||
     originalData?.status === RegistryStatusValueRest.Deleting;
-  const isLoggedInUserOwner = true; // loggedInUser === originalData?.owner;
+  const isLoggedInUserOwner = loggedInUser === originalData?.owner;
   const isRowDisabled = isRowDeleted || !isLoggedInUserOwner;
 
   return (

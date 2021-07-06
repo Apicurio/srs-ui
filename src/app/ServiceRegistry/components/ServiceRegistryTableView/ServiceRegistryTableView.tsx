@@ -206,7 +206,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     /**
      * Todo; remove hard code true when backend provide owner field
      */
-    const isUserSameAsLoggedIn = true; //originalData.owner === loggedInUser;
+    const isUserSameAsLoggedIn = originalData.owner === loggedInUser;
     let additionalProps: any;
     if (!isUserSameAsLoggedIn) {
       additionalProps = {
