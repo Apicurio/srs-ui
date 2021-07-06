@@ -1,7 +1,7 @@
 {
     "common": {
-      "loding": "Loading",
-      "java": "jave",
+      "loading": "Loading",
+      "java": "java",
       "mvn": "mvn",
       "cli": "cli",
       "curl": "curl",
@@ -58,7 +58,7 @@
       "deleting": "Deleting",
       "no_results_found": "No results found",
       "adjust_your_filters_and_try_again": "Adjust your filters and try again.",
-      "registry_instance_list": "Service Service instance list",
+      "registry_instance_list": "Service Registry instance list",
       "full_pagination": "Full pagination",
       "per_page_suffix": "per page",
       "to_first_page": "Go to first page",
