@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { css } from '@patternfly/react-styles';
+import { RegistryStatusValueRest } from '@rhoas/registry-management-sdk';
 import './CustomRowWrapper.css';
 
 export type CustomRowWrapperContextProps = {
@@ -22,20 +23,25 @@ export const CustomRowWrapper = (rowWrapperProps) => {
   const { trRef, className, rowProps, row, ...props } = rowWrapperProps || {};
   const { rowIndex } = rowProps;
   const { isExpanded, originalData } = row;
+  const isRowDeleted =
+    originalData?.status === RegistryStatusValueRest.Deprovision ||
+    originalData?.status === RegistryStatusValueRest.Deleting;
   const isLoggedInUserOwner = loggedInUser === originalData?.owner;
+  const isRowDisabled = isRowDeleted || !isLoggedInUserOwner;
 
   return (
     <tr
       data-testid={rowDataTestId}
-      tabIndex={0}
+      tabIndex={!isRowDisabled ? 0 : undefined}
       ref={trRef}
       className={css(
         className,
         'pf-c-table-row__item',
-        activeRow && activeRow === originalData?.rowId && 'pf-m-selected'
+        isRowDeleted ? 'pf-m-disabled' : isLoggedInUserOwner && 'pf-m-selectable',
+        !isRowDisabled && activeRow && activeRow === originalData?.rowId && 'pf-m-selected'
       )}
       hidden={isExpanded !== undefined && !isExpanded}
-      onClick={(event: MouseEvent) => onRowClick && onRowClick(event, rowIndex, row)}
+      onClick={(event: MouseEvent) => !isRowDisabled && onRowClick && onRowClick(event, rowIndex, row)}
       {...props}
     />
   );

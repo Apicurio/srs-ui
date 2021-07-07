@@ -30,8 +30,14 @@ const StatusColumn: React.FunctionComponent<StatusColumnProps> = ({ status, inst
         return <CheckCircleIcon className="mk--instances__table--icon--completed" />;
       case statusOptions[1].value: // 'failed'
         return <ExclamationCircleIcon className="mk--instances__table--icon--failed" />;
-      case statusOptions[2].value: // 'provisioning'
+      case statusOptions[2].value: // 'accepted'
+        return <PendingIcon />;
+      case statusOptions[3].value: // 'provisioning'
+      case statusOptions[4].value: // 'preparing'
         return <Spinner size="md" aria-label={instanceName} aria-valuetext="Creation in progress" />;
+      case statusOptions[5].value: // 'deprovision'
+      case statusOptions[6].value: // 'deleting'
+        return;
       default:
         return <PendingIcon />;
     }

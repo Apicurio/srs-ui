@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { RegistryRest, RegistriesApi, Configuration } from '@rhoas/registry-management-sdk';
+import { RegistryRest, RegistriesApi, Configuration, RegistryStatusValueRest } from '@rhoas/registry-management-sdk';
 import { useAuth, useConfig, useBasename, useAlert, AlertVariant } from '@bf2/ui-shared';
 import { MASDeleteModal, useRootModalContext } from '@app/components';
-import { ServiceRegistryStatus, isServiceApiError } from '@app/utils';
+import { isServiceApiError } from '@app/utils';
 
 export const DeleteServiceRegistry: React.FC = () => {
   const { t } = useTranslation();
@@ -38,7 +38,7 @@ export const DeleteServiceRegistry: React.FC = () => {
   };
 
   const isConfirmButtonDisabled = () => {
-    if (serviceRegistryStatus?.toLowerCase() === ServiceRegistryStatus.Available) {
+    if (serviceRegistryStatus?.toLowerCase() === RegistryStatusValueRest.Ready) {
       if (instanceNameInput?.toLowerCase() === selectedInstanceName?.toLowerCase()) {
         return false;
       }
@@ -121,7 +121,7 @@ export const DeleteServiceRegistry: React.FC = () => {
       textProps={textProps}
       selectedItemData={selectedItemData}
       textInputProps={{
-        showTextInput: serviceRegistryStatus?.toLowerCase() === ServiceRegistryStatus.Available,
+        showTextInput: serviceRegistryStatus?.toLowerCase() === RegistryStatusValueRest.Ready,
         label: t('common.service_registry_name_label', { name: selectedInstanceName }),
         value: instanceNameInput,
         onChange: handleInstanceName,

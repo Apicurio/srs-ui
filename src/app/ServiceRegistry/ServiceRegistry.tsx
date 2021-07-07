@@ -162,7 +162,7 @@ export const ServiceRegistry: React.FC = () => {
               orderBy={orderBy}
               setOrderBy={setOrderBy}
               loggedInUser={loggedInUser}
-              currentUserkafkas={registryItems}
+              currentUserRegistries={registryItems}
               handleCreateModal={createServiceRegistry}
               refresh={fetchRegistries}
               registryDataLoaded={false}
