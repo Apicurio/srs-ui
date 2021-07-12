@@ -210,11 +210,9 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
 
   const actionResolver = (rowData: IRowData) => {
     const originalData: RegistryRest = rowData.originalData;
-    /**
-     * Todo; remove hard code true when backend provide owner field
-     */
     const isUserSameAsLoggedIn = originalData.owner === loggedInUser || isOrgAdmin;
     let additionalProps: any;
+
     if (!isUserSameAsLoggedIn) {
       additionalProps = {
         tooltip: true,
