@@ -20,9 +20,9 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl 
   const { t } = useTranslation();
 
   const registriesInfo = [
-    { title: t('srs.connection_content_1'), code: `${registryApisUrl}/registry/v2` },
-    { title: t('srs.connection_content_2'), code: `${registryApisUrl}/ccompat/v6` },
-    { title: t('srs.connection_content_3'), code: `${registryApisUrl}/cncf/v0` },
+    { title: t('srs.connection_content_1'), code: `${registryApisUrl}/apis/registry/v2` },
+    { title: t('srs.connection_content_2'), code: `${registryApisUrl}/apis/ccompat/v6` },
+    { title: t('srs.connection_content_3'), code: `${registryApisUrl}/apis/cncf/v0` },
   ];
 
   return (
