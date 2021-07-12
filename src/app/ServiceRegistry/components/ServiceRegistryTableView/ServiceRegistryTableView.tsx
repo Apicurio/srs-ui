@@ -5,7 +5,7 @@ import { IAction, IExtraColumnData, IRowData, ISeparator, ISortBy, SortByDirecti
 import { PageSection, PageSectionVariants, Card } from '@patternfly/react-core';
 import { PaginationVariant } from '@patternfly/react-core';
 import { RegistryRest, RegistryStatusValueRest } from '@rhoas/registry-management-sdk';
-import { useBasename, useAlert, AlertVariant } from '@bf2/ui-shared';
+import { useBasename, useAlert, AlertVariant, useAuth } from '@bf2/ui-shared';
 import { getFormattedDate } from '@app/utils';
 import { MASEmptyState, MASEmptyStateVariant, MASPagination, MASTable } from '@app/components';
 import { StatusColumn } from './StatusColumn';
@@ -46,9 +46,12 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   const { getBasename } = useBasename();
   const basename = getBasename();
   const { t } = useTranslation();
+  const auth = useAuth();
+
   const [activeRow, setActiveRow] = useState<string>();
   const [deletedRegistries, setDeletedRegistries] = useState<string[]>([]);
   const [instances, setInstances] = useState<Array<RegistryRest>>([]);
+  const [isOrgAdmin, setIsOrgAdmin] = useState<boolean>();
 
   const tableColumns = [
     { title: t('common.name') },
@@ -62,6 +65,10 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
       setActiveRow('');
     }
   }, [isDrawerOpen]);
+
+  useEffect(() => {
+    auth?.isOrgAdmin().then((isOrgAdmin) => setIsOrgAdmin(isOrgAdmin));
+  }, [auth]);
 
   const removeRegistryFromList = (name: string) => {
     const index = deletedRegistries.findIndex((r) => r === name);
@@ -203,11 +210,9 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
 
   const actionResolver = (rowData: IRowData) => {
     const originalData: RegistryRest = rowData.originalData;
-    /**
-     * Todo; remove hard code true when backend provide owner field
-     */
-    const isUserSameAsLoggedIn = originalData.owner === loggedInUser;
+    const isUserSameAsLoggedIn = originalData.owner === loggedInUser || isOrgAdmin;
     let additionalProps: any;
+
     if (!isUserSameAsLoggedIn) {
       additionalProps = {
         tooltip: true,
