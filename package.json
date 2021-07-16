@@ -110,7 +110,7 @@
     "keycloak-js": "^14.0.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-i18next": "11.11.2",
+    "react-i18next": "11.11.3",
     "react-router-last-location": "2.0.1",
     "sirv-cli": "1.0.12"
   }
