@@ -98,7 +98,15 @@ module.exports = (env, argv) => {
       }),
       new MiniCssExtractPlugin({
         filename: '[name].[contenthash:8].css',
-        chunkFilename: '[contenthash:8].css'
+        chunkFilename: '[contenthash:8].css',
+        insert: (linkTag) => {
+          const preloadLinkTag = document.createElement('link')
+          preloadLinkTag.rel = 'preload'
+          preloadLinkTag.as = 'style'
+          preloadLinkTag.href = linkTag.href
+          document.head.appendChild(preloadLinkTag)
+          document.head.appendChild(linkTag)
+        }
       }),
       new ChunkMapper({
         modules: [
@@ -108,7 +116,7 @@ module.exports = (env, argv) => {
       new webpack.container.ModuleFederationPlugin({
         name: federatedModuleName,
         filename: `${federatedModuleName}${isProduction ? '.[chunkhash:8]' : ''}.js`,
-        exposes: {    
+        exposes: {
           "./ServiceRegistry":"./src/app/ServiceRegistry/ServiceRegistryFederated",
           "./ApicurioRegistry":"./src/app/ServiceRegistry/ApicurioRegistryFederated"
         },
