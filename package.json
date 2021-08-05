@@ -16,7 +16,7 @@
     "start": "node server.js",
     "start:mockserver": "asapi",
     "start:dev": "webpack serve --https --hot --color --progress --config webpack.dev.js",
-    "start:federate": "HOST=localhost PORT=9005 PROTOCOL=http webpack serve --hot --color --progress --config webpack.dev.js",
+    "start:federate": "HOST=localhost PORT=9005 PROTOCOL=http webpack serve --hot --color --progress --open=false --config webpack.dev.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
