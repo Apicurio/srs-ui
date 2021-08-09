@@ -33,7 +33,7 @@
     "i18n": "i18next 'src/**/**/*.{ts,tsx}' [-oc] -c './i18next-parser.config.js' -o './src/locales/$LOCALE/$NAMESPACE.json'"
   },
   "devDependencies": {
-    "@rhoas/api-mock": "0.9.0",
+    "@rhoas/api-mock": "0.12.1",
     "@storybook/addon-actions": "6.3.6",
     "@storybook/addon-info": "5.3.21",
     "@storybook/addon-links": "6.3.6",
@@ -95,7 +95,7 @@
     "@patternfly/react-styles": "4.11.0",
     "@redhat-cloud-services/frontend-components-config": "4.3.3",
     "@patternfly/react-table": "4.29.0",
-    "@rhoas/registry-management-sdk": "0.9.0",
+    "@rhoas/registry-management-sdk": "0.12.1",
     "@testing-library/dom": "8.1.0",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "12.0.0",
