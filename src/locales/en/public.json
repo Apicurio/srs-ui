@@ -85,7 +85,7 @@
     "tab_sample_code_title_info": "Below are example configuration snippets for accessing Service Registry from different runtimes.",
     "connection_title_info": "Use this information to connect an application or tool to this Service Registry.",
     "connection_content_1": "Core Registry API",
-    "connection_content_2": "Confluent Schema Registry compatibility API",
+    "connection_content_2": "Schema Registry compatibility API",
     "connection_content_3": "CNCF Schema Registry API",
     "artifacts_details": "Artifacts Details",
     "global_rules": "Global Rules",
