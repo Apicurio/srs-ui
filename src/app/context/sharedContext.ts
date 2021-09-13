@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 
-export type SharedProps = {
+export type SharedContextrops = {
     preCreateInstance?: (isOpen: boolean) => Promise<boolean>;
     shouldOpenCreateModal?: () => Promise<boolean>;
 };
 
-export const SharedContext = React.createContext<SharedProps | undefined>(undefined);
-export const useSharedContext = (): SharedProps | undefined => useContext(SharedContext);
+export const SharedContext = React.createContext<SharedContextrops | undefined>(undefined);
+export const useSharedContext = (): SharedContextrops | undefined => useContext(SharedContext);

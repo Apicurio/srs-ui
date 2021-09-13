@@ -3,9 +3,9 @@ import { I18nextProvider } from 'react-i18next';
 import { ServiceRegistry } from './ServiceRegistry';
 import { RootModal } from '@app/components';
 import srsi18n from '@i18n/i18n';
-import { SharedContext, SharedProps } from '@app/context';
+import { SharedContext, SharedContextrops } from '@app/context';
 
-type ServiceRegistryFederatedProps = SharedProps;
+type ServiceRegistryFederatedProps = SharedContextrops;
 
 const ServiceRegistryFederated: React.FC<ServiceRegistryFederatedProps> = ({
   preCreateInstance,
