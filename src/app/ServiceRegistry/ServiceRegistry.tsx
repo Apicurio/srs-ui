@@ -14,6 +14,7 @@ import { ServiceRegistryHeader } from '@app/ServiceRegistry/components';
 import { MASLoading, useRootModalContext, MODAL_TYPES } from '@app/components';
 import { useTimeout } from '@app/hooks';
 import { MAX_POLL_INTERVAL } from '@app/constants';
+import { useSharedContext } from '@app/context';
 import './ServiceRegistry.css';
 
 export const ServiceRegistry: React.FC = () => {
@@ -23,6 +24,8 @@ export const ServiceRegistry: React.FC = () => {
     srs: { apiBasePath: basePath },
   } = useConfig();
   const { showModal } = useRootModalContext();
+  const { preCreateInstance, shouldOpenCreateModal } = useSharedContext() || {};
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const page = parseInt(searchParams.get('page') || '', 10) || 1;
@@ -48,6 +51,14 @@ export const ServiceRegistry: React.FC = () => {
   useEffect(() => {
     updateServiceRegistryInstance();
   }, [registryItems]);
+
+  useEffect(() => {
+    const openModal = async () => {
+      const shouldOpen = shouldOpenCreateModal && (await shouldOpenCreateModal());
+      shouldOpen && openCreateModal();
+    };
+    openModal();
+  }, [shouldOpenCreateModal]);
 
   const updateServiceRegistryInstance = () => {
     if (registryItems && registryItems?.length > 0) {
@@ -112,10 +123,20 @@ export const ServiceRegistry: React.FC = () => {
      */
   };
 
-  const createServiceRegistry = () => {
+  const openCreateModal = () => {
     showModal(MODAL_TYPES.CREATE_SERVICE_REGISTRY, {
       fetchServiceRegistries: fetchRegistries,
     });
+  };
+
+  const createServiceRegistry = async () => {
+    let open;
+    if (preCreateInstance) {
+      // Callback before opening create dialog
+      // The callback can override the new state of opening
+      open = await preCreateInstance(true);
+    }
+    open && openCreateModal();
   };
 
   if (isUnauthorizedUser) {
