@@ -14,6 +14,7 @@ import { ServiceRegistryHeader } from '@app/ServiceRegistry/components';
 import { MASLoading, useRootModalContext, MODAL_TYPES } from '@app/components';
 import { useTimeout } from '@app/hooks';
 import { MAX_POLL_INTERVAL } from '@app/constants';
+import {InstanceType} from '@app/utils';
 import './ServiceRegistry.css';
 
 export const ServiceRegistry: React.FC = () => {
@@ -36,6 +37,8 @@ export const ServiceRegistry: React.FC = () => {
   const [registryItems, setRegistryItems] = useState<RegistryRest[] | undefined>(undefined);
   const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined);
   const [orderBy, setOrderBy] = useState<string>('name asc');
+
+  const hasUserTrialInstance = registryItems?.some((r) => r?.instance_type === InstanceType?.eval);
 
   useEffect(() => {
     fetchRegistries();
@@ -115,6 +118,7 @@ export const ServiceRegistry: React.FC = () => {
   const createServiceRegistry = () => {
     showModal(MODAL_TYPES.CREATE_SERVICE_REGISTRY, {
       fetchServiceRegistries: fetchRegistries,
+      hasUserTrialInstance
     });
   };
 
