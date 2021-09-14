@@ -5,7 +5,7 @@ import { IAction, IExtraColumnData, IRowData, ISeparator, ISortBy, SortByDirecti
 import { PageSection, PageSectionVariants, Card } from '@patternfly/react-core';
 import { PaginationVariant } from '@patternfly/react-core';
 import { RegistryRest, RegistryStatusValueRest } from '@rhoas/registry-management-sdk';
-import { useBasename, useAlert, AlertVariant, useAuth } from '@bf2/ui-shared';
+import { useBasename, useAlert, AlertVariant, useAuth } from '@rhoas/app-services-ui-shared';
 import { getFormattedDate } from '@app/utils';
 import { MASEmptyState, MASEmptyStateVariant, MASPagination, MASTable } from '@app/components';
 import { StatusColumn } from './StatusColumn';
@@ -42,9 +42,9 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   perPage,
   handleCreateModal,
 }) => {
-  const { addAlert } = useAlert();
-  const { getBasename } = useBasename();
-  const basename = getBasename();
+  const { addAlert } = useAlert() || {};
+  const { getBasename } = useBasename() || {};
+  const basename = getBasename && getBasename();
   const { t } = useTranslation();
   const auth = useAuth();
 
@@ -100,7 +100,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
         const registryIndex = currentUserRegistries?.findIndex((item) => item.name === registryName);
         if (registryIndex < 0) {
           removeRegistryFromList(registryName);
-          addAlert({
+          addAlert && addAlert({
             title: t('srs.service_registry_successfully_deleted', { name: registryName }),
             variant: AlertVariant.success,
           });
@@ -124,14 +124,14 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
           const { status, name } = filteredInstances[0];
 
           if (status === RegistryStatusValueRest.Ready) {
-            addAlert({
+            addAlert && addAlert({
               title: t('srs.registry_successfully_created'),
               variant: AlertVariant.success,
               description: <span dangerouslySetInnerHTML={{ __html: t('srs.registry_success_message', { name }) }} />,
               dataTestId: 'toastCreateRegistry-success',
             });
           } else if (status === RegistryStatusValueRest.Failed) {
-            addAlert({
+            addAlert && addAlert({
               title: t('srs.registry_not_created'),
               variant: AlertVariant.danger,
               description: <span dangerouslySetInnerHTML={{ __html: t('srs.registry_failed_message', { name }) }} />,

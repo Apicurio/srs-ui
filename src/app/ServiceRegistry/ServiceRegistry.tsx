@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { Configuration, RegistryListRest, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
-import { useAuth, useConfig } from '@bf2/ui-shared';
+import { useAuth, useConfig } from '@rhoas/app-services-ui-shared';
 import {
   ServiceRegistryDrawer,
   UnauthrizedUser,

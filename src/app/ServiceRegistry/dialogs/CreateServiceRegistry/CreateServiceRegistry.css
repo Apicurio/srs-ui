@@ -1,0 +1,7 @@
+/* TextContent dl customizations */
+.mk--create-instance-modal__sidebar--content .pf-c-content dl {
+  display: block;
+}
+.mk--create-instance-modal__sidebar--content dt {
+  font-size: var(--pf-global--FontSize--sm);
+}

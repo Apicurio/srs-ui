@@ -13,7 +13,7 @@ import { AppRoutes } from '@app/Routes';
 import { MASErrorBoundary, MASLoading, RootModal, AlertProvider } from '@app/components';
 import srsi18n from '@i18n/i18n';
 import { KeycloakAuthProvider, KeycloakContext, getKeycloakInstance } from './auth';
-import { Config, ConfigContext, BasenameContext } from '@bf2/ui-shared';
+import { Config, ConfigContext, BasenameContext } from '@rhoas/app-services-ui-shared';
 import '@app/App.css';
 
 declare const __BASE_PATH__: string;
