@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { AlertVariant, PageSection, PageSectionVariants, Text } from '@patternfly/react-core';
 import { Configuration, RegistryListRest, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
-import { useAuth, useConfig } from '@bf2/ui-shared';
+import { useAuth, useConfig, useBasename, useAlert } from '@bf2/ui-shared';
 import {
   ServiceRegistryDrawer,
   UnauthrizedUser,
@@ -22,6 +22,8 @@ export const ServiceRegistry: React.FC = () => {
   const {
     srs: { apiBasePath: basePath },
   } = useConfig();
+  const basename = useBasename();
+  const { addAlert } = useAlert();
   const { showModal } = useRootModalContext();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -81,6 +83,33 @@ export const ServiceRegistry: React.FC = () => {
 
   useTimeout(() => fetchRegistries(), MAX_POLL_INTERVAL);
 
+
+  const downloadArtifactsZip = async (registryUrl?: string, name?: string) => {
+
+    const accessToken = await auth?.apicurio_registry.getToken();
+
+    fetch(`${registryUrl}/apis/registry/v2/admin/export`, {
+      headers: new Headers({
+        "Authorization": `Bearer ${accessToken}` || ""
+      })
+    })
+      .then(response => {
+        return response.blob()
+      })
+      .then(data => {
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(data);
+        link.download = `${name}.zip`;
+        link.click();
+      }).catch(error => {
+        addAlert({
+          title: t('something_went_wrong'),
+          variant: AlertVariant.danger,
+          description: error?.response?.data?.reason,
+        });
+      })
+  };
+
   const onConnectToRegistry = (instance: RegistryRest | undefined) => {
     setIsExpandedDrawer(true);
     setSelectedRegistryInstance(instance);
@@ -91,7 +120,7 @@ export const ServiceRegistry: React.FC = () => {
   };
 
   const onDeleteRegistry = (registry: RegistryRest | undefined) => {
-    const { name, status } = registry || {};
+    const { name, status, registryUrl } = registry || {};
     showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
       serviceRegistryStatus: status,
       selectedItemData: registry,
@@ -101,7 +130,18 @@ export const ServiceRegistry: React.FC = () => {
         label: t('common.delete'),
       },
       textProps: {
-        description: t('common.delete_service_registry_description', { name }),
+        descriptionHTML: (
+          <>
+            <Text className='mas--delete-item__modal--text'>
+              <span dangerouslySetInnerHTML={{ __html: t('common.delete_service_registry_description', { name }) }} />
+            </Text>
+            <Text className='mas--delete-item__modal--text'>
+              {t('common.delete_service_registry_download_zip')}
+              &nbsp;
+              <Link onClick={() => downloadArtifactsZip(registryUrl, name)} to="#">{t('common.delete_service_registry_download_zip_link')}</Link>
+            </Text>
+          </>
+        )
       },
     });
   };
