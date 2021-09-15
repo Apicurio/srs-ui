@@ -23,9 +23,9 @@ export const ServiceRegistry: React.FC = () => {
   const auth = useAuth();
   const {
     srs: { apiBasePath: basePath },
-  } = useConfig();
-  const basename = useBasename();
-  const { addAlert } = useAlert();
+  } = useConfig() || {srs:{apiBasePath:''}};
+
+  const { addAlert } = useAlert() || {};
   const { showModal } = useRootModalContext();
   const { preCreateInstance, shouldOpenCreateModal } = useSharedContext() || {};
 
@@ -77,22 +77,24 @@ export const ServiceRegistry: React.FC = () => {
 
   const fetchRegistries = async () => {
     const accessToken = await auth?.srs.getToken();
-    const api = new RegistriesApi(
-      new Configuration({
-        accessToken,
-        basePath,
-      })
-    );
-    await api
-      .getRegistries()
-      .then((res) => {
-        const registry = res?.data;
-        setRegistries(registry);
-        setRegistryItems(registry?.items);
-      })
-      .catch((error) => {
-        //todo: handle error
-      });
+    if(basePath && accessToken){
+      const api = new RegistriesApi(
+        new Configuration({
+          accessToken,
+          basePath,
+        })
+      );
+      await api
+        .getRegistries()
+        .then((res) => {
+          const registry = res?.data;
+          setRegistries(registry);
+          setRegistryItems(registry?.items);
+        })
+        .catch((error) => {
+          //todo: handle error
+        });
+    }    
   };
 
   useTimeout(() => fetchRegistries(), MAX_POLL_INTERVAL);
@@ -116,7 +118,7 @@ export const ServiceRegistry: React.FC = () => {
         link.download = `${name}.zip`;
         link.click();
       }).catch(error => {
-        addAlert({
+        addAlert && addAlert({
           title: t('something_went_wrong'),
           variant: AlertVariant.danger,
           description: error?.response?.data?.reason,
