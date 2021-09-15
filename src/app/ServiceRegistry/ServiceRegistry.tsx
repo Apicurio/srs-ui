@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { AlertVariant, PageSection, PageSectionVariants, Text } from '@patternfly/react-core';
 import { Configuration, RegistryListRest, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
-import { useAuth, useConfig } from '@rhoas/app-services-ui-shared';
+import { useAuth, useConfig, useBasename, useAlert } from '@rhoas/app-services-ui-shared';
 import {
   ServiceRegistryDrawer,
   UnauthrizedUser,
@@ -15,6 +15,7 @@ import { MASLoading, useRootModalContext, MODAL_TYPES } from '@app/components';
 import { useTimeout } from '@app/hooks';
 import { MAX_POLL_INTERVAL } from '@app/constants';
 import {InstanceType} from '@app/utils';
+import { useSharedContext } from '@app/context';
 import './ServiceRegistry.css';
 
 export const ServiceRegistry: React.FC = () => {
@@ -23,7 +24,11 @@ export const ServiceRegistry: React.FC = () => {
   const {
     srs: { apiBasePath: basePath },
   } = useConfig();
+  const basename = useBasename();
+  const { addAlert } = useAlert();
   const { showModal } = useRootModalContext();
+  const { preCreateInstance, shouldOpenCreateModal } = useSharedContext() || {};
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const page = parseInt(searchParams.get('page') || '', 10) || 1;
@@ -51,6 +56,14 @@ export const ServiceRegistry: React.FC = () => {
   useEffect(() => {
     updateServiceRegistryInstance();
   }, [registryItems]);
+
+  useEffect(() => {
+    const openModal = async () => {
+      const shouldOpen = shouldOpenCreateModal && (await shouldOpenCreateModal());
+      shouldOpen && openCreateModal();
+    };
+    openModal();
+  }, [shouldOpenCreateModal]);
 
   const updateServiceRegistryInstance = () => {
     if (registryItems && registryItems?.length > 0) {
@@ -84,6 +97,33 @@ export const ServiceRegistry: React.FC = () => {
 
   useTimeout(() => fetchRegistries(), MAX_POLL_INTERVAL);
 
+
+  const downloadArtifactsZip = async (registryUrl?: string, name?: string) => {
+
+    const accessToken = await auth?.apicurio_registry.getToken();
+
+    fetch(`${registryUrl}/apis/registry/v2/admin/export`, {
+      headers: new Headers({
+        "Authorization": `Bearer ${accessToken}` || ""
+      })
+    })
+      .then(response => {
+        return response.blob()
+      })
+      .then(data => {
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(data);
+        link.download = `${name}.zip`;
+        link.click();
+      }).catch(error => {
+        addAlert({
+          title: t('something_went_wrong'),
+          variant: AlertVariant.danger,
+          description: error?.response?.data?.reason,
+        });
+      })
+  };
+
   const onConnectToRegistry = (instance: RegistryRest | undefined) => {
     setIsExpandedDrawer(true);
     setSelectedRegistryInstance(instance);
@@ -94,7 +134,7 @@ export const ServiceRegistry: React.FC = () => {
   };
 
   const onDeleteRegistry = (registry: RegistryRest | undefined) => {
-    const { name, status } = registry || {};
+    const { name, status, registryUrl } = registry || {};
     showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
       serviceRegistryStatus: status,
       selectedItemData: registry,
@@ -104,7 +144,18 @@ export const ServiceRegistry: React.FC = () => {
         label: t('common.delete'),
       },
       textProps: {
-        description: t('common.delete_service_registry_description', { name }),
+        descriptionHTML: (
+          <>
+            <Text className='mas--delete-item__modal--text'>
+              <span dangerouslySetInnerHTML={{ __html: t('common.delete_service_registry_description', { name }) }} />
+            </Text>
+            <Text className='mas--delete-item__modal--text'>
+              {t('common.delete_service_registry_download_zip')}
+              &nbsp;
+              <Link onClick={() => downloadArtifactsZip(registryUrl, name)} to="#">{t('common.delete_service_registry_download_zip_link')}</Link>
+            </Text>
+          </>
+        )
       },
     });
   };
@@ -115,11 +166,21 @@ export const ServiceRegistry: React.FC = () => {
      */
   };
 
-  const createServiceRegistry = () => {
+  const openCreateModal = () => {
     showModal(MODAL_TYPES.CREATE_SERVICE_REGISTRY, {
       fetchServiceRegistries: fetchRegistries,
       hasUserTrialInstance
     });
+  };
+
+  const createServiceRegistry = async () => {
+    let open;
+    if (preCreateInstance) {
+      // Callback before opening create dialog
+      // The callback can override the new state of opening
+      open = await preCreateInstance(true);
+    }
+    open && openCreateModal();
   };
 
   if (isUnauthorizedUser) {
