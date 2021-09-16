@@ -75,7 +75,7 @@ export const ServiceRegistry: React.FC = () => {
       })
     );
     await api
-      .getRegistries()
+      .getRegistries(page,perPage)
       .then((res) => {
         const registry = res?.data;
         setRegistries(registry);
