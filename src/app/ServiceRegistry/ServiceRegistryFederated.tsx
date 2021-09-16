@@ -1,7 +1,7 @@
 import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { ServiceRegistry } from './ServiceRegistry';
-import { RootModal } from '@app/components';
+import { RootModal, PaginationProvider } from '@app/components';
 import srsi18n from '@i18n/i18n';
 import { SharedContext, SharedContextrops } from '@app/context';
 
@@ -15,7 +15,9 @@ const ServiceRegistryFederated: React.FC<ServiceRegistryFederatedProps> = ({
     <I18nextProvider i18n={srsi18n}>
       <SharedContext.Provider value={{ preCreateInstance, shouldOpenCreateModal }}>
         <RootModal>
-          <ServiceRegistry />
+          <PaginationProvider>
+            <ServiceRegistry />
+          </PaginationProvider>
         </RootModal>
       </SharedContext.Provider>
     </I18nextProvider>
