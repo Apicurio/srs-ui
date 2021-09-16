@@ -10,7 +10,7 @@ import '@patternfly/patternfly/utilities/Display/display.css';
 import '@patternfly/patternfly/utilities/Flex/flex.css';
 import { AppLayout } from '@app/AppLayout/AppLayout';
 import { AppRoutes } from '@app/Routes';
-import { MASErrorBoundary, MASLoading, RootModal, AlertProvider } from '@app/components';
+import { MASErrorBoundary, MASLoading, RootModal, AlertProvider, PaginationProvider } from '@app/components';
 import srsi18n from '@i18n/i18n';
 import { KeycloakAuthProvider, KeycloakContext, getKeycloakInstance } from './auth';
 import { Config, ConfigContext, BasenameContext } from '@bf2/ui-shared';
@@ -52,9 +52,11 @@ const App: React.FunctionComponent = () => {
                   <React.Suspense fallback={<MASLoading />}>
                     <MASErrorBoundary>
                       <RootModal>
-                        <AppLayout>
-                          <AppRoutes />
-                        </AppLayout>
+                        <PaginationProvider>
+                          <AppLayout>
+                            <AppRoutes />
+                          </AppLayout>
+                        </PaginationProvider>
                       </RootModal>
                     </MASErrorBoundary>
                   </React.Suspense>

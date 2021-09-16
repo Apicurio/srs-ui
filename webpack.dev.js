@@ -12,14 +12,18 @@ module.exports = merge(common('development'), {
   mode: 'development',
   devtool: 'eval-source-map',
   devServer: {
-    contentBase: './dist',
+    static: {
+      directory: './dist',
+    },
     host: HOST,
     port: PORT,
     compress: true,
-    inline: true,
+    //inline: true,
     historyApiFallback: true,
     hot: true,
-    overlay: true,
+    client: {
+      overlay: true,
+    },
     open: true,
     https: PROTOCOL === 'https',
     headers: {

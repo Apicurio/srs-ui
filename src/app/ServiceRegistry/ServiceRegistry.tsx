@@ -11,7 +11,7 @@ import {
   ServiceRegistryTableView,
 } from './components';
 import { ServiceRegistryHeader } from '@app/ServiceRegistry/components';
-import { MASLoading, useRootModalContext, MODAL_TYPES } from '@app/components';
+import { MASLoading, useRootModalContext, MODAL_TYPES, usePagination } from '@app/components';
 import { useTimeout } from '@app/hooks';
 import { MAX_POLL_INTERVAL } from '@app/constants';
 import { useSharedContext } from '@app/context';
@@ -25,11 +25,7 @@ export const ServiceRegistry: React.FC = () => {
   } = useConfig();
   const { showModal } = useRootModalContext();
   const { preCreateInstance, shouldOpenCreateModal } = useSharedContext() || {};
-
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const page = parseInt(searchParams.get('page') || '', 10) || 1;
-  const perPage = parseInt(searchParams.get('perPage') || '', 10) || 10;
+  const {page=1, perPage=10}=usePagination() || {};
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
   const [selectedRegistryInstance, setSelectedRegistryInstance] = useState<RegistryRest | undefined>(undefined);
@@ -79,7 +75,7 @@ export const ServiceRegistry: React.FC = () => {
       })
     );
     await api
-      .getRegistries()
+      .getRegistries(page,perPage)
       .then((res) => {
         const registry = res?.data;
         setRegistries(registry);
