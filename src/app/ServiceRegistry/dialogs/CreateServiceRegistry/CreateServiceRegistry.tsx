@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Alert,
-  Form,
-  FormAlert,
-  FormGroup,
-  TextInput,
-  Flex,
-  FlexItem,
-  Divider,
-} from '@patternfly/react-core';
+import { Alert, Form, FormAlert, FormGroup, TextInput, Flex, FlexItem, Divider } from '@patternfly/react-core';
 import { Configuration, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { NewServiceregistry, FormDataValidationState } from '@app/models';
 import { MASCreateModal, useRootModalContext } from '@app/components';
 import { useTranslation } from 'react-i18next';
+import { isServiceApiError, MAX_SERVICE_REGISTRY_NAME_LENGTH, ErrorCodes } from '@app/utils';
 import {
-  isServiceApiError,
-  MAX_SERVICE_REGISTRY_NAME_LENGTH,
-  ErrorCodes,
-} from '@app/utils';
-import { useAlert, AlertVariant, useAuth, useConfig, Quota, QuotaType, useQuota, QuotaValue } from '@rhoas/app-services-ui-shared';
+  useAlert,
+  AlertVariant,
+  useAuth,
+  useConfig,
+  Quota,
+  QuotaType,
+  useQuota,
+  QuotaValue,
+} from '@rhoas/app-services-ui-shared';
 import { QuotaAlert } from './QuotaAlert';
 import { ServiceRegistryInformation } from './ServiceRegistryInformation';
 import './CreateServiceRegistry.css';
@@ -43,15 +39,10 @@ const CreateServiceRegistry: React.FC = () => {
   const [hasServiceRegistryCreationFailed, setHasServiceRegistryCreationFailed] = useState<boolean>(false);
 
   const srsQuota: QuotaValue | undefined = quota?.data?.get(QuotaType?.srs);
-  const srsTrial: QuotaValue | undefined = quota?.data?.get(QuotaType?.srsTrial);
   const loadingQuota = quota?.loading === undefined ? true : quota?.loading;
-  const isSrsTrial = srsTrial && !srsQuota;
+  const isSrsTrial = !srsQuota;
   const shouldDisabledButton =
-    loadingQuota ||
-    hasUserTrialInstance ||
-    hasServiceRegistryCreationFailed ||
-    (srsQuota && srsQuota?.remaining === 0) ||
-    (!srsQuota && !srsTrial);
+    loadingQuota || hasUserTrialInstance || hasServiceRegistryCreationFailed || (srsQuota && srsQuota?.remaining === 0);
 
   const resetForm = () => {
     setNameValidated({ fieldState: 'default' });
@@ -69,7 +60,6 @@ const CreateServiceRegistry: React.FC = () => {
   useEffect(() => {
     manageQuota();
   }, []);
-
 
   const handleTextInputName = (name: string) => {
     setRegistryFormData({ ...registryFormData, name });
@@ -102,15 +92,17 @@ const CreateServiceRegistry: React.FC = () => {
     if (
       code === ErrorCodes.FAILED_TO_CHECK_QUOTA ||
       code === ErrorCodes.USER_ALREADY_HAVE_TRIAL_INSTANCE ||
-      code === ErrorCodes.INSUFFICIENT_QUOTA
+      code === ErrorCodes.INSUFFICIENT_QUOTA ||
+      code === ErrorCodes.INSUFFICIENT_STANDARD_QUOTA
     ) {
       setHasServiceRegistryCreationFailed(true);
     } else {
-      addAlert && addAlert({
-        title: t('something_went_wrong'),
-        variant: AlertVariant.danger,
-        description: reason,
-      });
+      addAlert &&
+        addAlert({
+          title: t('something_went_wrong'),
+          variant: AlertVariant.danger,
+          description: reason,
+        });
     }
   };
 
@@ -126,7 +118,7 @@ const CreateServiceRegistry: React.FC = () => {
         fieldState: 'error',
         message: t('common.input_filed_invalid_helper_text'),
       });
-    } 
+    }
 
     if (name.length > MAX_SERVICE_REGISTRY_NAME_LENGTH) {
       isValid = false;
@@ -183,7 +175,7 @@ const CreateServiceRegistry: React.FC = () => {
   const createForm = () => {
     const { message, fieldState } = nameValidated;
     const { name } = registryFormData;
-   
+
     return (
       <Form onSubmit={onFormSubmit}>
         {!isFormValid && (
@@ -209,7 +201,7 @@ const CreateServiceRegistry: React.FC = () => {
             validated={fieldState}
             autoFocus={true}
           />
-        </FormGroup>        
+        </FormGroup>
       </Form>
     );
   };
