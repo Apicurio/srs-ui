@@ -6,7 +6,7 @@ import { PageSection, PageSectionVariants, Card } from '@patternfly/react-core';
 import { PaginationVariant } from '@patternfly/react-core';
 import { RegistryRest, RegistryStatusValueRest } from '@rhoas/registry-management-sdk';
 import { useBasename, useAlert, AlertVariant, useAuth } from '@rhoas/app-services-ui-shared';
-import { getFormattedDate } from '@app/utils';
+import { getFormattedDate, InstanceType } from '@app/utils';
 import { MASEmptyState, MASEmptyStateVariant, MASPagination, MASTable } from '@app/components';
 import { StatusColumn } from './StatusColumn';
 import { ServiceRegistryToolbar, ServiceRegistryToolbarProps } from './ServiceRegistryToolbar';
@@ -100,10 +100,11 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
         const registryIndex = currentUserRegistries?.findIndex((item) => item.name === registryName);
         if (registryIndex < 0) {
           removeRegistryFromList(registryName);
-          addAlert && addAlert({
-            title: t('srs.service_registry_successfully_deleted', { name: registryName }),
-            variant: AlertVariant.success,
-          });
+          addAlert &&
+            addAlert({
+              title: t('srs.service_registry_successfully_deleted', { name: registryName }),
+              variant: AlertVariant.success,
+            });
         }
       });
     }
@@ -124,19 +125,21 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
           const { status, name } = filteredInstances[0];
 
           if (status === RegistryStatusValueRest.Ready) {
-            addAlert && addAlert({
-              title: t('srs.registry_successfully_created'),
-              variant: AlertVariant.success,
-              description: <span dangerouslySetInnerHTML={{ __html: t('srs.registry_success_message', { name }) }} />,
-              dataTestId: 'toastCreateRegistry-success',
-            });
+            addAlert &&
+              addAlert({
+                title: t('srs.registry_successfully_created'),
+                variant: AlertVariant.success,
+                description: <span dangerouslySetInnerHTML={{ __html: t('srs.registry_success_message', { name }) }} />,
+                dataTestId: 'toastCreateRegistry-success',
+              });
           } else if (status === RegistryStatusValueRest.Failed) {
-            addAlert && addAlert({
-              title: t('srs.registry_not_created'),
-              variant: AlertVariant.danger,
-              description: <span dangerouslySetInnerHTML={{ __html: t('srs.registry_failed_message', { name }) }} />,
-              dataTestId: 'toastCreateRegistry-failed',
-            });
+            addAlert &&
+              addAlert({
+                title: t('srs.registry_not_created'),
+                variant: AlertVariant.danger,
+                description: <span dangerouslySetInnerHTML={{ __html: t('srs.registry_failed_message', { name }) }} />,
+                dataTestId: 'toastCreateRegistry-failed',
+              });
           }
         }
       });
@@ -170,7 +173,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   const preparedTableCells = () => {
     const tableRow: (IRowData | string[])[] | undefined = [];
     serviceRegistryItems?.forEach((row: IRowData) => {
-      const { name, created_at, status, owner } = row;
+      const { name, created_at, status, owner, instance_type } = row;
       tableRow.push({
         cells: [
           {
@@ -181,7 +184,13 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
             title: <StatusColumn status={status} instanceName={name} />,
           },
           {
-            title: getFormattedDate(created_at, t('ago')),
+            title: (
+              <>
+                {getFormattedDate(created_at, t('ago'))},
+                <br />
+                {instance_type === InstanceType?.eval && '2-months duration'}
+              </>
+            ),
           },
         ],
         originalData: { ...row, rowId: row?.id },
