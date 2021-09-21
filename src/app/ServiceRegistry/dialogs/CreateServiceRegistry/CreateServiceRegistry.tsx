@@ -5,7 +5,7 @@ import { NewServiceregistry, FormDataValidationState } from '@app/models';
 import { MASCreateModal, useRootModalContext } from '@app/components';
 import { useTranslation } from 'react-i18next';
 import { isServiceApiError, MAX_SERVICE_REGISTRY_NAME_LENGTH, MAX_SERVICE_REGISTRY_DESC_LENGTH } from '@app/utils';
-import { useAlert, AlertVariant, useAuth, useConfig } from '@bf2/ui-shared';
+import { useAlert, AlertVariant, useAuth, useConfig } from '@rhoas/app-services-ui-shared';
 
 const CreateServiceRegistry: React.FC = () => {
   const newServiceRegistry: NewServiceregistry = new NewServiceregistry();
