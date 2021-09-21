@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { RegistryRest, RegistriesApi, Configuration, RegistryStatusValueRest } from '@rhoas/registry-management-sdk';
-import { useAuth, useConfig, useBasename, useAlert, AlertVariant } from '@bf2/ui-shared';
+import { useAuth, useConfig, useBasename, useAlert, AlertVariant } from '@rhoas/app-services-ui-shared';
 import { MASDeleteModal, useRootModalContext } from '@app/components';
 import { isServiceApiError } from '@app/utils';
 

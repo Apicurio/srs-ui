@@ -16,7 +16,7 @@ import {
   PageSectionVariants,
 } from '@patternfly/react-core';
 import { RegistryRest } from '@rhoas/registry-management-sdk';
-import { useBasename } from '@bf2/ui-shared';
+import { useBasename } from '@rhoas/app-services-ui-shared';
 
 export type ServiceRegistryHeaderProps = {
   onConnectToRegistry?: (instance: RegistryRest | undefined) => void;

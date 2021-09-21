@@ -5,7 +5,7 @@ import { IAction, IExtraColumnData, IRowData, ISeparator, ISortBy, SortByDirecti
 import { PageSection, PageSectionVariants, Card } from '@patternfly/react-core';
 import { PaginationVariant } from '@patternfly/react-core';
 import { RegistryRest, RegistryStatusValueRest } from '@rhoas/registry-management-sdk';
-import { useBasename, useAlert, AlertVariant, useAuth } from '@bf2/ui-shared';
+import { useBasename, useAlert, AlertVariant, useAuth } from '@rhoas/app-services-ui-shared';
 import { getFormattedDate } from '@app/utils';
 import { MASEmptyState, MASEmptyStateVariant, MASPagination, MASTable } from '@app/components';
 import { StatusColumn } from './StatusColumn';
