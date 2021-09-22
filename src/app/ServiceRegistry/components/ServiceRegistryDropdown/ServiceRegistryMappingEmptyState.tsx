@@ -17,7 +17,7 @@ import { WrenchIcon } from '@patternfly/react-icons/dist/js/icons/wrench-icon';
 import { ArrowRightIcon } from '@patternfly/react-icons/dist/js/icons/arrow-right-icon'
 import { useHistory } from 'react-router-dom';
 
-export const SchemaEmptyState: React.FC = () => {
+export const ServiceRegistryMappingEmptyState: React.FC = () => {
     const { t } = useTranslation();
 
     const onClickLink = () => {

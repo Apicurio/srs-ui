@@ -1,2 +1,2 @@
 export * from './ServiceRegistyDropdown';
-export * from './SchemaEmptyState';
+export * from './ServiceRegistryMappingEmptyState';
