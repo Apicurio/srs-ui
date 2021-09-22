@@ -13,7 +13,7 @@ module.exports = merge(common('development'), {
   devtool: 'eval-source-map',
   devServer: {
     static: {
-      directory: "./dist",
+      directory: './dist',
     },
     host: HOST,
     port: PORT,
@@ -22,7 +22,7 @@ module.exports = merge(common('development'), {
     historyApiFallback: true,
     hot: true,
     client: {
-      overlay: true
+      overlay: true,
     },
     open: true,
     https: PROTOCOL === 'https',

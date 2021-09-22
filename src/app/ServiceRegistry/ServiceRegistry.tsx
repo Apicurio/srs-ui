@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AlertVariant, PageSection, PageSectionVariants, Text } from '@patternfly/react-core';
+import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { Configuration, RegistryListRest, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { useAuth, useConfig, useBasename, useAlert } from '@rhoas/app-services-ui-shared';
 import {
@@ -11,7 +11,7 @@ import {
   ServiceRegistryTableView,
 } from './components';
 import { ServiceRegistryHeader } from '@app/ServiceRegistry/components';
-import { MASLoading, useRootModalContext, MODAL_TYPES } from '@app/components';
+import { MASLoading, useRootModalContext, MODAL_TYPES, usePagination } from '@app/components';
 import { useTimeout } from '@app/hooks';
 import { MAX_POLL_INTERVAL } from '@app/constants';
 import {InstanceType} from '@app/utils';
@@ -28,11 +28,7 @@ export const ServiceRegistry: React.FC = () => {
   const { addAlert } = useAlert() || {};
   const { showModal } = useRootModalContext();
   const { preCreateInstance, shouldOpenCreateModal } = useSharedContext() || {};
-
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const page = parseInt(searchParams.get('page') || '', 10) || 1;
-  const perPage = parseInt(searchParams.get('perPage') || '', 10) || 10;
+  const {page=1, perPage=10}=usePagination() || {};
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
   const [selectedRegistryInstance, setSelectedRegistryInstance] = useState<RegistryRest | undefined>(undefined);
@@ -99,33 +95,6 @@ export const ServiceRegistry: React.FC = () => {
 
   useTimeout(() => fetchRegistries(), MAX_POLL_INTERVAL);
 
-
-  const downloadArtifactsZip = async (registryUrl?: string, name?: string) => {
-
-    const accessToken = await auth?.apicurio_registry.getToken();
-
-    fetch(`${registryUrl}/apis/registry/v2/admin/export`, {
-      headers: new Headers({
-        "Authorization": `Bearer ${accessToken}` || ""
-      })
-    })
-      .then(response => {
-        return response.blob()
-      })
-      .then(data => {
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(data);
-        link.download = `${name}.zip`;
-        link.click();
-      }).catch(error => {
-        addAlert && addAlert({
-          title: t('something_went_wrong'),
-          variant: AlertVariant.danger,
-          description: error?.response?.data?.reason,
-        });
-      })
-  };
-
   const onConnectToRegistry = (instance: RegistryRest | undefined) => {
     setIsExpandedDrawer(true);
     setSelectedRegistryInstance(instance);
@@ -136,7 +105,7 @@ export const ServiceRegistry: React.FC = () => {
   };
 
   const onDeleteRegistry = (registry: RegistryRest | undefined) => {
-    const { name, status, registryUrl } = registry || {};
+    const { name, status } = registry || {};
     showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
       serviceRegistryStatus: status,
       selectedItemData: registry,
@@ -146,18 +115,7 @@ export const ServiceRegistry: React.FC = () => {
         label: t('common.delete'),
       },
       textProps: {
-        descriptionHTML: (
-          <>
-            <Text className='mas--delete-item__modal--text'>
-              <span dangerouslySetInnerHTML={{ __html: t('common.delete_service_registry_description', { name }) }} />
-            </Text>
-            <Text className='mas--delete-item__modal--text'>
-              {t('common.delete_service_registry_download_zip')}
-              &nbsp;
-              <Link onClick={() => downloadArtifactsZip(registryUrl, name)} to="#">{t('common.delete_service_registry_download_zip_link')}</Link>
-            </Text>
-          </>
-        )
+        description: t('common.delete_service_registry_description', { name }),
       },
     });
   };

@@ -44,14 +44,8 @@ export const QuotaAlert: React.FC<QuotaAlertProps> = ({
     variant = AlertVariant.warning;
     messageKey = 'common.deploy_one_instance_alert_message';
   }
-  //if user has no standard quota and no trial quota
-  else if (srsQuota && srsQuota?.remaining === 0 && !loadingQuota) {
-    variant = AlertVariant.warning;
-    titleKey = 'common.no_quota_service_registry_alert_title';
-    messageKey = 'common.no_quota_service_registry_alert_message';
-  }
   //if user has no standard quota and trial instances are available
-  else if ((!srsQuota || srsQuota?.remaining === 0) && !hasUserTrialInstance) {
+  else if (!srsQuota && !hasUserTrialInstance) {
     variant = AlertVariant.info;
     titleKey = 'common.trial_quota_service_registry_title';
   }
