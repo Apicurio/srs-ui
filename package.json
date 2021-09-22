@@ -89,10 +89,10 @@
     "webpack-merge": "5.8.0"
   },
   "dependencies": {
-    "@patternfly/patternfly": "4.132.2",
+    "@patternfly/patternfly": "4.135.2",
     "@patternfly/react-core": "4.152.4",
-    "@patternfly/react-icons": "4.11.14",
-    "@patternfly/react-styles": "4.11.13",
+    "@patternfly/react-icons": "4.11.17",
+    "@patternfly/react-styles": "4.11.16",
     "@patternfly/react-table": "4.29.58",
     "@redhat-cloud-services/frontend-components-config": "4.3.5",
     "@rhoas/app-services-ui-shared": "^0.12.2",
