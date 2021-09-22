@@ -100,6 +100,13 @@
     "registry_successfully_created": "Service Registry instance is ready",
     "registry_success_message": "The creation of the <b>{{name}}</b> Service Registry instance is ready for you.",
     "registry_not_created": "Service Registry instance creation failed",
-    "registry_failed_message": "The creation of the <b>{{name}}</b> Service Registry instance is failed"
+    "registry_failed_message": "The creation of the <b>{{name}}</b> Service Registry instance is failed",
+    "select_service_registry_instance": "Select instance",
+    "service_registry_instance": "Service Registry instance",
+    "create_service_registry_helper_text": "Create Service Registry instance",
+    "empty_state_title": "No Service Registry instances",
+    "empty_state_body": "To register a schema for this topic, create a Service Registry instance and use the following naming format for the artifact ID:",
+    "topic_test_value": "topic-test-value",
+    "topic_test_key": "topic-test-key"
   }
 }
