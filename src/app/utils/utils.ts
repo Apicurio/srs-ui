@@ -30,11 +30,17 @@ const getFormattedDate = (date: string | Date, translatePostfix: string): string
   return formatDistance(date, new Date()) + ' ' + translatePostfix;
 };
 
+enum InstanceType {
+  eval = 'eval',
+  standard = 'standard',
+}
+
 export {
   accessibleRouteChangeHandler,
   getModalAppendTo,
   MAX_SERVICE_REGISTRY_NAME_LENGTH,
   MAX_SERVICE_REGISTRY_DESC_LENGTH,
   statusOptions,
-  getFormattedDate
+  getFormattedDate,
+  InstanceType
 };

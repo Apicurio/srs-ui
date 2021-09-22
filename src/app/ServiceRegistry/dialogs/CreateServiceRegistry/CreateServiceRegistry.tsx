@@ -1,41 +1,65 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Form, FormAlert, FormGroup, TextInput, TextArea } from '@patternfly/react-core';
+import { Alert, Form, FormAlert, FormGroup, TextInput, Flex, FlexItem, Divider } from '@patternfly/react-core';
 import { Configuration, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { NewServiceregistry, FormDataValidationState } from '@app/models';
 import { MASCreateModal, useRootModalContext } from '@app/components';
 import { useTranslation } from 'react-i18next';
-import { isServiceApiError, MAX_SERVICE_REGISTRY_NAME_LENGTH, MAX_SERVICE_REGISTRY_DESC_LENGTH } from '@app/utils';
-import { useAlert, AlertVariant, useAuth, useConfig } from '@rhoas/app-services-ui-shared';
+import { isServiceApiError, MAX_SERVICE_REGISTRY_NAME_LENGTH, ErrorCodes } from '@app/utils';
+import {
+  useAlert,
+  AlertVariant,
+  useAuth,
+  useConfig,
+  Quota,
+  QuotaType,
+  useQuota,
+  QuotaValue,
+} from '@rhoas/app-services-ui-shared';
+import { QuotaAlert } from './QuotaAlert';
+import { ServiceRegistryInformation } from './ServiceRegistryInformation';
+import './CreateServiceRegistry.css';
 
 const CreateServiceRegistry: React.FC = () => {
   const newServiceRegistry: NewServiceregistry = new NewServiceregistry();
   const { store, hideModal } = useRootModalContext();
-  const { fetchServiceRegistries } = store?.modalProps || {};
+  const { fetchServiceRegistries, hasUserTrialInstance } = store?.modalProps || {};
   const { t } = useTranslation();
   const auth = useAuth();
   const {
     srs: { apiBasePath: basePath },
   } = useConfig();
-  const { addAlert } = useAlert();
+  const { addAlert } = useAlert() || {};
+  const { getQuota } = useQuota() || {};
 
   const [nameValidated, setNameValidated] = useState<FormDataValidationState>({ fieldState: 'default' });
-  const [descriptionValidated, setDescriptionValidated] = useState<FormDataValidationState>({ fieldState: 'default' });
   const [registryFormData, setRegistryFormData] = useState<NewServiceregistry>(newServiceRegistry);
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
   const [isCreationInProgress, setCreationInProgress] = useState(false);
+  const [quota, setQuota] = useState<Quota>();
+  const [hasServiceRegistryCreationFailed, setHasServiceRegistryCreationFailed] = useState<boolean>(false);
+
+  const srsQuota: QuotaValue | undefined = quota?.data?.get(QuotaType?.srs);
+  const loadingQuota = quota?.loading === undefined ? true : quota?.loading;
+  const isSrsTrial = !srsQuota;
+  const shouldDisabledButton =
+    loadingQuota || hasUserTrialInstance || hasServiceRegistryCreationFailed || (srsQuota && srsQuota?.remaining === 0);
 
   const resetForm = () => {
     setNameValidated({ fieldState: 'default' });
-    setDescriptionValidated({ fieldState: 'default' });
     setRegistryFormData(newServiceRegistry);
     setIsFormValid(true);
   };
+  const manageQuota = async () => {
+    if (getQuota) {
+      await getQuota().then((res) => {
+        setQuota(res);
+      });
+    }
+  };
 
   useEffect(() => {
-    if (nameValidated.fieldState !== 'error' && descriptionValidated.fieldState !== 'error') {
-      setIsFormValid(true);
-    }
-  }, [nameValidated.fieldState, descriptionValidated.fieldState]);
+    manageQuota();
+  }, []);
 
   const handleTextInputName = (name: string) => {
     setRegistryFormData({ ...registryFormData, name });
@@ -60,45 +84,31 @@ const CreateServiceRegistry: React.FC = () => {
 
   const handleServerError = (error: Error) => {
     let reason: string | undefined;
+    let code: string | undefined;
     if (isServiceApiError(error)) {
       reason = error.response?.data.reason;
+      code = error.response?.data.code;
     }
-    addAlert({
-      title: t('something_went_wrong'),
-      variant: AlertVariant.danger,
-      description: reason,
-    });
-  };
-
-  const handleTextInputDescription = (description: string) => {
-    setRegistryFormData({ ...registryFormData, description });
-    let isValid = true;
-    if (description && !/^[a-zA-Z0-9.,\-\s]*$/.test(description.trim())) {
-      isValid = false;
-    }
-    if (description && description.length > MAX_SERVICE_REGISTRY_DESC_LENGTH) {
-      setDescriptionValidated({
-        fieldState: 'error',
-        message: t('srs.service_registry_description_length_is_greater_than_expected', {
-          maxLength: MAX_SERVICE_REGISTRY_DESC_LENGTH,
-        }),
-      });
-    } else if (isValid && descriptionValidated.fieldState === 'error') {
-      setDescriptionValidated({
-        fieldState: 'default',
-        message: '',
-      });
-    } else if (!isValid) {
-      setDescriptionValidated({
-        fieldState: 'error',
-        message: t('common.input_text_area_invalid_helper_text'),
-      });
+    if (
+      code === ErrorCodes.FAILED_TO_CHECK_QUOTA ||
+      code === ErrorCodes.USER_ALREADY_HAVE_TRIAL_INSTANCE ||
+      code === ErrorCodes.INSUFFICIENT_QUOTA ||
+      code === ErrorCodes.INSUFFICIENT_STANDARD_QUOTA
+    ) {
+      setHasServiceRegistryCreationFailed(true);
+    } else {
+      addAlert &&
+        addAlert({
+          title: t('something_went_wrong'),
+          variant: AlertVariant.danger,
+          description: reason,
+        });
     }
   };
 
   const validateCreateForm = () => {
     let isValid = true;
-    const { name, description } = registryFormData;
+    const { name } = registryFormData;
     if (!name || name.trim() === '') {
       isValid = false;
       setNameValidated({ fieldState: 'error', message: t('common.this_is_a_required_field') });
@@ -108,12 +118,6 @@ const CreateServiceRegistry: React.FC = () => {
         fieldState: 'error',
         message: t('common.input_filed_invalid_helper_text'),
       });
-    } else if (!/^[a-zA-Z0-9.,\-\s]*$/.test(description.trim())) {
-      isValid = false;
-      setDescriptionValidated({
-        fieldState: 'error',
-        message: t('common.input_text_area_invalid_helper_text'),
-      });
     }
 
     if (name.length > MAX_SERVICE_REGISTRY_NAME_LENGTH) {
@@ -122,16 +126,6 @@ const CreateServiceRegistry: React.FC = () => {
         fieldState: 'error',
         message: t('srs.service_registry_name_length_is_greater_than_expected', {
           maxLength: MAX_SERVICE_REGISTRY_NAME_LENGTH,
-        }),
-      });
-    }
-
-    if (description && description.length > MAX_SERVICE_REGISTRY_DESC_LENGTH) {
-      isValid = false;
-      setDescriptionValidated({
-        fieldState: 'error',
-        message: t('srs.service_registry_desc_length_is_greater_than_expected', {
-          maxLength: MAX_SERVICE_REGISTRY_DESC_LENGTH,
         }),
       });
     }
@@ -180,8 +174,8 @@ const CreateServiceRegistry: React.FC = () => {
 
   const createForm = () => {
     const { message, fieldState } = nameValidated;
-    const { name, description } = registryFormData;
-    const { message: descMessage, fieldState: descFieldState } = descriptionValidated;
+    const { name } = registryFormData;
+
     return (
       <Form onSubmit={onFormSubmit}>
         {!isFormValid && (
@@ -208,21 +202,6 @@ const CreateServiceRegistry: React.FC = () => {
             autoFocus={true}
           />
         </FormGroup>
-        <FormGroup
-          label="Description"
-          fieldId="text-input-description"
-          helperTextInvalid={descMessage}
-          validated={descFieldState}
-          helperText={t('common.input_text_area_invalid_helper_text')}
-        >
-          <TextArea
-            id="text-input-description"
-            name="text-input-description"
-            value={description}
-            onChange={handleTextInputDescription}
-            validated={descFieldState}
-          />
-        </FormGroup>
       </Form>
     );
   };
@@ -239,8 +218,21 @@ const CreateServiceRegistry: React.FC = () => {
       isCreationInProgress={isCreationInProgress}
       dataTestIdSubmit="modalCreateServiceRegistry-buttonSubmit"
       dataTestIdCancel="modalCreateServiceRegistry-buttonCancel"
+      isDisabledButton={shouldDisabledButton}
     >
-      {createForm()}
+      <QuotaAlert
+        quota={quota}
+        hasServiceRegistryCreationFailed={hasServiceRegistryCreationFailed}
+        loadingQuota={loadingQuota}
+        hasUserTrialInstance={hasUserTrialInstance}
+      />
+      <Flex direction={{ default: 'column', lg: 'row' }}>
+        <FlexItem flex={{ default: 'flex_2' }}> {createForm()}</FlexItem>
+        <Divider isVertical />
+        <FlexItem flex={{ default: 'flex_1' }} className="mk--create-instance-modal__sidebar--content">
+          <ServiceRegistryInformation isSrsTrial={isSrsTrial} />
+        </FlexItem>
+      </Flex>
     </MASCreateModal>
   );
 };

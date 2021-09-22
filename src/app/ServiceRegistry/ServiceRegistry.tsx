@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { Configuration, RegistryListRest, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
-import { useAuth, useConfig } from '@rhoas/app-services-ui-shared';
+import { useAuth, useConfig, useBasename, useAlert } from '@rhoas/app-services-ui-shared';
 import {
   ServiceRegistryDrawer,
   UnauthrizedUser,
@@ -14,6 +14,7 @@ import { ServiceRegistryHeader } from '@app/ServiceRegistry/components';
 import { MASLoading, useRootModalContext, MODAL_TYPES, usePagination } from '@app/components';
 import { useTimeout } from '@app/hooks';
 import { MAX_POLL_INTERVAL } from '@app/constants';
+import {InstanceType} from '@app/utils';
 import { useSharedContext } from '@app/context';
 import './ServiceRegistry.css';
 
@@ -22,7 +23,9 @@ export const ServiceRegistry: React.FC = () => {
   const auth = useAuth();
   const {
     srs: { apiBasePath: basePath },
-  } = useConfig();
+  } = useConfig() || {srs:{apiBasePath:''}};
+
+  const { addAlert } = useAlert() || {};
   const { showModal } = useRootModalContext();
   const { preCreateInstance, shouldOpenCreateModal } = useSharedContext() || {};
   const {page=1, perPage=10}=usePagination() || {};
@@ -35,6 +38,8 @@ export const ServiceRegistry: React.FC = () => {
   const [registryItems, setRegistryItems] = useState<RegistryRest[] | undefined>(undefined);
   const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined);
   const [orderBy, setOrderBy] = useState<string>('name asc');
+
+  const hasUserTrialInstance = registryItems?.some((r) => r?.instance_type === InstanceType?.eval);
 
   useEffect(() => {
     fetchRegistries();
@@ -68,22 +73,24 @@ export const ServiceRegistry: React.FC = () => {
 
   const fetchRegistries = async () => {
     const accessToken = await auth?.srs.getToken();
-    const api = new RegistriesApi(
-      new Configuration({
-        accessToken,
-        basePath,
-      })
-    );
-    await api
-      .getRegistries(page,perPage)
-      .then((res) => {
-        const registry = res?.data;
-        setRegistries(registry);
-        setRegistryItems(registry?.items);
-      })
-      .catch((error) => {
-        //todo: handle error
-      });
+    if(basePath && accessToken){
+      const api = new RegistriesApi(
+        new Configuration({
+          accessToken,
+          basePath,
+        })
+      );
+      await api
+        .getRegistries()
+        .then((res) => {
+          const registry = res?.data;
+          setRegistries(registry);
+          setRegistryItems(registry?.items);
+        })
+        .catch((error) => {
+          //todo: handle error
+        });
+    }    
   };
 
   useTimeout(() => fetchRegistries(), MAX_POLL_INTERVAL);
@@ -122,6 +129,7 @@ export const ServiceRegistry: React.FC = () => {
   const openCreateModal = () => {
     showModal(MODAL_TYPES.CREATE_SERVICE_REGISTRY, {
       fetchServiceRegistries: fetchRegistries,
+      hasUserTrialInstance
     });
   };
 
