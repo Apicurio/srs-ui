@@ -186,9 +186,9 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
           {
             title: (
               <>
-                {getFormattedDate(created_at, t('ago'))},
+                {getFormattedDate(created_at, t('ago'))}
                 <br />
-                {instance_type === InstanceType?.eval && '2-months duration'}
+                {instance_type === InstanceType?.eval && '2-month duration'}
               </>
             ),
           },
