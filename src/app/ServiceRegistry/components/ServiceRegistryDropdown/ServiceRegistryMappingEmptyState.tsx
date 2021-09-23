@@ -13,14 +13,22 @@ import {
     Button,
     Title,
 } from '@patternfly/react-core';
+
 import { WrenchIcon } from '@patternfly/react-icons/dist/js/icons/wrench-icon';
 import { ArrowRightIcon } from '@patternfly/react-icons/dist/js/icons/arrow-right-icon'
 import { useHistory } from 'react-router-dom';
+import { useBasename } from '@bf2/ui-shared';
 
 export const ServiceRegistryMappingEmptyState: React.FC = () => {
     const { t } = useTranslation();
 
+    const histroy = useHistory();
+
+    const { getBasename } = useBasename() || { getBasename: () => '' };
+    const basename = getBasename();
+
     const onClickLink = () => {
+        histroy.push(`${basename}`);
 
     }
 

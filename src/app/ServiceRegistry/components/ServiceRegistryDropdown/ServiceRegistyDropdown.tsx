@@ -1,12 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageSection, Select, SelectVariant, SelectOption, Card, CardTitle, CardBody, Button, ButtonVariant, Grid, GridItem } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
+import { Configuration, RegistryListRest, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
+import { useAuth, useConfig } from '@bf2/ui-shared';
+import { __values } from 'tslib';
+
 
 export const ServiceRegistryDropdown: React.FC = () => {
     const { t } = useTranslation();
 
+    const [registryItems, setRegistryItems] = useState<RegistryRest[] | undefined>(undefined);
+
     const [selectedSchema, setSelectedSchema] = useState<boolean>(false);
     const [isSchemaOpen, setIsSchemaOpen] = useState<boolean>(false);
+
+    const auth = useAuth();
+
+    const {
+        srs: { apiBasePath: basePath },
+    } = useConfig();
+
+    useEffect(() => {
+        fetchRegistries();
+    }, []);
+
+    const fetchRegistries = async () => {
+        const accessToken = await auth?.srs.getToken();
+        const api = new RegistriesApi(
+            new Configuration({
+                accessToken,
+                basePath,
+            })
+        );
+        await api
+            .getRegistries()
+            .then((res) => {
+                const registry = res?.data;
+                setRegistryItems(registry?.items);
+            })
+            .catch((error) => {
+                //todo: handle error
+            });
+    };
 
     const onToggleSchema = (isSchemaOpen: boolean) => {
         setIsSchemaOpen(isSchemaOpen);
@@ -20,7 +55,6 @@ export const ServiceRegistryDropdown: React.FC = () => {
     const onClearSchema = () => {
         setSelectedSchema(false);
     };
-
 
     return (
         <PageSection>
@@ -41,10 +75,11 @@ export const ServiceRegistryDropdown: React.FC = () => {
                                 isOpen={isSchemaOpen}
                                 width={600}
                                 onClear={onClearSchema}>
-
-                                <SelectOption key={0} value='test-instance' />
-                                <SelectOption key={1} value='test-instance1' />
-                                <SelectOption key={2} value='test-instance2' />
+                                {registryItems?.map((registryItem, index) => {
+                                    return (
+                                        <SelectOption key={index} value={registryItem.name}></SelectOption>
+                                    );
+                                })}
                             </Select>
                         </GridItem>
                         <GridItem>
