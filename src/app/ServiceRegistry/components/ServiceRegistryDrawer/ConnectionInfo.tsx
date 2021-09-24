@@ -9,14 +9,20 @@ import {
   Title,
   TitleSizes,
   Skeleton,
+  Label,
+  Popover,
+  Button,
+  ButtonVariant,
 } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
+import { HelpIcon } from '@patternfly/react-icons';
 
 type ConnectionInfoProps = {
   registryApisUrl: string;
+  tokenEndPointUrl: string;
 };
 
-export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl }) => {
+export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl, tokenEndPointUrl }) => {
   const { t } = useTranslation();
 
   const registriesInfo = [
@@ -55,6 +61,43 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl 
           )
         )}
       </Form>
+      <TextContent className='pf-u-pb-sm'>
+        <Text component={TextVariants.h3} className='pf-u-mt-xl'>
+          {t('srs.authentication_method')}
+        </Text>
+        <Text component={TextVariants.h4} className='pf-u-mt-md'>
+          {t('srs.sasl_oauthbearer')}{' '}
+          <Label color='green'>{t('srs.recommended')}</Label>
+          <Popover
+            aria-label={t('srs.sasl_oauthbearer')}
+            bodyContent={
+              <div>{t('srs.sasl_oauthbearer_popover_content')}</div>
+            }
+          >
+            <Button
+              variant={ButtonVariant.plain}
+              aria-label={t('more_info_about_sasl_oauthbearer')}
+            >
+              <HelpIcon />
+            </Button>
+          </Popover>
+        </Text>
+      <Text component={TextVariants.small}>
+          {t('srs.sasl_oauthbearer_description')}
+        </Text>
+        <Text component={TextVariants.h6} className='pf-u-mt-md'>
+          {t('srs.token_endpoint_url')}
+        </Text>
+          <ClipboardCopy>{tokenEndPointUrl}</ClipboardCopy>
+      </TextContent>
+      <TextContent className='pf-u-pb-sm'>
+        <Text component={TextVariants.h4} className='pf-u-mt-md'>
+          {t('srs.sasl_plain')}
+        </Text>
+        <Text component={TextVariants.small}>
+          {t('srs.sasl_plain_description')}
+        </Text>
+      </TextContent>
     </div>
   );
 };
