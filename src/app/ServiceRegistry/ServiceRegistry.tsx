@@ -27,7 +27,7 @@ export const ServiceRegistry: React.FC = () => {
 
   const { addAlert } = useAlert() || {};
   const { showModal } = useRootModalContext();
-  const { preCreateInstance, shouldOpenCreateModal } = useSharedContext() || {};
+  const { preCreateInstance, shouldOpenCreateModal,tokenEndPointUrl } = useSharedContext() || {};
   const {page=1, perPage=10}=usePagination() || {};
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
@@ -169,6 +169,7 @@ export const ServiceRegistry: React.FC = () => {
           notRequiredDrawerContentBackground={notRequiredDrawerContentBackground}
           onClose={onCloseDrawer}
           registry={selectedRegistryInstance}
+          tokenEndPointUrl={tokenEndPointUrl}
         >
           <main className="pf-c-page__main">
             <ServiceRegistryHeader
