@@ -106,14 +106,14 @@
     "registry_success_message": "The creation of the <b>{{name}}</b> Service Registry instance is ready for you.",
     "registry_not_created": "Service Registry instance creation failed",
     "registry_failed_message": "The creation of the <b>{{name}}</b> Service Registry instance is failed",
-    "sasl_oauthbearer_description": "Use your service account credentials and a token endpoint URL to authenticate your client with the Service Registry instance.",
+    "oauth_description": "Use your service account credentials and a token endpoint URL to authenticate your client with the Service Registry instance.",
     "token_endpoint_url": "Token endpoint URL",
-    "sasl_plain": "SASL/PLAIN",
-    "sasl_plain_description": " Use your service account credentials (Client ID and Client secret) as the user name and password to authenticate your client with the Service Registry instance.",
-    "sasl_oauthbearer": "SASL/OAUTHBEARER",
+    "http_basic": "HTTP Basic",
+    "http_basic_description": " Use your service account credentials (Client ID and Client secret) as the user name and password to authenticate your client with the Service Registry instance.",
+    "oauth": "OAuth",
     "authentication_method": "Authentication method",
     "recommended": "Recommended",
-    "sasl_oauthbearer_popover_content": "OpenShift Service Registry uses the industry-standard OAuth protocol via the SASL/OAUTHBEARER.",
-    "more_info_about_sasl_oauthbearer": "More information about SASL/OAUTHBEARER"
+    "oauth_popover_content": "OpenShift Service Registry uses the industry-standard OAuth protocol.",
+    "more_info_about_oauth": "More information about OAuth"
   }
 }

@@ -66,24 +66,24 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl,
           {t('srs.authentication_method')}
         </Text>
         <Text component={TextVariants.h4} className='pf-u-mt-md'>
-          {t('srs.sasl_oauthbearer')}{' '}
+          {t('srs.oauth')}{' '}
           <Label color='green'>{t('srs.recommended')}</Label>
           <Popover
-            aria-label={t('srs.sasl_oauthbearer')}
+            aria-label={t('srs.oauth')}
             bodyContent={
-              <div>{t('srs.sasl_oauthbearer_popover_content')}</div>
+              <div>{t('srs.oauth_popover_content')}</div>
             }
           >
             <Button
               variant={ButtonVariant.plain}
-              aria-label={t('more_info_about_sasl_oauthbearer')}
+              aria-label={t('more_info_about_oauth')}
             >
               <HelpIcon />
             </Button>
           </Popover>
         </Text>
       <Text component={TextVariants.small}>
-          {t('srs.sasl_oauthbearer_description')}
+          {t('srs.oauth_description')}
         </Text>
         <Text component={TextVariants.h6} className='pf-u-mt-md'>
           {t('srs.token_endpoint_url')}
@@ -92,10 +92,10 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl,
       </TextContent>
       <TextContent className='pf-u-pb-sm'>
         <Text component={TextVariants.h4} className='pf-u-mt-md'>
-          {t('srs.sasl_plain')}
+          {t('srs.http_basic')}
         </Text>
         <Text component={TextVariants.small}>
-          {t('srs.sasl_plain_description')}
+          {t('srs.http_basic_description')}
         </Text>
       </TextContent>
     </div>
