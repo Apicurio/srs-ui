@@ -88,7 +88,7 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl,
         <Text component={TextVariants.h6} className='pf-u-mt-md'>
           {t('srs.token_endpoint_url')}
         </Text>
-          <ClipboardCopy>{tokenEndPointUrl}</ClipboardCopy>
+          <ClipboardCopy isReadOnly>{tokenEndPointUrl}</ClipboardCopy>
       </TextContent>
       <TextContent className='pf-u-pb-sm'>
         <Text component={TextVariants.h4} className='pf-u-mt-md'>
