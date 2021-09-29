@@ -120,9 +120,6 @@ export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
       {...restModalProps}
     >
       {description}
-      {/* {description && (
-        <Text className={className} dangerouslySetInnerHTML={{ __html: description || '' }} {...restTextProps} />
-      )} */}
       {showTextInput && (
         <>
           <label htmlFor="mas-name-input" dangerouslySetInnerHTML={{ __html: label }} />
