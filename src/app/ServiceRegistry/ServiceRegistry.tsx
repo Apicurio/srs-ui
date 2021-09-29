@@ -169,7 +169,6 @@ export const ServiceRegistry: React.FC = () => {
           notRequiredDrawerContentBackground={notRequiredDrawerContentBackground}
           onClose={onCloseDrawer}
           registry={selectedRegistryInstance}
-          tokenEndPointUrl={tokenEndPointUrl}
         >
           <main className="pf-c-page__main">
             <ServiceRegistryHeader

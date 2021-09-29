@@ -10,7 +10,6 @@ export type ServiceRegistryDrawerProps = Omit<
 > & {
   activeTab?: React.ReactText;
   registry: RegistryRest | undefined;
-  tokenEndPointUrl?: string;
 };
 
 const ServiceRegistryDrawer: React.FC<ServiceRegistryDrawerProps> = ({
@@ -21,12 +20,11 @@ const ServiceRegistryDrawer: React.FC<ServiceRegistryDrawerProps> = ({
   children,
   notRequiredDrawerContentBackground,
   registry,
-  tokenEndPointUrl,
 }: ServiceRegistryDrawerProps) => {
   const { t } = useTranslation();
   const { registryUrl, name } = registry || {};
 
-  const panelBodyContent = <ConnectionInfo registryApisUrl={registryUrl} tokenEndPointUrl={tokenEndPointUrl} />;
+  const panelBodyContent = <ConnectionInfo registryApisUrl={registryUrl} />;
 
   return (
     <MASDrawer
