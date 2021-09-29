@@ -34,7 +34,7 @@ export type MASDeleteModalProps = {
     label?: string;
   };
   textProps?: Omit<TextProps, 'children'> & {
-    description?: string;
+    description?: string | React.ReactNode;
   };
   textInputProps?: TextInputProps & {
     showTextInput: boolean;
@@ -119,9 +119,10 @@ export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
       ]}
       {...restModalProps}
     >
-      {description && (
+      {description}
+      {/* {description && (
         <Text className={className} dangerouslySetInnerHTML={{ __html: description || '' }} {...restTextProps} />
-      )}
+      )} */}
       {showTextInput && (
         <>
           <label htmlFor="mas-name-input" dangerouslySetInnerHTML={{ __html: label }} />
