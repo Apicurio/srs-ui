@@ -114,6 +114,13 @@
     "authentication_method": "Authentication method",
     "recommended": "Recommended",
     "oauth_popover_content": "OpenShift Service Registry uses the industry-standard OAuth protocol.",
-    "more_info_about_oauth": "More information about OAuth"
+    "more_info_about_oauth": "More information about OAuth",
+    "select_instance": "Select instance",
+    "service_registry_instance": "Service Registry instance",
+    "create_service_registry_helper_text": "Create Service Registry instance",
+    "empty_state_title": "No Service Registry instances",
+    "empty_state_body": "To register a schema for this topic, create a Service Registry instance and use the following naming format for the artifact ID:",
+    "schema_loading": "Looking for a matching schema…",
+    "go_to_service_registry_instance_helper_text": "Go to Service Registry instance"
   }
 }
