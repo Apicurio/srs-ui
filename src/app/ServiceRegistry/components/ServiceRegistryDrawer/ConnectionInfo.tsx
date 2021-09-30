@@ -16,13 +16,14 @@ import {
 } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 import { HelpIcon } from '@patternfly/react-icons';
+import { useSharedContext } from '@app/context';
 
 type ConnectionInfoProps = {
-  registryApisUrl: string;
-  tokenEndPointUrl: string;
+  registryApisUrl: string | undefined;
 };
 
-export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl, tokenEndPointUrl }) => {
+export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl }) => {
+  const { tokenEndPointUrl } = useSharedContext() || {};
   const { t } = useTranslation();
 
   const registriesInfo = [
@@ -61,42 +62,29 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl,
           )
         )}
       </Form>
-      <TextContent className='pf-u-pb-sm'>
-        <Text component={TextVariants.h3} className='pf-u-mt-xl'>
+      <TextContent className="pf-u-pb-sm">
+        <Text component={TextVariants.h3} className="pf-u-mt-xl">
           {t('srs.authentication_method')}
         </Text>
-        <Text component={TextVariants.h4} className='pf-u-mt-md'>
-          {t('srs.oauth')}{' '}
-          <Label color='green'>{t('srs.recommended')}</Label>
-          <Popover
-            aria-label={t('srs.oauth')}
-            bodyContent={
-              <div>{t('srs.oauth_popover_content')}</div>
-            }
-          >
-            <Button
-              variant={ButtonVariant.plain}
-              aria-label={t('more_info_about_oauth')}
-            >
+        <Text component={TextVariants.h4} className="pf-u-mt-md">
+          {t('srs.oauth')} <Label color="green">{t('srs.recommended')}</Label>
+          <Popover aria-label={t('srs.oauth')} bodyContent={<div>{t('srs.oauth_popover_content')}</div>}>
+            <Button variant={ButtonVariant.plain} aria-label={t('more_info_about_oauth')}>
               <HelpIcon />
             </Button>
           </Popover>
         </Text>
-      <Text component={TextVariants.small}>
-          {t('srs.oauth_description')}
-        </Text>
-        <Text component={TextVariants.h6} className='pf-u-mt-md'>
+        <Text component={TextVariants.small}>{t('srs.oauth_description')}</Text>
+        <Text component={TextVariants.h6} className="pf-u-mt-md">
           {t('srs.token_endpoint_url')}
         </Text>
-          <ClipboardCopy isReadOnly>{tokenEndPointUrl}</ClipboardCopy>
+        <ClipboardCopy isReadOnly>{tokenEndPointUrl}</ClipboardCopy>
       </TextContent>
-      <TextContent className='pf-u-pb-sm'>
-        <Text component={TextVariants.h4} className='pf-u-mt-md'>
+      <TextContent className="pf-u-pb-sm">
+        <Text component={TextVariants.h4} className="pf-u-mt-md">
           {t('srs.http_basic')}
         </Text>
-        <Text component={TextVariants.small}>
-          {t('srs.http_basic_description')}
-        </Text>
+        <Text component={TextVariants.small}>{t('srs.http_basic_description')}</Text>
       </TextContent>
     </div>
   );
