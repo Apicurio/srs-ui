@@ -127,7 +127,8 @@ module.exports = (env, argv) => {
         filename: `${federatedModuleName}${isProduction ? '.[chunkhash:8]' : ''}.js`,
         exposes: {
           "./ServiceRegistry":"./src/app/ServiceRegistry/ServiceRegistryFederated",
-          "./ApicurioRegistry":"./src/app/ServiceRegistry/ApicurioRegistryFederated"
+          "./ApicurioRegistry":"./src/app/ServiceRegistry/ApicurioRegistryFederated",
+          "./ServiceRegistryMapping":"./src/app/ServiceRegistry/components/ServiceRegistryMapping/ServiceRegistryMappingFederated"
         },
         shared: {
           ...dependencies,
