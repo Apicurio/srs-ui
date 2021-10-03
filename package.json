@@ -99,7 +99,7 @@
     "@rhoas/registry-management-sdk": "0.12.3",
     "@testing-library/dom": "8.7.1",
     "@testing-library/jest-dom": "5.14.1",
-    "@testing-library/react": "12.1.1",
+    "@testing-library/react": "12.1.2",
     "@testing-library/react-hooks": "7.0.2",
     "@testing-library/user-event": "13.2.1",
     "date-fns": "2.24.0",
