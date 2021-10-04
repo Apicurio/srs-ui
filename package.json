@@ -97,7 +97,7 @@
     "@redhat-cloud-services/frontend-components-config": "4.3.7",
     "@rhoas/app-services-ui-shared": "0.14.0",
     "@rhoas/registry-management-sdk": "0.12.3",
-    "@testing-library/dom": "8.7.1",
+    "@testing-library/dom": "8.7.2",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "12.1.2",
     "@testing-library/react-hooks": "7.0.2",
