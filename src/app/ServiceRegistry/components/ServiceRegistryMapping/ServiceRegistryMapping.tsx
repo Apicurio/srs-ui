@@ -32,6 +32,7 @@ type SchemasProps = {
 const Schemas: React.FC<SchemasProps> = React.memo(({ renderSchema, registry }) => {
   return (renderSchema && registry && renderSchema(registry)) || <></>;
 });
+Schemas.displayName = 'Schemas';
 
 export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
   renderSchema,
