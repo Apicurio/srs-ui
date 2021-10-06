@@ -1,126 +1,132 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
-    Select, SelectVariant, SelectOption, Card, CardTitle, CardBody, Button, ButtonVariant, Grid, GridItem,
+  Select,
+  SelectVariant,
+  SelectOption,
+  Card,
+  CardTitle,
+  CardBody,
+  Grid,
+  GridItem,
+  SelectOptionObject,
 } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 import { Configuration, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { useAuth, useConfig } from '@rhoas/app-services-ui-shared';
-import { ServiceRegistryMappingEmptyState } from './ServiceRegistryEmptyState';
-import { ServiceRegistryLoading } from './ServiceRegistryLoading';
-import { useHistory } from 'react-router-dom';
-import { useBasename } from '@rhoas/app-services-ui-shared';
+import { EmptyState } from './EmptyState';
+import { Loading } from './Loading';
 import '@patternfly/patternfly/patternfly.min.css';
 import '@patternfly/patternfly/components/Select/select.css';
 
-export const ServiceRegistryMapping: React.FC = () => {
-    const { t } = useTranslation();
-
-    const [registryItems, setRegistryItems] = useState<RegistryRest[] | undefined>(undefined);
-
-    const [selectedSchema, setSelectedSchema] = useState<boolean>(false);
-    const [isSchemaOpen, setIsSchemaOpen] = useState<boolean>(false);
-
-    const auth = useAuth();
-
-    const histroy = useHistory();
-
-    const { getBasename } = useBasename() || { getBasename: () => '' };
-    const basename = getBasename();
-
-    const {
-        srs: { apiBasePath: basePath },
-    } = useConfig();
-
-    useEffect(() => {
-        fetchRegistries();
-    }, []);
-
-    const fetchRegistries = async () => {
-        const accessToken = await auth?.srs.getToken();
-        const api = new RegistriesApi(
-            new Configuration({
-                accessToken,
-                basePath,
-            })
-        );
-        await api
-            .getRegistries()
-            .then((res) => {
-                const registry = res?.data;
-                setRegistryItems(registry?.items);
-            })
-            .catch((error) => {
-                //todo: handle error
-            });
-    };
-
-    const onToggleSchema = (isSchemaOpen: boolean) => {
-        setIsSchemaOpen(isSchemaOpen);
-    };
-
-    const onSchemaSelect = (_, selection) => {
-        setSelectedSchema(selection);
-        setIsSchemaOpen(false);
-    };
-
-    const onClearSchema = () => {
-        setSelectedSchema(false);
-    };
-
-    const onClickServcieRegistryInstance = () => {
-        histroy.push(`${basename}`);
-    }
-
-    if (registryItems == undefined) {
-        return (
-            <ServiceRegistryLoading />
-        );
-
-    }
-    if (!registryItems?.length) {
-        return (
-            <ServiceRegistryMappingEmptyState />
-        );
-    }
-    else {
-        return (
-            <Card>
-                <CardTitle component='h2'>
-                    {t('srs.service_registry_instance')}
-                </CardTitle>
-                <CardBody>
-                    <Grid hasGutter rowSpan={2}>
-                        <GridItem>
-                            <Select
-                                variant={SelectVariant.typeahead}
-                                typeAheadAriaLabel={t('srs.select_instance')}
-                                placeholderText={t('srs.select_instance')}
-                                onToggle={onToggleSchema}
-                                onSelect={onSchemaSelect}
-                                selections={selectedSchema}
-                                isOpen={isSchemaOpen}
-                                width={600}
-                                onClear={onClearSchema}>
-                                {registryItems?.map((registryItem, index) => {
-                                    return (
-                                        <SelectOption key={index} value={registryItem.name} />
-                                    );
-                                })}
-                            </Select>
-                        </GridItem>
-                        <GridItem>
-                            <Button
-                                isInline
-                                variant={ButtonVariant.link}
-                                onClick={onClickServcieRegistryInstance}
-                            >
-                                {t('srs.create_service_registry_helper_text')}
-                            </Button>
-                        </GridItem>
-                    </Grid>
-                </CardBody>
-            </Card>
-        );
-    }
+export type ServiceRegistryMappingProps = {
+  renderSchema: (registry: RegistryRest | undefined) => JSX.Element;
+  basename: string;
+  topicName: string;
 };
 
+export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
+  renderSchema,
+  basename,
+  topicName,
+}) => {
+  const { t } = useTranslation();
+  const auth = useAuth();
+  const {
+    srs: { apiBasePath: basePath },
+  } = useConfig() || { srs: { apiBasePath: '' } };
+  //states
+  const [registryItems, setRegistryItems] = useState<RegistryRest[] | undefined>(undefined);
+  const [selectedRegistry, setSelectedRegistry] = useState<string | SelectOptionObject>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [registry, setRegistry] = useState<RegistryRest>();
+
+  useEffect(() => {
+    fetchRegistries();
+  }, []);
+
+  useEffect(() => {
+    const filteredRegistry = registryItems?.filter((r) => r.name === selectedRegistry)[0];
+    setRegistry(filteredRegistry);
+  }, [selectedRegistry]);
+
+  const fetchRegistries = async () => {
+    const accessToken = await auth?.srs.getToken();
+    const api = new RegistriesApi(
+      new Configuration({
+        accessToken,
+        basePath,
+      })
+    );
+    await api
+      .getRegistries()
+      .then((res) => {
+        const registry = res?.data;
+        setRegistryItems(registry?.items);
+      })
+      .catch((error) => {
+        //todo: handle error
+      });
+  };
+
+  const onToggle = (isOpen: boolean) => {
+    setIsOpen(isOpen);
+  };
+
+  const onSelectInstance = (
+    event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
+    selection: string | SelectOptionObject
+  ) => {
+    event?.preventDefault();
+    setSelectedRegistry(selection);
+    setIsOpen(false);
+  };
+
+  const onClearSchema = () => {
+    setSelectedRegistry(undefined);
+  };
+
+  if (registryItems === undefined) {
+    return <Loading />;
+  }
+
+  if (!registryItems?.length) {
+    return <EmptyState topicName={topicName} basename={basename} />;
+  } else {
+    return (
+      <>
+        <Card>
+          <CardTitle component="h2">{t('srs.service_registry_instance')}</CardTitle>
+          <CardBody>
+            <Grid hasGutter rowSpan={2}>
+              <GridItem>
+                {' '}
+                <Select
+                  id="registry-mapping-select"
+                  variant={SelectVariant.typeahead}
+                  typeAheadAriaLabel={t('srs.select_instance')}
+                  placeholderText={t('srs.select_instance')}
+                  onToggle={onToggle}
+                  onSelect={onSelectInstance}
+                  selections={selectedRegistry}
+                  isOpen={isOpen}
+                  width={600}
+                  onClear={onClearSchema}
+                >
+                  {registryItems?.map((r: RegistryRest) => {
+                    return <SelectOption key={r.id} value={r.name} />;
+                  })}
+                </Select>
+              </GridItem>
+              <GridItem>
+                <Link to={basename}>{t('srs.create_service_registry_helper_text')}</Link>
+              </GridItem>
+            </Grid>
+          </CardBody>
+        </Card>
+        <br />
+        {registry && renderSchema && renderSchema(registry)}
+      </>
+    );
+  }
+};
