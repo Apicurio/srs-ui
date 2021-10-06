@@ -19,11 +19,19 @@ import { Loading } from './Loading';
 import '@patternfly/patternfly/patternfly.min.css';
 import '@patternfly/patternfly/components/Select/select.css';
 
-export type ServiceRegistryMappingProps = {
-  renderSchema: (registry: RegistryRest | undefined) => JSX.Element;
+export type ServiceRegistryMappingProps = SchemasProps & {
   basename: string;
   topicName: string;
 };
+
+type SchemasProps = {
+  renderSchema: (registry: RegistryRest | undefined) => JSX.Element;
+  registry?: RegistryRest | undefined;
+};
+
+const Schemas: React.FC<SchemasProps> = React.memo(({ renderSchema, registry }) => {
+  return (renderSchema && registry && renderSchema(registry)) || <></>;
+});
 
 export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
   renderSchema,
@@ -125,7 +133,7 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
           </CardBody>
         </Card>
         <br />
-        {registry && renderSchema && renderSchema(registry)}
+        <Schemas renderSchema={renderSchema} registry={registry} />
       </>
     );
   }
