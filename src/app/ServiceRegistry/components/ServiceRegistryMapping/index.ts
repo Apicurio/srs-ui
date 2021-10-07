@@ -1,4 +1,4 @@
 export * from './ServiceRegistryMapping';
-export * from './ServiceRegistryEmptyState';
+export * from './EmptyState';
 export * from './ServiceRegistryMappingFederated';
-export * from './ServiceRegistryLoading';
+export * from './Loading';
