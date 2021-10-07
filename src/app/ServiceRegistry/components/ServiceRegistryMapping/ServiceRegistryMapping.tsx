@@ -18,6 +18,7 @@ import { EmptyState } from './EmptyState';
 import { Loading } from './Loading';
 import '@patternfly/patternfly/patternfly.min.css';
 import '@patternfly/patternfly/components/Select/select.css';
+import './styles.css';
 
 export type ServiceRegistryMappingProps = SchemasProps & {
   basename: string;
