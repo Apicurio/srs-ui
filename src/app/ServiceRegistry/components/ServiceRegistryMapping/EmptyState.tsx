@@ -11,7 +11,6 @@ import {
 } from '@patternfly/react-core';
 import { WrenchIcon } from '@patternfly/react-icons/dist/js/icons/wrench-icon';
 import { ArrowRightIcon } from '@patternfly/react-icons/dist/js/icons/arrow-right-icon';
-import { css } from '@patternfly/react-styles';
 
 export type EmptyStateProps = {
   topicName: string;
@@ -22,7 +21,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({ topicName, basename }: E
   const { t } = useTranslation();
 
   return (
-    <PFEmptyState className={css('pf-u-pt-2xl pf-u-pt-3xl-on-md')}>
+    <PFEmptyState className="pf-u-pt-2xl pf-u-pt-3xl-on-md">
       <EmptyStateIcon icon={WrenchIcon} />
       <Title headingLevel="h2" size="lg">
         {t('srs.empty_state_title')}
