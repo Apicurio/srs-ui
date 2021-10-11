@@ -17,20 +17,29 @@ import {
 import { useTranslation } from 'react-i18next';
 import { HelpIcon } from '@patternfly/react-icons';
 import { useSharedContext } from '@app/context';
+import { RegistryRest } from '@rhoas/registry-management-sdk';
+import { Link } from 'react-router-dom';
+import { ModalType, useModal } from '@rhoas/app-services-ui-shared';
 
 type ConnectionInfoProps = {
   registryApisUrl: string | undefined;
+  registry: RegistryRest | undefined;
 };
 
-export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl }) => {
+export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl, registry }) => {
   const { tokenEndPointUrl } = useSharedContext() || {};
   const { t } = useTranslation();
+  // const { showModal } = useModal<ModalType.KasCreateServiceAccount>();
 
   const registriesInfo = [
     { title: t('srs.connection_content_1'), code: `${registryApisUrl}/apis/registry/v2` },
     { title: t('srs.connection_content_2'), code: `${registryApisUrl}/apis/ccompat/v6` },
     { title: t('srs.connection_content_3'), code: `${registryApisUrl}/apis/cncf/v0` },
   ];
+
+  const handleCreateServiceAccountModal = () => {
+    // showModal(ModalType.KasCreateServiceAccount, {});
+  };
 
   return (
     <div className="mas--details__drawer--tab-content">
@@ -62,6 +71,35 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl 
           )
         )}
       </Form>
+      <TextContent className='pf-u-pb-sm'>
+        <Text component={TextVariants.h3} className='pf-u-mt-xl'>
+          {t('srs.service_accounts_small')}
+        </Text>
+        <Text component={TextVariants.small}>
+          {t('srs.create_service_account_to_generate_credentials')}{' '}
+          <Link to={'service-accounts'} data-testid='tableStreams-linkKafka'>
+            {t('srs.service_accounts')}
+          </Link>{' '}
+          {t('common.page')}.
+        </Text>
+      </TextContent>
+      <Button
+        variant='secondary'
+        onClick={handleCreateServiceAccountModal}
+        data-testid='drawerStreams-buttonCreateServiceAccount'
+        isInline
+      >
+        {t('srs.create_service_account')}
+      </Button>
+      <TextContent className='pf-u-pt-sm'>
+        <Text component={TextVariants.small}>
+        {t('srs.current_instance')}{' '}
+        <Link to={'service-accounts'} >
+            {t('srs.access_tab')}
+          </Link>{' '}
+          {t('srs.alter_allow')}.
+          </Text>
+      </TextContent>
       <TextContent className="pf-u-pb-sm">
         <Text component={TextVariants.h3} className="pf-u-mt-xl">
           {t('srs.authentication_method')}
@@ -89,3 +127,4 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl 
     </div>
   );
 };
+

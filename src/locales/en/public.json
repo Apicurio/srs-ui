@@ -106,7 +106,7 @@
     "registry_success_message": "The creation of the <b>{{name}}</b> Service Registry instance is ready for you.",
     "registry_not_created": "Service Registry instance creation failed",
     "registry_failed_message": "The creation of the <b>{{name}}</b> Service Registry instance is failed",
-    "oauth_description": "Use your service account credentials and a token endpoint URL to authenticate your client with the Service Registry instance.",
+    "oauth_description": "Use your service account credentials and a token endpoint URL to authenticate your client with the Service Registry instance. Your application authenticates with your service account credentials.",
     "token_endpoint_url": "Token endpoint URL",
     "http_basic": "HTTP Basic",
     "http_basic_description": " Use your service account credentials (Client ID and Client secret) as the user name and password to authenticate your client with the Service Registry instance.",
@@ -121,6 +121,13 @@
     "empty_state_title": "No Service Registry instances",
     "empty_state_body": "To register a schema for this topic, create a Service Registry instance and use the following naming format for the artifact ID:",
     "schema_loading": "Looking for a matching schema…",
-    "go_to_service_registry_instance_helper_text": "Go to Service Registry instance"
+    "go_to_service_registry_instance_helper_text": "Go to Service Registry instance",
+    "create_service_account": "Create service account",
+    "create_service_account_to_generate_credentials": "Create a service account to generate credentials. Manage the service accounts you create on the",
+    "service_accounts": "Service Accounts",
+    "service_accounts_small": "Service accounts",
+    "current_instance": "Accounts do not have access to this instance unless granted under the instance’s",
+    "access_tab": "Access tab.",
+    "alter_allow": "The owner, the organization administrator, or users with the Allow Alter permission on this instance can manage access"
   }
 }
