@@ -19,17 +19,18 @@ import { HelpIcon } from '@patternfly/react-icons';
 import { useSharedContext } from '@app/context';
 import { RegistryRest } from '@rhoas/registry-management-sdk';
 import { Link } from 'react-router-dom';
-import { ModalType, useModal } from '@rhoas/app-services-ui-shared';
+import { useBasename } from '@rhoas/app-services-ui-shared';
 
 type ConnectionInfoProps = {
   registryApisUrl: string | undefined;
-  registry: RegistryRest | undefined;
+  registryInstance: RegistryRest | undefined;
 };
 
-export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl, registry }) => {
+export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl, registryInstance }) => {
   const { tokenEndPointUrl } = useSharedContext() || {};
   const { t } = useTranslation();
-  // const { showModal } = useModal<ModalType.KasCreateServiceAccount>();
+  const { getBasename } = useBasename() || {};
+  const basename = getBasename && getBasename();
 
   const registriesInfo = [
     { title: t('srs.connection_content_1'), code: `${registryApisUrl}/apis/registry/v2` },
@@ -38,7 +39,7 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl,
   ];
 
   const handleCreateServiceAccountModal = () => {
-    // showModal(ModalType.KasCreateServiceAccount, {});
+    // To Be Done
   };
 
   return (
@@ -94,9 +95,9 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl,
       <TextContent className='pf-u-pt-sm'>
         <Text component={TextVariants.small}>
         {t('srs.current_instance')}{' '}
-        <Link to={'service-accounts'} >
-            {t('srs.access_tab')}
-          </Link>{' '}
+        <Link to={`${basename}/t/${registryInstance?.id}/roles`} data-testid="tableRegistries-linkKafka">
+        {t('srs.access_tab')}
+      </Link>{' '}
           {t('srs.alter_allow')}.
           </Text>
       </TextContent>
