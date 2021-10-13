@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
 import '@patternfly/react-core/dist/styles/base.css';
-import '@patternfly/patternfly/patternfly.min.css';
+import '@patternfly/patternfly/patternfly.css';
 import '@patternfly/patternfly/utilities/Accessibility/accessibility.css';
 import '@patternfly/patternfly/utilities/Sizing/sizing.css';
 import '@patternfly/patternfly/utilities/Spacing/spacing.css';
