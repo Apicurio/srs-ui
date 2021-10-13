@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { IAction, IExtraColumnData, IRowData, ISeparator, ISortBy, SortByDirection } from '@patternfly/react-table';
 import { PageSection, PageSectionVariants, Card } from '@patternfly/react-core';
 import { PaginationVariant } from '@patternfly/react-core';
-import { RegistryRest, RegistryStatusValueRest } from '@rhoas/registry-management-sdk';
+import { Registry, RegistryStatusValue } from '@rhoas/registry-management-sdk';
 import { useBasename, useAlert, AlertVariant, useAuth } from '@rhoas/app-services-ui-shared';
 import { getFormattedDate, InstanceType } from '@app/utils';
 import { MASEmptyState, MASEmptyStateVariant, MASPagination, MASTable } from '@app/components';
@@ -12,17 +12,17 @@ import { StatusColumn } from './StatusColumn';
 import { ServiceRegistryToolbar, ServiceRegistryToolbarProps } from './ServiceRegistryToolbar';
 
 export type ServiceRegistryTableViewProps = ServiceRegistryToolbarProps & {
-  serviceRegistryItems: RegistryRest[];
-  onViewConnection: (instance: RegistryRest) => void;
+  serviceRegistryItems: Registry[];
+  onViewConnection: (instance: Registry) => void;
   refresh: (arg0?: boolean) => void;
   registryDataLoaded: boolean;
-  onDelete: (instance: RegistryRest) => void;
+  onDelete: (instance: Registry) => void;
   expectedTotal: number;
   orderBy: string;
   setOrderBy: (order: string) => void;
   isDrawerOpen?: boolean;
   loggedInUser: string | undefined;
-  currentUserRegistries: RegistryRest[] | undefined;
+  currentUserRegistries: Registry[] | undefined;
 };
 
 const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
@@ -50,7 +50,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
 
   const [activeRow, setActiveRow] = useState<string>();
   const [deletedRegistries, setDeletedRegistries] = useState<string[]>([]);
-  const [instances, setInstances] = useState<Array<RegistryRest>>([]);
+  const [instances, setInstances] = useState<Array<Registry>>([]);
   const [isOrgAdmin, setIsOrgAdmin] = useState<boolean>();
 
   const tableColumns = [
@@ -82,8 +82,8 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   const addAlertAfterSuccessDeletion = () => {
     if (currentUserRegistries) {
       // filter all registry with status as deprovision or deleting
-      const deprovisonedRegistries: RegistryRest[] = currentUserRegistries.filter(
-        (r) => r.status === RegistryStatusValueRest.Deprovision || r.status === RegistryStatusValueRest.Deleting
+      const deprovisonedRegistries: Registry[] = currentUserRegistries.filter(
+        (r) => r.status === RegistryStatusValue.Deprovision || r.status === RegistryStatusValue.Deleting
       );
 
       // filter all new registry which is not in deleteRegistry state
@@ -111,20 +111,20 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   };
 
   const addAlertAfterSuccessCreation = () => {
-    const lastItemsState: RegistryRest[] = JSON.parse(JSON.stringify(instances));
+    const lastItemsState: Registry[] = JSON.parse(JSON.stringify(instances));
     if (instances && instances.length > 0) {
       const completedOrFailedItems = Object.assign([], serviceRegistryItems).filter(
-        (item: RegistryRest) =>
-          item.status === RegistryStatusValueRest.Ready || item.status === RegistryStatusValueRest.Failed
+        (item: Registry) =>
+          item.status === RegistryStatusValue.Ready || item.status === RegistryStatusValue.Failed
       );
-      lastItemsState.forEach((item: RegistryRest) => {
-        const filteredInstances: RegistryRest[] = completedOrFailedItems.filter(
-          (cfItem: RegistryRest) => item.id === cfItem.id
+      lastItemsState.forEach((item: Registry) => {
+        const filteredInstances: Registry[] = completedOrFailedItems.filter(
+          (cfItem: Registry) => item.id === cfItem.id
         );
         if (filteredInstances && filteredInstances.length > 0) {
           const { status, name } = filteredInstances[0];
 
-          if (status === RegistryStatusValueRest.Ready) {
+          if (status === RegistryStatusValue.Ready) {
             addAlert &&
               addAlert({
                 title: t('srs.registry_successfully_created'),
@@ -132,7 +132,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
                 description: <span dangerouslySetInnerHTML={{ __html: t('srs.registry_success_message', { name }) }} />,
                 dataTestId: 'toastCreateRegistry-success',
               });
-          } else if (status === RegistryStatusValueRest.Failed) {
+          } else if (status === RegistryStatusValue.Failed) {
             addAlert &&
               addAlert({
                 title: t('srs.registry_not_created'),
@@ -148,8 +148,8 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     const incompleteRegistry = Object.assign(
       [],
       serviceRegistryItems?.filter(
-        (r: RegistryRest) =>
-          r.status === RegistryStatusValueRest.Provisioning || r.status === RegistryStatusValueRest.Accepted
+        (r: Registry) =>
+          r.status === RegistryStatusValue.Provisioning || r.status === RegistryStatusValue.Accepted
       )
     );
     setInstances(incompleteRegistry);
@@ -177,7 +177,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
       tableRow.push({
         cells: [
           {
-            title: status?.toLowerCase() !== RegistryStatusValueRest.Ready ? name : renderNameLink({ name, row }),
+            title: status?.toLowerCase() !== RegistryStatusValue.Ready ? name : renderNameLink({ name, row }),
           },
           owner,
           {
@@ -201,7 +201,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
 
   const onSelectKebabDropdownOption = (
     event: React.ChangeEvent<HTMLSelectElement>,
-    originalData: RegistryRest,
+    originalData: Registry,
     selectedOption: string
   ) => {
     if (selectedOption === 'connect-instance') {
@@ -218,7 +218,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   };
 
   const actionResolver = (rowData: IRowData) => {
-    const originalData: RegistryRest = rowData.originalData;
+    const originalData: Registry = rowData.originalData;
     const isUserSameAsLoggedIn = originalData.owner === loggedInUser || isOrgAdmin;
     let additionalProps: any;
 

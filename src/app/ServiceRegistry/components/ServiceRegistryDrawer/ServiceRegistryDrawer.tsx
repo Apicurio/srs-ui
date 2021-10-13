@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { RegistryRest } from '@rhoas/registry-management-sdk';
+import { Registry } from '@rhoas/registry-management-sdk';
 import { MASDrawer, MASDrawerProps } from '@app/components';
 import { ConnectionInfo } from './ConnectionInfo';
 
@@ -9,7 +9,7 @@ export type ServiceRegistryDrawerProps = Omit<
   'drawerHeaderProps' | 'panelBodyContent' | '[data-ouia-app-id]'
 > & {
   activeTab?: React.ReactText;
-  registry: RegistryRest | undefined;
+  registry: Registry | undefined;
 };
 
 const ServiceRegistryDrawer: React.FC<ServiceRegistryDrawerProps> = ({

@@ -12,7 +12,7 @@ import {
   SelectOptionObject,
 } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
-import { Configuration, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
+import { Configuration, Registry, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { useAuth, useConfig } from '@rhoas/app-services-ui-shared';
 import { EmptyState } from './EmptyState';
 import { Loading } from './Loading';
@@ -26,8 +26,8 @@ export type ServiceRegistryMappingProps = SchemasProps & {
 };
 
 type SchemasProps = {
-  renderSchema: (registry: RegistryRest | undefined) => JSX.Element;
-  registry?: RegistryRest | undefined;
+  renderSchema: (registry: Registry | undefined) => JSX.Element;
+  registry?: Registry | undefined;
 };
 
 const Schemas: React.FC<SchemasProps> = React.memo(({ renderSchema, registry }) => {
@@ -46,10 +46,10 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
     srs: { apiBasePath: basePath },
   } = useConfig() || { srs: { apiBasePath: '' } };
   //states
-  const [registryItems, setRegistryItems] = useState<RegistryRest[] | undefined>(undefined);
+  const [registryItems, setRegistryItems] = useState<Registry[] | undefined>(undefined);
   const [selectedRegistry, setSelectedRegistry] = useState<string | SelectOptionObject>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [registry, setRegistry] = useState<RegistryRest>();
+  const [registry, setRegistry] = useState<Registry>();
 
   useEffect(() => {
     fetchRegistries();
@@ -123,7 +123,7 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
                   width={600}
                   onClear={onClearSchema}
                 >
-                  {registryItems?.map((r: RegistryRest) => {
+                  {registryItems?.map((r: Registry) => {
                     return <SelectOption key={r.id} value={r.name} />;
                   })}
                 </Select>

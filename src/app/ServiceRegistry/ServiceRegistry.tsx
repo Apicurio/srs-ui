@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
-import { Configuration, RegistryListRest, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
+import { Configuration, RegistryListRest, Registry, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { useAuth, useConfig, useBasename, useAlert } from '@rhoas/app-services-ui-shared';
 import {
   ServiceRegistryDrawer,
@@ -31,11 +31,11 @@ export const ServiceRegistry: React.FC = () => {
   const {page=1, perPage=10}=usePagination() || {};
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
-  const [selectedRegistryInstance, setSelectedRegistryInstance] = useState<RegistryRest | undefined>(undefined);
+  const [selectedRegistryInstance, setSelectedRegistryInstance] = useState<Registry | undefined>(undefined);
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
   const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
   const [registries, setRegistries] = useState<RegistryListRest | undefined>(undefined);
-  const [registryItems, setRegistryItems] = useState<RegistryRest[] | undefined>(undefined);
+  const [registryItems, setRegistryItems] = useState<Registry[] | undefined>(undefined);
   const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined);
   const [orderBy, setOrderBy] = useState<string>('name asc');
 
@@ -95,7 +95,7 @@ export const ServiceRegistry: React.FC = () => {
 
   useTimeout(() => fetchRegistries(), MAX_POLL_INTERVAL);
 
-  const onConnectToRegistry = (instance: RegistryRest | undefined) => {
+  const onConnectToRegistry = (instance: Registry | undefined) => {
     setIsExpandedDrawer(true);
     setSelectedRegistryInstance(instance);
   };
@@ -104,7 +104,7 @@ export const ServiceRegistry: React.FC = () => {
     setIsExpandedDrawer(false);
   };
 
-  const onDeleteRegistry = (registry: RegistryRest | undefined) => {
+  const onDeleteRegistry = (registry: Registry | undefined) => {
     const { name, status } = registry || {};
     showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
       serviceRegistryStatus: status,
