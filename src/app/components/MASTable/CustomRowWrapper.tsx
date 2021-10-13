@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { css } from '@patternfly/react-styles';
-import { RegistryStatusValueRest } from '@rhoas/registry-management-sdk';
+import { RegistryStatusValue } from '@rhoas/registry-management-sdk';
 import './CustomRowWrapper.css';
 
 export type CustomRowWrapperContextProps = {
@@ -24,8 +24,8 @@ export const CustomRowWrapper = (rowWrapperProps) => {
   const { rowIndex } = rowProps;
   const { isExpanded, originalData } = row;
   const isRowDeleted =
-    originalData?.status === RegistryStatusValueRest.Deprovision ||
-    originalData?.status === RegistryStatusValueRest.Deleting;
+    originalData?.status === RegistryStatusValue.Deprovision ||
+    originalData?.status === RegistryStatusValue.Deleting;
   const isLoggedInUserOwner = loggedInUser === originalData?.owner;
   const isRowDisabled = isRowDeleted || !isLoggedInUserOwner;
 

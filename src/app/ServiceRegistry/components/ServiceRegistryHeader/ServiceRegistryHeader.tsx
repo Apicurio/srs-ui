@@ -15,14 +15,14 @@ import {
   PageSection,
   PageSectionVariants,
 } from '@patternfly/react-core';
-import { RegistryRest } from '@rhoas/registry-management-sdk';
+import { Registry } from '@rhoas/registry-management-sdk';
 import { useBasename } from '@rhoas/app-services-ui-shared';
 
 export type ServiceRegistryHeaderProps = {
-  onConnectToRegistry?: (instance: RegistryRest | undefined) => void;
-  onDeleteRegistry?: (instance: RegistryRest | undefined) => void;
+  onConnectToRegistry?: (instance: Registry | undefined) => void;
+  onDeleteRegistry?: (instance: Registry | undefined) => void;
   breadcrumbId?: string;
-  serviceRegistryDetails?: RegistryRest;
+  serviceRegistryDetails?: Registry;
 };
 
 export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({

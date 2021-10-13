@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
-import { Configuration, RegistryRest, RegistriesApi } from '@rhoas/registry-management-sdk';
+import { Configuration, Registry, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { useAuth, useConfig } from '@rhoas/app-services-ui-shared';
 import { ServiceRegistryDrawer, ServiceRegistryHeader } from './components';
 import { useRootModalContext, MODAL_TYPES, MASLoading } from '@app/components';
 
 export type ApicurioRegistryProps = {
-  render: (registry: RegistryRest | undefined) => JSX.Element;
+  render: (registry: Registry | undefined) => JSX.Element;
   breadcrumbId: string;
 };
 
@@ -21,7 +21,7 @@ const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({ render, breadcrumbI
   const { tenantId } = useParams<{ tenantId: string }>();
   const { showModal } = useRootModalContext();
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
-  const [registry, setRegistry] = useState<RegistryRest | undefined>(undefined);
+  const [registry, setRegistry] = useState<Registry | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchRegistry = async () => {
@@ -59,7 +59,7 @@ const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({ render, breadcrumbI
     setIsExpandedDrawer(false);
   };
 
-  const onDeleteRegistry = (registry: RegistryRest | undefined) => {
+  const onDeleteRegistry = (registry: Registry | undefined) => {
     const { name, status } = registry || {};
     showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
       shouldRedirect: true,
