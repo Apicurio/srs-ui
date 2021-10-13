@@ -16,9 +16,7 @@ import { Configuration, Registry, RegistriesApi } from '@rhoas/registry-manageme
 import { useAuth, useConfig } from '@rhoas/app-services-ui-shared';
 import { EmptyState } from './EmptyState';
 import { Loading } from './Loading';
-import '@patternfly/patternfly/patternfly.min.css';
-import '@patternfly/patternfly/components/Select/select.css';
-import './styles.css';
+import '@patternfly/patternfly/patternfly.css';
 
 export type ServiceRegistryMappingProps = SchemasProps & {
   basename: string;
