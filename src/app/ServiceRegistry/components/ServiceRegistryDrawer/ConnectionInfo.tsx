@@ -19,7 +19,8 @@ import { HelpIcon } from '@patternfly/react-icons';
 import { useSharedContext } from '@app/context';
 import { RegistryRest } from '@rhoas/registry-management-sdk';
 import { Link } from 'react-router-dom';
-import { useBasename } from '@rhoas/app-services-ui-shared';
+import { useBasename, useModal, ModalType } from '@rhoas/app-services-ui-shared';
+
 
 type ConnectionInfoProps = {
   registryApisUrl: string | undefined;
@@ -31,16 +32,18 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl,
   const { t } = useTranslation();
   const { getBasename } = useBasename() || {};
   const basename = getBasename && getBasename();
-
+  
   const registriesInfo = [
     { title: t('srs.connection_content_1'), code: `${registryApisUrl}/apis/registry/v2` },
     { title: t('srs.connection_content_2'), code: `${registryApisUrl}/apis/ccompat/v6` },
     { title: t('srs.connection_content_3'), code: `${registryApisUrl}/apis/cncf/v0` },
   ];
+  const { showModal } = useModal<ModalType.KasCreateServiceAccount>();
 
   const handleCreateServiceAccountModal = () => {
-    // To Be Done
-  };
+    showModal(ModalType.KasCreateServiceAccount, {});
+   }
+      
 
   return (
     <div className="mas--details__drawer--tab-content">
