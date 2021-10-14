@@ -61,6 +61,12 @@ const CreateServiceRegistry: React.FC = () => {
     manageQuota();
   }, []);
 
+  useEffect(() => {
+    if (nameValidated.fieldState !== 'error') {
+      setIsFormValid(true);
+    }
+  }, [nameValidated]);
+
   const handleTextInputName = (name: string) => {
     setRegistryFormData({ ...registryFormData, name });
     let isValid = true;
