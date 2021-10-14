@@ -128,6 +128,6 @@
     "service_accounts_small": "Service accounts",
     "current_instance": "Accounts do not have access to this instance unless granted under the instance’s",
     "access_tab": "Access tab.",
-    "alter_allow": "The owner, the organization administrator, or users with the Allow Alter permission on this instance can manage access"
+    "alter_allow": "The instance owner, the instance administrator, or the organization administrator can manage access."
   }
 }

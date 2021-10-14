@@ -17,14 +17,14 @@ import {
 import { useTranslation } from 'react-i18next';
 import { HelpIcon } from '@patternfly/react-icons';
 import { useSharedContext } from '@app/context';
-import { RegistryRest } from '@rhoas/registry-management-sdk';
+import { Registry } from '@rhoas/registry-management-sdk';
 import { Link } from 'react-router-dom';
 import { useBasename, useModal, ModalType } from '@rhoas/app-services-ui-shared';
 
 
 type ConnectionInfoProps = {
   registryApisUrl: string | undefined;
-  registryInstance: RegistryRest | undefined;
+  registryInstance: Registry | undefined;
 };
 
 export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl, registryInstance }) => {
@@ -81,7 +81,7 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl,
         </Text>
         <Text component={TextVariants.small}>
           {t('srs.create_service_account_to_generate_credentials')}{' '}
-          <Link to={'service-accounts'} data-testid='tableStreams-linkKafka'>
+          <Link to={'/service-accounts'} data-testid='tableStreams-linkKafka'>
             {t('srs.service_accounts')}
           </Link>{' '}
           {t('common.page')}.
