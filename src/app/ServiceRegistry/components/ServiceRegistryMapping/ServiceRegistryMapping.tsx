@@ -10,6 +10,8 @@ import {
   Grid,
   GridItem,
   SelectOptionObject,
+  Stack,
+  StackItem,
 } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 import { Configuration, Registry, RegistriesApi } from '@rhoas/registry-management-sdk';
@@ -102,39 +104,42 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
     return <EmptyState topicName={topicName} basename={basename} />;
   } else {
     return (
-      <>
-        <Card>
-          <CardTitle component="h2">{t('srs.service_registry_instance')}</CardTitle>
-          <CardBody>
-            <Grid hasGutter rowSpan={2}>
-              <GridItem>
-                {' '}
-                <Select
-                  id="registry-mapping-select"
-                  variant={SelectVariant.typeahead}
-                  typeAheadAriaLabel={t('srs.select_instance')}
-                  placeholderText={t('srs.select_instance')}
-                  onToggle={onToggle}
-                  onSelect={onSelectInstance}
-                  selections={selectedRegistry}
-                  isOpen={isOpen}
-                  width={600}
-                  onClear={onClearSchema}
-                >
-                  {registryItems?.map((r: Registry) => {
-                    return <SelectOption key={r.id} value={r.name} />;
-                  })}
-                </Select>
-              </GridItem>
-              <GridItem>
-                <Link to={basename}>{t('srs.create_service_registry_helper_text')}</Link>
-              </GridItem>
-            </Grid>
-          </CardBody>
-        </Card>
-        <br />
-        <Schemas renderSchema={renderSchema} registry={registry} />
-      </>
+      <Stack hasGutter>
+        <StackItem>
+          <Card>
+            <CardTitle component="h2">{t('srs.service_registry_instance')}</CardTitle>
+            <CardBody>
+              <Grid hasGutter rowSpan={2}>
+                <GridItem>
+                  {' '}
+                  <Select
+                    id="registry-mapping-select"
+                    variant={SelectVariant.typeahead}
+                    typeAheadAriaLabel={t('srs.select_instance')}
+                    placeholderText={t('srs.select_instance')}
+                    onToggle={onToggle}
+                    onSelect={onSelectInstance}
+                    selections={selectedRegistry}
+                    isOpen={isOpen}
+                    width={600}
+                    onClear={onClearSchema}
+                  >
+                    {registryItems?.map((r: Registry) => {
+                      return <SelectOption key={r.id} value={r.name} />;
+                    })}
+                  </Select>
+                </GridItem>
+                <GridItem>
+                  <Link to={basename}>{t('srs.create_service_registry_helper_text')}</Link>
+                </GridItem>
+              </Grid>
+            </CardBody>
+          </Card>
+        </StackItem>
+        <StackItem>
+          <Schemas renderSchema={renderSchema} registry={registry} />
+        </StackItem>
+      </Stack>
     );
   }
 };
