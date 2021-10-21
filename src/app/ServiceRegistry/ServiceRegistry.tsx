@@ -39,7 +39,7 @@ export const ServiceRegistry: React.FC = () => {
   const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined);
   const [orderBy, setOrderBy] = useState<string>('name asc');
 
-  const hasUserTrialInstance = registryItems?.some((r) => r?.instance_type === InstanceType?.eval);
+  const hasUserTrialInstance = registryItems?.some((r) => r?.instance_type === InstanceType?.eval && r.owner===loggedInUser);
 
   useEffect(() => {
     fetchRegistries();
@@ -170,30 +170,30 @@ export const ServiceRegistry: React.FC = () => {
           onClose={onCloseDrawer}
           registry={selectedRegistryInstance}
         >
-          <main className="pf-c-page__main">
-            <ServiceRegistryHeader
-              onConnectToRegistry={onConnectToRegistry}
-              onDeleteRegistry={onDeleteRegistry}
-              serviceRegistryDetails={selectedRegistryInstance}
-            />
-            <ServiceRegistryTableView
-              page={page}
-              perPage={perPage}
-              serviceRegistryItems={registryItems}
-              total={registries?.total}
-              onViewConnection={onConnectToRegistry}
-              onDelete={onDeleteRegistry}
-              expectedTotal={0}
-              orderBy={orderBy}
-              setOrderBy={setOrderBy}
-              loggedInUser={loggedInUser}
-              currentUserRegistries={registryItems}
-              handleCreateModal={createServiceRegistry}
-              refresh={fetchRegistries}
-              registryDataLoaded={false}
-              isDrawerOpen={isExpandedDrawer}
-            />
-          </main>
+        <main className="pf-c-page__main">
+          <ServiceRegistryHeader
+            onConnectToRegistry={onConnectToRegistry}
+            onDeleteRegistry={onDeleteRegistry}
+            serviceRegistryDetails={selectedRegistryInstance}
+          />
+          <ServiceRegistryTableView
+            page={page}
+            perPage={perPage}
+            serviceRegistryItems={registryItems}
+            total={registries?.total}
+            onViewConnection={onConnectToRegistry}
+            onDelete={onDeleteRegistry}
+            expectedTotal={0}
+            orderBy={orderBy}
+            setOrderBy={setOrderBy}
+            loggedInUser={loggedInUser}
+            currentUserRegistries={registryItems}
+            handleCreateModal={createServiceRegistry}
+            refresh={fetchRegistries}
+            registryDataLoaded={false}
+            isDrawerOpen={isExpandedDrawer}
+          />
+        </main>
         </ServiceRegistryDrawer>
       );
     }
