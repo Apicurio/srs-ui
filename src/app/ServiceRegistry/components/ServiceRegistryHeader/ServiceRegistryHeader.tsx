@@ -18,6 +18,7 @@ import {
 } from '@patternfly/react-core';
 import { Registry } from '@rhoas/registry-management-sdk';
 import { useBasename } from '@rhoas/app-services-ui-shared';
+import { SharedContext, useSharedContext } from '@app/context';
 
 
 export type ServiceRegistryHeaderProps = {
@@ -53,6 +54,8 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
     setIsOpen(!isOpen);
   };
 
+  const { artifactId } = useSharedContext() || {}
+
   const dropdownItems = [
     <DropdownItem
       key="connect-registry"
@@ -77,6 +80,7 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
               <Link to={`${basename}/t/${serviceRegistryDetails?.id}`}>{serviceRegistryDetails?.name}</Link>
             </BreadcrumbItem>
             <BreadcrumbItem>
+              {artifactId}
             </BreadcrumbItem>
           </Breadcrumb>
         ) : (

@@ -4,6 +4,7 @@ export type SharedContextrops = {
     preCreateInstance?: (isOpen: boolean) => Promise<boolean>;
     shouldOpenCreateModal?: () => Promise<boolean>;
     tokenEndPointUrl?:  string;
+    artifactId?: string;
 };
 
 export const SharedContext = React.createContext<SharedContextrops | undefined>(undefined);
