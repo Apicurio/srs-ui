@@ -14,9 +14,12 @@ import {
   BreadcrumbItem,
   PageSection,
   PageSectionVariants,
+  Title
 } from '@patternfly/react-core';
 import { Registry } from '@rhoas/registry-management-sdk';
 import { useBasename } from '@rhoas/app-services-ui-shared';
+import { SharedContext, useSharedContext } from '@app/context';
+
 
 export type ServiceRegistryHeaderProps = {
   onConnectToRegistry?: (instance: Registry | undefined) => void;
@@ -35,7 +38,8 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
   let showBreadcrumb = false;
   let activeBreadcrumbItemLabel = '';
   const [isOpen, setIsOpen] = useState<boolean>();
-  const basename = useBasename();
+  const { getBasename } = useBasename() || {};
+  const basename = getBasename && getBasename();
 
   if (breadcrumbId != undefined) {
     showBreadcrumb = true;
@@ -50,6 +54,8 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
     setIsOpen(!isOpen);
   };
 
+  const { artifactId } = useSharedContext() || {}
+
   const dropdownItems = [
     <DropdownItem
       key="connect-registry"
@@ -63,24 +69,30 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
   ];
 
   return (
-    <PageSection variant={PageSectionVariants.light}>
-      <Level>
-        <LevelItem>
-          {showBreadcrumb ? (
-            <Breadcrumb>
-              <BreadcrumbItem>
-                <Link to={basename.getBasename() || '/'}> {t('srs.service_registry_breadcrumb')}</Link>
-              </BreadcrumbItem>
-              <BreadcrumbItem isActive={true}>{serviceRegistryDetails?.name}</BreadcrumbItem>
-            </Breadcrumb>
-          ) : (
-            <TextContent>
-              <Text component="h1"> {t('srs.service_registry')}</Text>
-            </TextContent>
-          )}
-        </LevelItem>
+    <>
+      <section className='pf-c-page__main-breadcrumb'>
+        {showBreadcrumb ? (
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <Link to={`${basename}` || '/'}> {t('srs.service_registry_breadcrumb')}</Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem isActive={true}>
+              {artifactId ? (<Link to={`${basename}/t/${serviceRegistryDetails?.id}`}>{serviceRegistryDetails?.name}</Link>) : (serviceRegistryDetails?.name)}
+            </BreadcrumbItem>
+            {artifactId && (<BreadcrumbItem>{artifactId}</BreadcrumbItem>)}
+          </Breadcrumb>
+        ) : (
+          <TextContent>
+            <Text component="h1"> {t('srs.service_registry')}</Text>
+          </TextContent>
+        )}
+      </section>
+      <PageSection variant={PageSectionVariants.light}>
         {breadcrumbId && (
-          <LevelItem>
+          <Level>
+            <Title headingLevel='h1'>
+              {serviceRegistryDetails?.name}
+            </Title>
             <Dropdown
               onSelect={onSelect}
               toggle={<KebabToggle onToggle={onToggle} id="toggle-service-registry" />}
@@ -89,9 +101,9 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
               dropdownItems={dropdownItems}
               position={DropdownPosition.right}
             />
-          </LevelItem>
+          </Level>
         )}
-      </Level>
-    </PageSection>
+      </PageSection>
+    </>
   );
 };
