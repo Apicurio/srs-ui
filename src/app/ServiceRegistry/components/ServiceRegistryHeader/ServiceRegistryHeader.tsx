@@ -79,7 +79,7 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
             <BreadcrumbItem isActive={true}>
               {artifactId ? (<Link to={`${basename}/t/${serviceRegistryDetails?.id}`}>{serviceRegistryDetails?.name}</Link>) : (serviceRegistryDetails?.name)}
             </BreadcrumbItem>
-            {artifactId ? (<BreadcrumbItem>{artifactId}</BreadcrumbItem>) : (" ")}
+            {artifactId && (<BreadcrumbItem>{artifactId}</BreadcrumbItem>)}
           </Breadcrumb>
         ) : (
           <TextContent>
