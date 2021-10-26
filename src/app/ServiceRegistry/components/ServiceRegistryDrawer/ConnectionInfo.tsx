@@ -14,7 +14,7 @@ import {
   Button,
   ButtonVariant,
 } from '@patternfly/react-core';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { HelpIcon } from '@patternfly/react-icons';
 import { useSharedContext } from '@app/context';
 import { Registry } from '@rhoas/registry-management-sdk';
@@ -97,11 +97,11 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl,
       </Button>
       <TextContent className='pf-u-pt-sm'>
         <Text component={TextVariants.small}>
-        {t('srs.current_instance')}{' '}
-        <Link to={`${basename}/t/${registryInstance?.id}/roles`} data-testid="tableRegistries-linkKafka">
-        {t('srs.access_tab')}
-      </Link>{' '}
-          {t('srs.alter_allow')}.
+        <Trans>
+          Accounts do not have access to this instance unless granted under the instance’s 
+          <Link to={`${basename}/t/${registryInstance?.id}/roles`} data-testid="tableRegistries-linkKafka"> Access tab</Link>. 
+          The instance owner, the instance administrator, or the organization administrator can manage access.
+          </Trans>
           </Text>
       </TextContent>
       <TextContent className="pf-u-pb-sm">
