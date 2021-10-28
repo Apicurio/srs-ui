@@ -10,7 +10,9 @@ function accessibleRouteChangeHandler() {
 }
 
 
-const getModalAppendTo = (): HTMLElement | undefined => document.querySelector('#qs-content') as HTMLElement || document.body;
+const getModalAppendTo = (): HTMLElement =>
+  (document.getElementById('chrome-app-render-root') as HTMLElement) ||
+  document.body;
 
 const MAX_SERVICE_REGISTRY_NAME_LENGTH = 32;
 const MAX_SERVICE_REGISTRY_DESC_LENGTH = 255;
