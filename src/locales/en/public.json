@@ -126,8 +126,6 @@
     "create_service_account_to_generate_credentials": "Create a service account to generate credentials. Manage the service accounts you create on the",
     "service_accounts": "Service Accounts",
     "service_accounts_small": "Service accounts",
-    "current_instance": "Accounts do not have access to this instance unless granted under the instance’s",
-    "access_tab": "Access tab.",
-    "alter_allow": "The instance owner, the instance administrator, or the organization administrator can manage access."
+    "current_instance": "Accounts do not have access to this instance unless granted under the instance’s <0>Access tab</0>. The instance owner, the instance administrator, or the organization administrator can manage access."
   }
 }

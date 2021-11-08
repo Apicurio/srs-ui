@@ -97,12 +97,14 @@ export const ConnectionInfo: React.FC<ConnectionInfoProps> = ({ registryApisUrl,
       </Button>
       <TextContent className='pf-u-pt-sm'>
         <Text component={TextVariants.small}>
-        <Trans>
-          Accounts do not have access to this instance unless granted under the instance’s 
-          <Link to={`${basename}/t/${registryInstance?.id}/roles`} data-testid="tableRegistries-linkKafka"> Access tab</Link>. 
-          The instance owner, the instance administrator, or the organization administrator can manage access.
-          </Trans>
-          </Text>
+
+        <Trans
+          i18nKey='srs.current_instance'
+          components={[
+            <Link to={`${basename}/t/${registryInstance?.id}/roles`} key="tableRegistries-linkKafka"></Link>
+          ]}
+        />
+        </Text>
       </TextContent>
       <TextContent className="pf-u-pb-sm">
         <Text component={TextVariants.h3} className="pf-u-mt-xl">
