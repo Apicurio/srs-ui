@@ -151,7 +151,11 @@ module.exports = (env, argv) => {
             eager: true,
             singleton: true,
             requiredVersion: dependencies["@rhoas/app-services-ui-shared"]
-          }
+          },
+          '@patternfly/quickstarts': {
+            singleton: true,
+            requiredVersion: '*',
+          },
         },
       })
     ],

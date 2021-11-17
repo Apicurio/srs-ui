@@ -60,12 +60,13 @@ const ServiceRegistryInformation: React.FC<ServiceRegistryInformationProps> = ({
           onClick={() =>
             qsContext.setActiveQuickStart &&
             qsContext.setActiveQuickStart('getting-started-service-registry')
+
           }
         >
           {t('common.quick_start_guide_message')}
         </Button>
       </TextList>
-    </TextContent>
+    </TextContent >
   );
 };
 
