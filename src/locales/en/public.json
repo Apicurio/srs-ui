@@ -81,7 +81,7 @@
     "view_connection_information": "Connection",
     "delete_registry": "Delete",
     "empty_state_registry_title": "No Service Registry instances yet",
-    "empty_state_registry_description": "To get started, create a Service Registry instance.",
+    "empty_state_registry_description": "For help getting started, access the <0>quick start guide.<0>",
     "create_service_registry": "Create Service Registry instance",
     "unauthorized_empty_state_title": "Access entitlements needed",
     "unauthorized_empty_state_body": "To set up a Service Registry, your account needs the appropriate access entitlements",
