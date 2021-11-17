@@ -89,8 +89,7 @@
     "webpack-merge": "5.8.0"
   },
   "dependencies": {
-    "@cloudmosaic/quickstarts": "^1.0.0-rc.1",
-    "@patternfly/patternfly": "^4.132.2",
+    "@patternfly/patternfly": "4.132.2",
     "@patternfly/quickstarts": "1.2.2",
     "@patternfly/react-core": "4.152.4",
     "@patternfly/react-icons": "4.11.14",
