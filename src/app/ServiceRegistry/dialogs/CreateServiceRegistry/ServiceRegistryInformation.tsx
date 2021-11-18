@@ -10,7 +10,13 @@ import {
   TextListItemVariants,
   Grid,
   GridItem,
+  Button,
+  ButtonVariant,
 } from '@patternfly/react-core';
+import {
+  QuickStartContext,
+  QuickStartContextValues,
+} from '@patternfly/quickstarts';
 
 export type ServiceRegistryInformationProps = {
   isSrsTrial?: boolean;
@@ -18,6 +24,9 @@ export type ServiceRegistryInformationProps = {
 
 const ServiceRegistryInformation: React.FC<ServiceRegistryInformationProps> = ({ isSrsTrial }) => {
   const { t } = useTranslation();
+
+  const qsContext: QuickStartContextValues =
+    React.useContext(QuickStartContext);
 
   return (
     <TextContent>
@@ -43,8 +52,21 @@ const ServiceRegistryInformation: React.FC<ServiceRegistryInformationProps> = ({
             <TextListItem component={TextListItemVariants.dd}>{t('common.request_rate_value')}</TextListItem>
           </GridItem>
         </Grid>
+        <Button
+          isSmall
+          isInline
+          variant={ButtonVariant.link}
+          style={{ marginTop: '20px' }}
+          onClick={() =>
+            qsContext.setActiveQuickStart &&
+            qsContext.setActiveQuickStart('getting-started-service-registry')
+
+          }
+        >
+          {t('common.quick_start_guide_message')}
+        </Button>
       </TextList>
-    </TextContent>
+    </TextContent >
   );
 };
 
