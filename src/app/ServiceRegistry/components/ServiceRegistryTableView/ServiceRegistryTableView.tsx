@@ -238,7 +238,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
         id: 'connect-instance',
         ['data-testid']: 'tableRegistry-actionConnection',
         onClick: (event: any) =>
-          isUserSameAsLoggedIn && onSelectKebabDropdownOption(event, originalData, 'connect-instance'),
+          onSelectKebabDropdownOption(event, originalData, 'connect-instance'),
         ...additionalProps,
         tooltipProps: {
           position: 'left',

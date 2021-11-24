@@ -24,7 +24,7 @@ const ServiceRegistryDrawer: React.FC<ServiceRegistryDrawerProps> = ({
   const { t } = useTranslation();
   const { registryUrl, name } = registry || {};
 
-  const panelBodyContent = <ConnectionInfo registryApisUrl={registryUrl} />;
+  const panelBodyContent = <ConnectionInfo registryApisUrl={registryUrl} registryInstance={registry}/>;
 
   return (
     <MASDrawer
