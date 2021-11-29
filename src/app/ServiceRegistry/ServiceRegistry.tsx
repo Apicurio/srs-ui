@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
-import { Configuration, RegistryListRest, Registry, RegistriesApi } from '@rhoas/registry-management-sdk';
-import { useAuth, useConfig, useBasename, useAlert } from '@rhoas/app-services-ui-shared';
-import {
-  ServiceRegistryDrawer,
-  UnauthrizedUser,
-  ServiceRegistryEmptyState,
-  ServiceRegistryTableView,
-} from './components';
+import { Configuration, RegistryList, Registry, RegistriesApi } from '@rhoas/registry-management-sdk';
+import { useAuth, useConfig } from '@rhoas/app-services-ui-shared';
+import { ServiceRegistryDrawer, ServiceRegistryEmptyState, ServiceRegistryTableView } from './components';
 import { ServiceRegistryHeader } from '@app/ServiceRegistry/components';
 import { MASLoading, useRootModalContext, MODAL_TYPES, usePagination } from '@app/components';
 import { useTimeout } from '@app/hooks';
 import { MAX_POLL_INTERVAL } from '@app/constants';
-import {InstanceType} from '@app/utils';
+import { InstanceType } from '@app/utils';
 import { useSharedContext } from '@app/context';
 import './ServiceRegistry.css';
 
@@ -23,23 +17,23 @@ export const ServiceRegistry: React.FC = () => {
   const auth = useAuth();
   const {
     srs: { apiBasePath: basePath },
-  } = useConfig() || {srs:{apiBasePath:''}};
+  } = useConfig() || { srs: { apiBasePath: '' } };
 
-  const { addAlert } = useAlert() || {};
   const { showModal } = useRootModalContext();
-  const { preCreateInstance, shouldOpenCreateModal,tokenEndPointUrl } = useSharedContext() || {};
-  const {page=1, perPage=10}=usePagination() || {};
+  const { preCreateInstance, shouldOpenCreateModal } = useSharedContext() || {};
+  const { page = 1, perPage = 10 } = usePagination() || {};
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
   const [selectedRegistryInstance, setSelectedRegistryInstance] = useState<Registry | undefined>(undefined);
   const [notRequiredDrawerContentBackground, setNotRequiredDrawerContentBackground] = useState<boolean>(false);
-  const [isUnauthorizedUser, setIsUnauthorizedUser] = useState<boolean>(false);
-  const [registries, setRegistries] = useState<RegistryListRest | undefined>(undefined);
+  const [registries, setRegistries] = useState<RegistryList | undefined>(undefined);
   const [registryItems, setRegistryItems] = useState<Registry[] | undefined>(undefined);
   const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined);
   const [orderBy, setOrderBy] = useState<string>('name asc');
 
-  const hasUserTrialInstance = registryItems?.some((r) => r?.instance_type === InstanceType?.eval && r.owner===loggedInUser);
+  const hasUserTrialInstance = registryItems?.some(
+    (r) => r?.instance_type === InstanceType?.eval && r.owner === loggedInUser
+  );
 
   useEffect(() => {
     fetchRegistries();
@@ -61,6 +55,10 @@ export const ServiceRegistry: React.FC = () => {
     openModal();
   }, [shouldOpenCreateModal]);
 
+  useEffect(() => {
+    fetchRegistries();
+  }, [page, perPage]);
+
   const updateServiceRegistryInstance = () => {
     if (registryItems && registryItems?.length > 0) {
       const selectedRegistryItem = registryItems?.filter(
@@ -73,7 +71,7 @@ export const ServiceRegistry: React.FC = () => {
 
   const fetchRegistries = async () => {
     const accessToken = await auth?.srs.getToken();
-    if(basePath && accessToken){
+    if (basePath && accessToken) {
       const api = new RegistriesApi(
         new Configuration({
           accessToken,
@@ -81,7 +79,7 @@ export const ServiceRegistry: React.FC = () => {
         })
       );
       await api
-        .getRegistries()
+        .getRegistries(page, perPage)
         .then((res) => {
           const registry = res?.data;
           setRegistries(registry);
@@ -90,7 +88,7 @@ export const ServiceRegistry: React.FC = () => {
         .catch((error) => {
           //todo: handle error
         });
-    }    
+    }
   };
 
   useTimeout(() => fetchRegistries(), MAX_POLL_INTERVAL);
@@ -120,16 +118,10 @@ export const ServiceRegistry: React.FC = () => {
     });
   };
 
-  const getAccessToServiceRegistry = () => {
-    /**
-     * Todo: integrate get access service registry api
-     */
-  };
-
   const openCreateModal = () => {
     showModal(MODAL_TYPES.CREATE_SERVICE_REGISTRY, {
       fetchServiceRegistries: fetchRegistries,
-      hasUserTrialInstance
+      hasUserTrialInstance,
     });
   };
 
@@ -142,10 +134,6 @@ export const ServiceRegistry: React.FC = () => {
     }
     open && openCreateModal();
   };
-
-  if (isUnauthorizedUser) {
-    return <UnauthrizedUser getAccessToServiceRegistry={getAccessToServiceRegistry} />;
-  }
 
   if (registryItems === undefined) {
     return (
@@ -170,30 +158,30 @@ export const ServiceRegistry: React.FC = () => {
           onClose={onCloseDrawer}
           registry={selectedRegistryInstance}
         >
-        <main className="pf-c-page__main">
-          <ServiceRegistryHeader
-            onConnectToRegistry={onConnectToRegistry}
-            onDeleteRegistry={onDeleteRegistry}
-            serviceRegistryDetails={selectedRegistryInstance}
-          />
-          <ServiceRegistryTableView
-            page={page}
-            perPage={perPage}
-            serviceRegistryItems={registryItems}
-            total={registries?.total}
-            onViewConnection={onConnectToRegistry}
-            onDelete={onDeleteRegistry}
-            expectedTotal={0}
-            orderBy={orderBy}
-            setOrderBy={setOrderBy}
-            loggedInUser={loggedInUser}
-            currentUserRegistries={registryItems}
-            handleCreateModal={createServiceRegistry}
-            refresh={fetchRegistries}
-            registryDataLoaded={false}
-            isDrawerOpen={isExpandedDrawer}
-          />
-        </main>
+          <main className="pf-c-page__main">
+            <ServiceRegistryHeader
+              onConnectToRegistry={onConnectToRegistry}
+              onDeleteRegistry={onDeleteRegistry}
+              serviceRegistryDetails={selectedRegistryInstance}
+            />
+            <ServiceRegistryTableView
+              page={page}
+              perPage={perPage}
+              serviceRegistryItems={registryItems}
+              total={registries?.total}
+              onViewConnection={onConnectToRegistry}
+              onDelete={onDeleteRegistry}
+              expectedTotal={0}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              loggedInUser={loggedInUser}
+              currentUserRegistries={registryItems}
+              handleCreateModal={createServiceRegistry}
+              refresh={fetchRegistries}
+              registryDataLoaded={false}
+              isDrawerOpen={isExpandedDrawer}
+            />
+          </main>
         </ServiceRegistryDrawer>
       );
     }

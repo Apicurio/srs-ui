@@ -13,7 +13,7 @@ const UnauthrizedUser: React.FC<UnauthrizedUserProps> = ({ getAccessToServiceReg
 
   return (
     <>
-      <ServiceRegistryHeader showKebab={false} />
+      <ServiceRegistryHeader />
       <PageSection padding={{ default: 'noPadding' }} isFilled>
         <MASEmptyState
           emptyStateProps={{ variant: MASEmptyStateVariant.NoAccess }}
