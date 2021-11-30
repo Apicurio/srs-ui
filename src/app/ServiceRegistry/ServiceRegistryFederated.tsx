@@ -11,10 +11,11 @@ const ServiceRegistryFederated: React.FC<ServiceRegistryFederatedProps> = ({
   preCreateInstance,
   shouldOpenCreateModal,
   tokenEndPointUrl,
+  renderDownloadArtifacts
 }) => {
   return (
     <I18nextProvider i18n={srsi18n}>
-      <SharedContext.Provider value={{ preCreateInstance, shouldOpenCreateModal, tokenEndPointUrl }}>
+      <SharedContext.Provider value={{ preCreateInstance, shouldOpenCreateModal, tokenEndPointUrl,renderDownloadArtifacts }}>
         <RootModal>
           <PaginationProvider>
             <ServiceRegistry />

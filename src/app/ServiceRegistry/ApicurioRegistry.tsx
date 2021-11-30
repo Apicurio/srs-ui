@@ -6,6 +6,7 @@ import { Configuration, Registry, RegistriesApi } from '@rhoas/registry-manageme
 import { useAuth, useConfig } from '@rhoas/app-services-ui-shared';
 import { ServiceRegistryDrawer, ServiceRegistryHeader } from './components';
 import { useRootModalContext, MODAL_TYPES, MASLoading } from '@app/components';
+import {useSharedContext} from '@app/context';
 
 export type ApicurioRegistryProps = {
   render: (registry: Registry | undefined) => JSX.Element;
@@ -20,6 +21,8 @@ const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({ render, breadcrumbI
   } = useConfig();
   const { tenantId } = useParams<{ tenantId: string }>();
   const { showModal } = useRootModalContext();
+  const { renderDownloadArtifacts } = useSharedContext() || {};
+
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
   const [registry, setRegistry] = useState<Registry | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
@@ -60,7 +63,7 @@ const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({ render, breadcrumbI
   };
 
   const onDeleteRegistry = (registry: Registry | undefined) => {
-    const { name, status } = registry || {};
+    const { status } = registry || {};
     showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
       shouldRedirect: true,
       serviceRegistryStatus: status,
@@ -69,9 +72,7 @@ const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({ render, breadcrumbI
       confirmButtonProps: {
         label: t('common.delete'),
       },
-      textProps: {
-        description: t('common.delete_service_registry_description', { name }),
-      },
+      renderDownloadArtifacts
     });
   };
 
