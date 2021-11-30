@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import {TextContent, Text, TextVariants } from '@patternfly/react-core';
 import { Registry, RegistriesApi, Configuration, RegistryStatusValue } from '@rhoas/registry-management-sdk';
 import { useAuth, useConfig, useBasename, useAlert, AlertVariant } from '@rhoas/app-services-ui-shared';
 import { MASDeleteModal, useRootModalContext } from '@app/components';
@@ -26,6 +27,7 @@ export const DeleteServiceRegistry: React.FC = () => {
     onClose,
     fetchRegistries,
     shouldRedirect,
+    renderDownloadArtifacts
   } = store?.modalProps || {};
 
   const selectedInstanceName = selectedItemData?.name;
@@ -105,6 +107,30 @@ export const DeleteServiceRegistry: React.FC = () => {
     }
   };
 
+  const description = (
+    <>
+      <TextContent className="pf-u-mb-md pf-u-mb-xs">
+        <Text component={TextVariants.p}>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: t('common.delete_service_registry_description', { name: selectedInstanceName }),
+            }}
+          />
+        </Text>
+        <Text component={TextVariants.p} className="pf-u-font-size-sm">
+          {t('common.delete_service_registry_download_zip')}
+          &nbsp;
+          {renderDownloadArtifacts && renderDownloadArtifacts(selectedItemData, t('common.download_artifacts'))}
+        </Text>
+      </TextContent>
+    </>
+  );
+
+  const newTextProps = {
+    ...textProps,
+    description,
+  };
+
   return (
     <MASDeleteModal
       isModalOpen={true}
@@ -118,7 +144,7 @@ export const DeleteServiceRegistry: React.FC = () => {
       }}
       cancelButtonProps={cancelButtonProps}
       handleModalToggle={handleToggle}
-      textProps={textProps}
+      textProps={newTextProps}
       selectedItemData={selectedItemData}
       textInputProps={{
         showTextInput: serviceRegistryStatus?.toLowerCase() === RegistryStatusValue.Ready,

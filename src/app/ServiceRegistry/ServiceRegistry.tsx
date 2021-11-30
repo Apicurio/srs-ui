@@ -20,7 +20,7 @@ export const ServiceRegistry: React.FC = () => {
   } = useConfig() || { srs: { apiBasePath: '' } };
 
   const { showModal } = useRootModalContext();
-  const { preCreateInstance, shouldOpenCreateModal } = useSharedContext() || {};
+  const { preCreateInstance, shouldOpenCreateModal, renderDownloadArtifacts } = useSharedContext() || {};
   const { page = 1, perPage = 10 } = usePagination() || {};
 
   const [isExpandedDrawer, setIsExpandedDrawer] = useState<boolean>(false);
@@ -103,7 +103,7 @@ export const ServiceRegistry: React.FC = () => {
   };
 
   const onDeleteRegistry = (registry: Registry | undefined) => {
-    const { name, status } = registry || {};
+    const { status } = registry || {};
     showModal(MODAL_TYPES.DELETE_SERVICE_REGISTRY, {
       serviceRegistryStatus: status,
       selectedItemData: registry,
@@ -111,10 +111,8 @@ export const ServiceRegistry: React.FC = () => {
       title: `${t('common.delete_service_registry_title')}?`,
       confirmButtonProps: {
         label: t('common.delete'),
-      },
-      textProps: {
-        description: t('common.delete_service_registry_description', { name }),
-      },
+      },      
+      renderDownloadArtifacts
     });
   };
 

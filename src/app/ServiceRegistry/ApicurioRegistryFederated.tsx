@@ -12,11 +12,12 @@ const ApicurioRegistryFederated: React.FC<ApicurioRegistryFederatedProps> = ({
   breadcrumbId,
   tokenEndPointUrl,
   artifactId,
+  renderDownloadArtifacts
 }) => {
   return (
     <I18nextProvider i18n={srsi18n}>
       <RootModal>
-        <SharedContext.Provider value={{ tokenEndPointUrl, artifactId }}>
+        <SharedContext.Provider value={{ tokenEndPointUrl, artifactId, renderDownloadArtifacts }}>
           <ApicurioRegistry render={render} breadcrumbId={breadcrumbId} />
         </SharedContext.Provider>
       </RootModal>
