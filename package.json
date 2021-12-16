@@ -96,7 +96,7 @@
     "@patternfly/react-styles": "4.11.13",
     "@patternfly/react-table": "4.29.58",
     "@redhat-cloud-services/frontend-components-config": "4.5.8",
-    "@rhoas/app-services-ui-shared": "0.15.2",
+    "@rhoas/app-services-ui-shared": "0.15.3",
     "@rhoas/registry-management-sdk": "0.18.0",
     "@testing-library/dom": "8.11.1",
     "@testing-library/jest-dom": "5.16.1",
