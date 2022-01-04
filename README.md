@@ -25,7 +25,7 @@ This UI uses `npm` to provide dependency management. If you wish to develop the 
 2. `npm run start:dev` - runs the UI client in development mode.
 3. `npm run start:restmockserver` - runs the REST mock server.
 
-#### Running locally with (app-services ui)[https://github.com/redhat-developer/app-services-ui] project
+### Running locally with (app-services ui)[https://github.com/redhat-developer/app-services-ui] project
 1. `npm install`
 2. `npm run start:federate` - runs the UI client in federated mode.
 
