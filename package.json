@@ -66,7 +66,7 @@
     "postcss": "8.4.5",
     "postcss-loader": "6.2.1",
     "prettier": "2.5.1",
-    "prop-types": "15.8.0",
+    "prop-types": "15.8.1",
     "raw-loader": "4.0.2",
     "react-axe": "3.5.4",
     "react-docgen-typescript-loader": "3.7.2",
