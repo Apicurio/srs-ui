@@ -10,9 +10,14 @@ import {
   TextProps,
   TextInput,
   TextInputProps,
+  CheckboxProps,
+  Form,
+  FormGroup,
+  Checkbox,
 } from '@patternfly/react-core';
 import { getModalAppendTo } from '@app/utils';
 import './MASDeleteModal.css';
+import { useTranslation } from 'react-i18next';
 
 export type MASDeleteModalProps = {
   isModalOpen: boolean;
@@ -41,6 +46,12 @@ export type MASDeleteModalProps = {
     label: string;
     value: string | undefined;
   };
+  checkboxProps?: CheckboxProps & {
+    id?: string;
+    isDownloaded: boolean;
+    isChecked: boolean,
+    onChange: () => void
+  }
 };
 
 export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
@@ -54,7 +65,10 @@ export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
   children,
   selectedItemData = '',
   textInputProps,
+  checkboxProps
 }: MASDeleteModalProps) => {
+  const { t } = useTranslation();
+
   const {
     variant = ModalVariant.small,
     titleIconVariant = 'warning',
@@ -81,6 +95,15 @@ export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
     label: cancelActionLabel = 'Cancel',
     ...restCancelButtonProps
   } = cancelButtonProps || {};
+
+  const {
+    id: checkboxId = id,
+    isDownloaded: isDownloaded,
+    isChecked: isChecked,
+    onChange: onChangeCheckbox
+
+    //...restCheckboxProps
+  } = checkboxProps || {};
 
   const { description } = textProps || {};
   const { label = '', value, onChange, onKeyPress, showTextInput, ...restInputFieldProps } = textInputProps || {};
@@ -119,21 +142,34 @@ export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
       ]}
       {...restModalProps}
     >
-     {description}
+      {description}
       {showTextInput && (
-        <>
-          <label htmlFor="mas-name-input" dangerouslySetInnerHTML={{ __html: label }} />
-          <TextInput
-            id="mas--name__input"
-            name="mas-name-input"
-            type="text"
-            value={value}
-            onChange={onChange}
-            onKeyPress={onKeyPress}
-            autoFocus={true}
-            {...restInputFieldProps}
-          />
-        </>
+        <Form>
+          <FormGroup fieldId={'text-input'}>
+            <label htmlFor="mas-name-input" dangerouslySetInnerHTML={{ __html: label }} />
+            <TextInput
+              id="mas--name__input"
+              name="mas-name-input"
+              type="text"
+              value={value}
+              onChange={onChange}
+              onKeyPress={onKeyPress}
+              autoFocus={true}
+              {...restInputFieldProps}
+            />
+          </FormGroup>
+          <FormGroup fieldId={'checkbox'}>
+            <Checkbox
+              label={isDownloaded ? t('common.checkbox_label_after_the_download_click')
+                : t('common.checkbox_label_before_the_download_click')}
+              aria-label="uncontrolled checkbox example"
+              id={id}
+              className="pf-u-font-size-sm"
+              isChecked={isChecked}
+              onChange={onChangeCheckbox}
+            />
+          </FormGroup>
+        </Form>
       )}
       {children}
     </Modal>

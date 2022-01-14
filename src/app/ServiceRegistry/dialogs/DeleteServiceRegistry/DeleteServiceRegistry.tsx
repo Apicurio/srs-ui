@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {TextContent, Text, TextVariants } from '@patternfly/react-core';
+import { TextContent, Text, TextVariants, Alert, AlertActionLink } from '@patternfly/react-core';
 import { Registry, RegistriesApi, Configuration, RegistryStatusValue } from '@rhoas/registry-management-sdk';
 import { useAuth, useConfig, useBasename, useAlert, AlertVariant } from '@rhoas/app-services-ui-shared';
 import { MASDeleteModal, useRootModalContext } from '@app/components';
@@ -35,13 +35,25 @@ export const DeleteServiceRegistry: React.FC = () => {
   const [instanceNameInput, setInstanceNameInput] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [isDownloaded, setIsDownloaded] = useState<boolean>(false);
+
+  const onClickDownload = () => {
+    setIsDownloaded(true)
+  }
+
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+
+  const onChangeCheckbox = () => {
+    setIsChecked(!isChecked);
+  }
+
   const handleInstanceName = (value: string) => {
     setInstanceNameInput(value);
   };
 
   const isConfirmButtonDisabled = () => {
     if (serviceRegistryStatus?.toLowerCase() === RegistryStatusValue.Ready) {
-      if (instanceNameInput?.toLowerCase() === selectedInstanceName?.toLowerCase()) {
+      if (instanceNameInput?.toLowerCase() === selectedInstanceName?.toLowerCase() && isChecked) {
         return false;
       }
       return true;
@@ -117,12 +129,11 @@ export const DeleteServiceRegistry: React.FC = () => {
             }}
           />
         </Text>
-        <Text component={TextVariants.p} className="pf-u-font-size-sm">
-          {t('common.delete_service_registry_download_zip')}
-          &nbsp;
-          {renderDownloadArtifacts && renderDownloadArtifacts(selectedItemData, t('common.download_artifacts'))}
-        </Text>
       </TextContent>
+      <Alert variant="info" isInline className="pf-u-mb-lg" title={t('common.delete_instance_alert_header')}
+        actionLinks={<AlertActionLink onClick={onClickDownload} >{renderDownloadArtifacts && renderDownloadArtifacts(selectedItemData, t('common.download_artifacts'))}</AlertActionLink>}>
+        {t('common.delete_instance_alert_body')}
+      </Alert>
     </>
   );
 
@@ -154,6 +165,14 @@ export const DeleteServiceRegistry: React.FC = () => {
         onKeyPress,
         autoFocus: true,
       }}
+      checkboxProps={
+        {
+          id: 'checkbox',
+          isDownloaded: isDownloaded,
+          isChecked: isChecked,
+          onChange: onChangeCheckbox
+        }
+      }
     ></MASDeleteModal>
   );
 };
