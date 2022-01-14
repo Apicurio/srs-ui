@@ -101,8 +101,6 @@ export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
     isDownloaded: isDownloaded,
     isChecked: isChecked,
     onChange: onChangeCheckbox
-
-    //...restCheckboxProps
   } = checkboxProps || {};
 
   const { description } = textProps || {};
