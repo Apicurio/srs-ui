@@ -61,7 +61,7 @@
     "i18next-parser": "5.4.0",
     "imagemin": "8.0.1",
     "jest": "27.4.7",
-    "mini-css-extract-plugin": "2.5.1",
+    "mini-css-extract-plugin": "2.5.2",
     "null-loader": "4.0.1",
     "postcss": "8.4.5",
     "postcss-loader": "6.2.1",
