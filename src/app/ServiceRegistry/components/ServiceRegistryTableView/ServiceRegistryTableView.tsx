@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { IAction, IExtraColumnData, IRowData, ISeparator, ISortBy, SortByDirection } from '@patternfly/react-table';
 import { PageSection, PageSectionVariants, Card } from '@patternfly/react-core';
@@ -10,6 +10,8 @@ import { getFormattedDate, InstanceType } from '@app/utils';
 import { MASEmptyState, MASEmptyStateVariant, MASPagination, MASTable } from '@app/components';
 import { StatusColumn } from './StatusColumn';
 import { ServiceRegistryToolbar, ServiceRegistryToolbarProps } from './ServiceRegistryToolbar';
+import { add } from 'date-fns';
+import {FormatDate} from '@rhoas/app-services-ui-components'
 
 export type ServiceRegistryTableViewProps = ServiceRegistryToolbarProps & {
   serviceRegistryItems: Registry[];
@@ -188,7 +190,19 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
               <>
                 {getFormattedDate(created_at, t('ago'))}
                 <br />
-                {instance_type === InstanceType?.eval && '2-month duration'}
+                {instance_type === InstanceType?.eval && (
+                  <Trans
+                    i18nKey="srs.expires_in"
+                    components={{
+                      time: (
+                        <FormatDate
+                          date={add(new Date(created_at), { months: 2 })}
+                          format="expiration"
+                        />
+                      ),
+                    }}
+                  />
+                )}
               </>
             ),
           },
