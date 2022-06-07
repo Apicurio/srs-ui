@@ -76,7 +76,9 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
      */
     const items = await (async (): Promise<Registry[]> => {
       const response = await api.getRegistries(page, pageSize);
-      let { items, total } = response?.data;
+      let { items } = response?.data;
+      const { total } = response?.data;
+
       if (total > pageSize) {
         const n = Math.ceil(total / pageSize);
         for (let i = 1; i < n; i++) {
