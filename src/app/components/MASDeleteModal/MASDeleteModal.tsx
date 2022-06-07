@@ -49,9 +49,9 @@ export type MASDeleteModalProps = {
   checkboxProps?: CheckboxProps & {
     id?: string;
     isDownloaded: boolean;
-    isChecked: boolean,
-    onChange: () => void
-  }
+    isChecked: boolean;
+    onChange: () => void;
+  };
 };
 
 export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
@@ -65,7 +65,7 @@ export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
   children,
   selectedItemData = '',
   textInputProps,
-  checkboxProps
+  checkboxProps,
 }: MASDeleteModalProps) => {
   const { t } = useTranslation();
 
@@ -100,7 +100,7 @@ export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
     id: checkboxId = id,
     isDownloaded: isDownloaded,
     isChecked: isChecked,
-    onChange: onChangeCheckbox
+    onChange: onChangeCheckbox,
   } = checkboxProps || {};
 
   const { description } = textProps || {};
@@ -142,7 +142,7 @@ export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
     >
       {description}
       {showTextInput && (
-        <Form>
+        <Form onSubmit={(event) => event.preventDefault()}>
           <FormGroup fieldId={'text-input'}>
             <label htmlFor="mas-name-input" dangerouslySetInnerHTML={{ __html: label }} />
             <TextInput
@@ -158,8 +158,11 @@ export const MASDeleteModal: React.FC<MASDeleteModalProps> = ({
           </FormGroup>
           <FormGroup fieldId={'checkbox'}>
             <Checkbox
-              label={isDownloaded ? t('common.checkbox_label_after_the_download_click')
-                : t('common.checkbox_label_before_the_download_click')}
+              label={
+                isDownloaded
+                  ? t('common.checkbox_label_after_the_download_click')
+                  : t('common.checkbox_label_before_the_download_click')
+              }
               aria-label="uncontrolled checkbox example"
               id={id}
               className="pf-u-font-size-sm"
