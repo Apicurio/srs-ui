@@ -60,6 +60,9 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
   }, [selectedRegistry]);
 
   const fetchRegistries = async () => {
+    let page = 1;
+    const pageSize = 10;
+
     const accessToken = await auth?.srs.getToken();
     const api = new RegistriesApi(
       new Configuration({
@@ -67,15 +70,27 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
         basePath,
       })
     );
-    await api
-      .getRegistries()
-      .then((res) => {
-        const registry = res?.data;
-        setRegistryItems(registry?.items);
-      })
-      .catch((error) => {
-        //todo: handle error
-      });
+    /**
+     * Api works based on pagination and return 10 records by default.
+     * Getting data by calling api mupltiple times based on page size 10 if total is greater than 10.
+     */
+    const items = await (async (): Promise<Registry[]> => {
+      const response = await api.getRegistries(page, pageSize);
+      let { items, total } = response?.data;
+      if (total > pageSize) {
+        const n = Math.ceil(total / pageSize);
+        for (let i = 1; i < n; i++) {
+          page += 1;
+          const response = await api.getRegistries(page, pageSize);
+          items = items?.concat(response?.data.items);
+        }
+        return items;
+      } else {
+        return items;
+      }
+    })();
+
+    setRegistryItems(items);
   };
 
   const onToggle = (isOpen: boolean) => {
