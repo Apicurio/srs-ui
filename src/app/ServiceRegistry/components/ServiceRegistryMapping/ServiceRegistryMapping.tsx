@@ -61,7 +61,7 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
 
   const fetchRegistries = async () => {
     let page = 1;
-    const pageSize = 10;
+    const pageSize = 100;
 
     const accessToken = await auth?.srs.getToken();
     const api = new RegistriesApi(
@@ -72,7 +72,7 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
     );
     /**
      * Api works based on pagination and return 10 records by default.
-     * Getting data by calling api mupltiple times based on page size 10 if total is greater than 10.
+     * Getting data by calling api mupltiple times based on page size 100 if total is greater than 100.
      */
     const items = await (async (): Promise<Registry[]> => {
       const response = await api.getRegistries(page, pageSize);
