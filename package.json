@@ -96,7 +96,7 @@
     "@patternfly/react-core": "4.202.16",
     "@patternfly/react-icons": "4.53.16",
     "@patternfly/react-table": "4.71.16",
-    "@redhat-cloud-services/frontend-components-config": "4.6.6",
+    "@redhat-cloud-services/frontend-components-config": "4.6.8",
     "@rhoas/app-services-ui-shared": "0.15.4",
     "@rhoas/registry-management-sdk": "0.30.0",
     "@testing-library/dom": "8.13.0",
