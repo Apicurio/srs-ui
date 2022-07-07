@@ -83,6 +83,7 @@
   },
   "srs": {
     "service_registry": "Service Registry",
+    "service_registry_instances": "Service Registry Instances",
     "expires_in":"Expires in <time>{{time}}</time>",
     "service_registry_breadcrumb": "Service Registry",
     "view_connection_information": "Connection",
