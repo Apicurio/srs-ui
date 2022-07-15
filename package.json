@@ -116,5 +116,17 @@
     "react-i18next": "11.17.4",
     "react-router-last-location": "2.0.1",
     "sirv-cli": "1.0.14"
+  },
+  "peerDependencies":{
+    "@patternfly/patternfly": "4.185.1",
+    "@patternfly/quickstarts": "1.2.2",
+    "@patternfly/react-core": "4.202.16",
+    "@patternfly/react-icons": "4.53.16",
+    "@patternfly/react-table": "4.71.16",
+    "@rhoas/app-services-ui-components": "1.40.6",
+    "@rhoas/app-services-ui-shared": "0.16.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-router-dom": "5.2.1"
   }
 }
