@@ -83,7 +83,7 @@ export const ServiceRegistryHeader: React.FC<ServiceRegistryHeaderProps> = ({
           </Breadcrumb>
         ) : (
           <TextContent>
-            <Text component="h1"> {t('srs.service_registry')}</Text>
+            <Text component="h1"> {t('srs.service_registry_instances')}</Text>
           </TextContent>
         )}
       </section>
