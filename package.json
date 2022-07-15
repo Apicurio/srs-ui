@@ -33,9 +33,10 @@
     "i18n": "i18next 'src/**/**/*.{ts,tsx}' [-oc] -c './i18next-parser.config.js' -o './src/locales/$LOCALE/$NAMESPACE.json'"
   },
   "devDependencies": {
+    "@patternfly/react-charts": "6.77.1",
     "@rhoas/api-mock": "0.37.0",
-    "@storybook/addon-actions": "6.5.9",
     "@rhoas/app-services-ui-components": "1.40.6",
+    "@storybook/addon-actions": "6.5.9",
     "@storybook/addon-info": "5.3.21",
     "@storybook/addon-links": "6.5.9",
     "@storybook/addons": "6.5.9",
@@ -90,11 +91,11 @@
     "webpack-merge": "5.8.0"
   },
   "dependencies": {
-    "@patternfly/quickstarts": "1.2.2",
-    "@patternfly/react-styles": "4.11.13",
     "@patternfly/patternfly": "4.185.1",
+    "@patternfly/quickstarts": "1.2.2",
     "@patternfly/react-core": "4.202.16",
     "@patternfly/react-icons": "4.53.16",
+    "@patternfly/react-styles": "4.11.13",
     "@patternfly/react-table": "4.71.16",
     "@redhat-cloud-services/frontend-components-config": "4.6.15",
     "@rhoas/app-services-ui-shared": "0.16.0",
@@ -117,7 +118,7 @@
     "react-router-last-location": "2.0.1",
     "sirv-cli": "1.0.14"
   },
-  "peerDependencies":{
+  "peerDependencies": {
     "@patternfly/patternfly": "4.185.1",
     "@patternfly/quickstarts": "1.2.2",
     "@patternfly/react-core": "4.202.16",
