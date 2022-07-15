@@ -2,16 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { IAction, IExtraColumnData, IRowData, ISeparator, ISortBy, SortByDirection } from '@patternfly/react-table';
-import { PageSection, PageSectionVariants, Card } from '@patternfly/react-core';
-import { PaginationVariant } from '@patternfly/react-core';
+import { PageSection, PageSectionVariants, Card, PaginationVariant } from '@patternfly/react-core';
 import { Registry, RegistryStatusValue } from '@rhoas/registry-management-sdk';
 import { useBasename, useAlert, AlertVariant, useAuth } from '@rhoas/app-services-ui-shared';
 import { getFormattedDate, InstanceType } from '@app/utils';
-import { MASEmptyState, MASEmptyStateVariant, MASPagination, MASTable } from '@app/components';
+import { MASEmptyState, MASEmptyStateVariant, MASPagination, MASTable,MASTableProps } from '@app/components';
 import { StatusColumn } from './StatusColumn';
 import { ServiceRegistryToolbar, ServiceRegistryToolbarProps } from './ServiceRegistryToolbar';
 import { add } from 'date-fns';
-import {FormatDate} from '@rhoas/app-services-ui-components'
+import { FormatDate } from '@rhoas/app-services-ui-components';
 
 export type ServiceRegistryTableViewProps = ServiceRegistryToolbarProps & {
   serviceRegistryItems: Registry[];
@@ -116,8 +115,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     const lastItemsState: Registry[] = JSON.parse(JSON.stringify(instances));
     if (instances && instances.length > 0) {
       const completedOrFailedItems = Object.assign([], serviceRegistryItems).filter(
-        (item: Registry) =>
-          item.status === RegistryStatusValue.Ready || item.status === RegistryStatusValue.Failed
+        (item: Registry) => item.status === RegistryStatusValue.Ready || item.status === RegistryStatusValue.Failed
       );
       lastItemsState.forEach((item: Registry) => {
         const filteredInstances: Registry[] = completedOrFailedItems.filter(
@@ -150,8 +148,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     const incompleteRegistry = Object.assign(
       [],
       serviceRegistryItems?.filter(
-        (r: Registry) =>
-          r.status === RegistryStatusValue.Provisioning || r.status === RegistryStatusValue.Accepted
+        (r: Registry) => r.status === RegistryStatusValue.Provisioning || r.status === RegistryStatusValue.Accepted
       )
     );
     setInstances(incompleteRegistry);
@@ -194,12 +191,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
                   <Trans
                     i18nKey="srs.expires_in"
                     components={{
-                      time: (
-                        <FormatDate
-                          date={add(new Date(created_at), { months: 2 })}
-                          format="expiration"
-                        />
-                      ),
+                      time: <FormatDate date={add(new Date(created_at), { months: 2 })} format="expiration" />,
                     }}
                   />
                 )}
@@ -251,13 +243,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
         title: t('srs.view_connection_information'),
         id: 'connect-instance',
         ['data-testid']: 'tableRegistry-actionConnection',
-        onClick: (event: any) =>
-          onSelectKebabDropdownOption(event, originalData, 'connect-instance'),
-        ...additionalProps,
-        tooltipProps: {
-          position: 'left',
-          content: t('common.no_permission_to_connect_registry'),
-        },
+        onClick: (event: any) => onSelectKebabDropdownOption(event, originalData, 'connect-instance'),
       },
       {
         title: t('srs.delete_registry'),
@@ -326,16 +312,17 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     setOrderBy(`${getParameterForSortIndex(index)} ${myDirection}`);
   };
 
-  const onRowClick = (event: any, rowIndex: number, row: IRowData) => {
-    const { originalData } = row;
-    const clickedEventType = event?.target?.type;
-    const tagName = event?.target?.tagName;
-
-    // Open modal on row click except kebab button click
-    if (clickedEventType !== 'button' && tagName?.toLowerCase() !== 'a') {
-      onViewConnection(originalData);
-      setActiveRow(originalData?.id);
+  const onRowClick: MASTableProps['onRowClick'] = (event, _, row) => {
+    const { originalData } = row || {};
+    if (event.target instanceof HTMLElement) {
+      const tagName = event.target.tagName.toLowerCase();
+      // Open instance drawer on row click except kebab button click or opening the kafka instance
+      if (tagName === 'button' || tagName === 'a') {
+        return;
+      }
     }
+    onViewConnection(originalData);
+    setActiveRow(originalData?.id);
   };
 
   return (
