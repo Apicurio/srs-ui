@@ -1,25 +1,26 @@
-import React, { FunctionComponent } from 'react';
+import React, { ReactNode, ReactElement } from 'react';
 import {
-  TableHeader,
+  HeaderProps,
   Table as PFTable,
   TableBody,
-  TableProps as PFTableProps,
-  HeaderProps,
   TableBodyProps,
+  TableHeader,
+  TableProps as PFTableProps,
 } from '@patternfly/react-table';
 import { css } from '@patternfly/react-styles';
-import { CustomRowWrapper, CustomRowWrapperProvider, CustomRowWrapperContextProps } from './CustomRowWrapper';
+import { CustomRowWrapper, CustomRowWrapperContextProps, CustomRowWrapperProvider } from './CustomRowWrapper';
 
 export type MASTableProps = CustomRowWrapperContextProps & {
   tableProps: Omit<PFTableProps, 'children'> & {
     hasDefaultCustomRowWrapper?: boolean;
+    ouiaId?: string;
   };
   tableHeaderProps?: Omit<HeaderProps, 'children'>;
   tableBodyProps?: Omit<TableBodyProps, 'children'>;
-  children?: React.ReactNode;
+  children?: ReactNode;
 };
 
-const MASTable: FunctionComponent<MASTableProps> = ({
+const MASTable = ({
   tableProps,
   tableHeaderProps,
   tableBodyProps,
@@ -28,7 +29,7 @@ const MASTable: FunctionComponent<MASTableProps> = ({
   onRowClick,
   rowDataTestId,
   loggedInUser,
-}) => {
+}: MASTableProps): ReactElement => {
   const {
     cells,
     rows,
@@ -39,6 +40,7 @@ const MASTable: FunctionComponent<MASTableProps> = ({
     variant,
     className,
     hasDefaultCustomRowWrapper = false,
+    ouiaId,
     ...restProps
   } = tableProps;
 
@@ -46,7 +48,7 @@ const MASTable: FunctionComponent<MASTableProps> = ({
    * Handle CustomRowWrapper
    */
   if (hasDefaultCustomRowWrapper) {
-    restProps['rowWrapper'] = CustomRowWrapper;
+    restProps.rowWrapper = CustomRowWrapper;
   }
 
   return (
@@ -67,6 +69,7 @@ const MASTable: FunctionComponent<MASTableProps> = ({
         actionResolver={actionResolver}
         onSort={onSort}
         sortBy={sortBy}
+        ouiaId={ouiaId}
         {...restProps}
       >
         <TableHeader {...tableHeaderProps} />
