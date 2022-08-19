@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageSection, ButtonVariant } from '@patternfly/react-core';
 import { MASEmptyState, MASEmptyStateVariant } from '@app/components';
@@ -8,7 +8,9 @@ export type UnauthrizedUserProps = {
   getAccessToServiceRegistry: () => void;
 };
 
-const UnauthrizedUser: React.FC<UnauthrizedUserProps> = ({ getAccessToServiceRegistry }) => {
+const UnauthrizedUser: FC<UnauthrizedUserProps> = ({
+  getAccessToServiceRegistry,
+}) => {
   const { t } = useTranslation();
 
   return (

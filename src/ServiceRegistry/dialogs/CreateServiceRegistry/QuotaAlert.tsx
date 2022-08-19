@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { Alert, AlertVariant, Spinner } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 import { Quota, QuotaType } from '@rhoas/app-services-ui-shared';
@@ -10,7 +10,7 @@ export type QuotaAlertProps = {
   hasUserTrialInstance?: boolean;
 };
 
-export const QuotaAlert: React.FC<QuotaAlertProps> = ({
+export const QuotaAlert: FC<QuotaAlertProps> = ({
   quota,
   hasServiceRegistryCreationFailed,
   loadingQuota,
@@ -23,12 +23,17 @@ export const QuotaAlert: React.FC<QuotaAlertProps> = ({
   if (quota === undefined || loadingQuota) {
     return (
       <Alert
-        className="pf-u-mb-md"
+        className='pf-u-mb-md'
         variant={AlertVariant.info}
         title={t('common.instance_checking_message')}
-        aria-live="polite"
+        aria-live='polite'
         isInline
-        customIcon={<Spinner size="md" aria-valuetext="Checking service registry availability" />}
+        customIcon={
+          <Spinner
+            size='md'
+            aria-valuetext='Checking service registry availability'
+          />
+        }
       />
     );
   }
@@ -76,7 +81,13 @@ export const QuotaAlert: React.FC<QuotaAlertProps> = ({
   return (
     <>
       {titleKey && (
-        <Alert className="pf-u-mb-md" variant={variant} title={t(titleKey)} aria-live="polite" isInline>
+        <Alert
+          className='pf-u-mb-md'
+          variant={variant}
+          title={t(titleKey)}
+          aria-live='polite'
+          isInline
+        >
           {t(messageKey)}
         </Alert>
       )}

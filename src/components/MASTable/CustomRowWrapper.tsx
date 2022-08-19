@@ -21,16 +21,22 @@ const CustomRowWrapperContext = createContext<CustomRowWrapperContextProps>({
 
 export const CustomRowWrapperProvider = CustomRowWrapperContext.Provider;
 
-export const CustomRowWrapper = (rowWrapperProps: CustomRowWrapperContextProps) => {
-  const { activeRow, onRowClick, rowDataTestId, loggedInUser } = useContext(CustomRowWrapperContext);
+export const CustomRowWrapper = (
+  rowWrapperProps: CustomRowWrapperContextProps
+) => {
+  const { activeRow, onRowClick, rowDataTestId, loggedInUser } = useContext(
+    CustomRowWrapperContext
+  );
   const { trRef, className, rowProps, row, ...props } = rowWrapperProps;
   const { originalData } = row || {};
   const isRowDeleted =
-    originalData?.status === RegistryStatusValue.Deprovision || originalData?.status === RegistryStatusValue.Deleting;
+    originalData?.status === RegistryStatusValue.Deprovision ||
+    originalData?.status === RegistryStatusValue.Deleting;
   const isLoggedInUserOwner = loggedInUser === row?.originalData?.owner;
   const isRowDisabled = isRowDeleted || !isLoggedInUserOwner;
 
-  const ref = trRef === undefined ? undefined : (trRef as LegacyRef<HTMLTableRowElement>);
+  const ref =
+    trRef === undefined ? undefined : (trRef as LegacyRef<HTMLTableRowElement>);
 
   const handleRowClick = (event: MouseEvent) => {
     if (!isRowDeleted) {
@@ -47,7 +53,10 @@ export const CustomRowWrapper = (rowWrapperProps: CustomRowWrapperContextProps) 
         className,
         'pf-c-table-row__item',
         isRowDeleted ? 'pf-m-disabled' : 'pf-m-selectable',
-        !isRowDeleted && activeRow && activeRow === row?.originalData?.rowId && 'pf-m-selected'
+        !isRowDeleted &&
+          activeRow &&
+          activeRow === row?.originalData?.rowId &&
+          'pf-m-selected'
       )}
       hidden={row?.isExpanded !== undefined && !row?.isExpanded}
       {...props}

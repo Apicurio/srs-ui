@@ -1,6 +1,6 @@
-import React from 'react';
+import { FC } from 'react';
 import { ServiceRegistry } from './ServiceRegistry';
 
-export const ServiceRegistryConnected: React.FC = () => {
+export const ServiceRegistryConnected: FC = () => {
   return <ServiceRegistry />;
 };

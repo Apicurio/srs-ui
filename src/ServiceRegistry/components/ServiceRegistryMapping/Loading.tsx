@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import {
   EmptyState as PFEmptyState,
   EmptyStateSecondaryActions,
@@ -11,14 +11,14 @@ import {
 import { useTranslation } from 'react-i18next';
 import { css } from '@patternfly/react-styles';
 
-export const Loading: React.FC = () => {
+export const Loading: FC = () => {
   const { t } = useTranslation();
 
   return (
     <PFEmptyState className={css('pf-u-pt-2xl pf-u-pt-3xl-on-md')}>
       <EmptyStateSecondaryActions>
         <Bullseye>
-          <Spinner size="xl" />
+          <Spinner size='xl' />
         </Bullseye>
       </EmptyStateSecondaryActions>
       <EmptyStateSecondaryActions>

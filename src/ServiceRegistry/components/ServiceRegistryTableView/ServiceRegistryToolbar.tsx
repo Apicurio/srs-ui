@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@patternfly/react-core';
 import { MASToolbar, ToolbarItemProps, MASPagination } from '@app/components';
@@ -10,7 +10,12 @@ export type ServiceRegistryToolbarProps = {
   handleCreateModal: () => void;
 };
 
-const ServiceRegistryToolbar: React.FC<ServiceRegistryToolbarProps> = ({ total, page, perPage, handleCreateModal }) => {
+const ServiceRegistryToolbar: FC<ServiceRegistryToolbarProps> = ({
+  total,
+  page,
+  perPage,
+  handleCreateModal,
+}) => {
   const { t } = useTranslation();
 
   const onClearAllFilters = () => {};
@@ -19,7 +24,7 @@ const ServiceRegistryToolbar: React.FC<ServiceRegistryToolbarProps> = ({ total, 
     {
       item: (
         <Button
-          variant="primary"
+          variant='primary'
           onClick={handleCreateModal}
           data-testid={'tableServiceRegistry-buttonCreateServiceRegistry'}
         >
@@ -33,7 +38,7 @@ const ServiceRegistryToolbar: React.FC<ServiceRegistryToolbarProps> = ({ total, 
     toolbarItems.push({
       item: (
         <MASPagination
-          widgetId="pagination-options-menu-top"
+          widgetId='pagination-options-menu-top'
           itemCount={total}
           page={page}
           perPage={perPage}

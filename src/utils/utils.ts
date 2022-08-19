@@ -9,7 +9,6 @@ function accessibleRouteChangeHandler() {
   }, 50);
 }
 
-
 const getModalAppendTo = (): HTMLElement =>
   (document.getElementById('chrome-app-render-root') as HTMLElement) ||
   document.body;
@@ -27,7 +26,10 @@ const statusOptions = [
   { value: 'deleting', label: 'Deletion in progress' },
 ];
 
-const getFormattedDate = (date: string | Date, translatePostfix: string): string => {
+const getFormattedDate = (
+  date: string | Date,
+  translatePostfix: string
+): string => {
   date = typeof date === 'string' ? new Date(date) : date;
   return formatDistance(date, new Date()) + ' ' + translatePostfix;
 };
@@ -44,5 +46,5 @@ export {
   MAX_SERVICE_REGISTRY_DESC_LENGTH,
   statusOptions,
   getFormattedDate,
-  InstanceType
+  InstanceType,
 };

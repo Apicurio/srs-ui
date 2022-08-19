@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,29 +17,43 @@ export type EmptyStateProps = {
   basename: string;
 };
 
-export const EmptyState: React.FC<EmptyStateProps> = ({ topicName, basename }: EmptyStateProps) => {
+export const EmptyState: FC<EmptyStateProps> = ({
+  topicName,
+  basename,
+}: EmptyStateProps) => {
   const { t } = useTranslation();
 
   return (
-    <PFEmptyState className="pf-u-pt-2xl pf-u-pt-3xl-on-md">
+    <PFEmptyState className='pf-u-pt-2xl pf-u-pt-3xl-on-md'>
       <EmptyStateIcon icon={WrenchIcon} />
-      <Title headingLevel="h2" size="lg">
+      <Title headingLevel='h2' size='lg'>
         {t('srs.empty_state_title')}
       </Title>
       <EmptyStateBody>{t('srs.empty_state_body')}</EmptyStateBody>
       <EmptyStateSecondaryActions>
-        <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied" className="pf-u-w-25">
+        <ClipboardCopy
+          isReadOnly
+          hoverTip='Copy'
+          clickTip='Copied'
+          className='pf-u-w-25'
+        >
           {topicName + '-value'}
         </ClipboardCopy>
       </EmptyStateSecondaryActions>
       <EmptyStateSecondaryActions>
-        <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied" className="pf-u-w-25">
+        <ClipboardCopy
+          isReadOnly
+          hoverTip='Copy'
+          clickTip='Copied'
+          className='pf-u-w-25'
+        >
           {topicName + '-key'}
         </ClipboardCopy>
       </EmptyStateSecondaryActions>
       <EmptyStateSecondaryActions>
         <Link to={basename}>
-          {t('srs.go_to_service_registry_instance_helper_text')} <ArrowRightIcon />
+          {t('srs.go_to_service_registry_instance_helper_text')}{' '}
+          <ArrowRightIcon />
         </Link>
       </EmptyStateSecondaryActions>
     </PFEmptyState>

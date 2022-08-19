@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 // import { accessibleRouteChangeHandler } from '@app/utils/utils';
 import { MASPageNotFound } from '@app/components/MASPageNotFound';
@@ -10,7 +9,9 @@ import { ServiceRegistryConnected } from './ServiceRegistry/ServiceRegistryConne
 export interface IAppRoute {
   label?: string; // Excluding the label will exclude the route from the nav sidebar in AppLayout
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
+  component:
+    | React.ComponentType<RouteComponentProps<any>>
+    | React.ComponentType<any>;
   /* eslint-enable @typescript-eslint/no-explicit-any */
   exact?: boolean;
   path: string;
@@ -55,7 +56,12 @@ const routes: AppRouteConfig[] = [
 //   }, [isAsync, lastNavigation]);
 // };
 
-const RouteWithTitleUpdates = ({ component: Component, isAsync = false, title, ...rest }: IAppRoute) => {
+const RouteWithTitleUpdates = ({
+  component: Component,
+  isAsync = false,
+  title,
+  ...rest
+}: IAppRoute) => {
   //useA11yRouteChange(isAsync);
   useDocumentTitle(title);
 
@@ -72,14 +78,18 @@ const PageNotFound = ({ title }: { title: string }) => {
 };
 
 const flattenedRoutes: IAppRoute[] = routes.reduce(
-  (flattened, route) => [...flattened, ...(route.routes ? route.routes : [route])],
+  (flattened, route) => [
+    ...flattened,
+    ...(route.routes ? route.routes : [route]),
+  ],
   [] as IAppRoute[]
 );
 
 const AppRoutes = (): React.ReactElement => (
   // <LastLocationProvider>
-    <Switch>
-      {flattenedRoutes.map(({ path, exact, component, title, isAsync, ...rest }, idx) => (
+  <Switch>
+    {flattenedRoutes.map(
+      ({ path, exact, component, title, isAsync, ...rest }, idx) => (
         <RouteWithTitleUpdates
           path={path}
           exact={exact}
@@ -89,9 +99,10 @@ const AppRoutes = (): React.ReactElement => (
           isAsync={isAsync}
           {...rest}
         />
-      ))}
-      <PageNotFound title="404 Page Not Found" />
-    </Switch>
+      )
+    )}
+    <PageNotFound title='404 Page Not Found' />
+  </Switch>
   // </LastLocationProvider>
 );
 

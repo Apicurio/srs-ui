@@ -13,12 +13,11 @@ import {
   BreadcrumbItem,
   PageSection,
   PageSectionVariants,
-  Title
+  Title,
 } from '@patternfly/react-core';
 import { Registry } from '@rhoas/registry-management-sdk';
 import { useBasename } from '@rhoas/app-services-ui-shared';
 import { useSharedContext } from '@app/context';
-
 
 export type ServiceRegistryHeaderProps = {
   onConnectToRegistry?: (instance: Registry | undefined) => void;
@@ -27,7 +26,9 @@ export type ServiceRegistryHeaderProps = {
   serviceRegistryDetails?: Registry;
 };
 
-export const ServiceRegistryHeader: FunctionComponent<ServiceRegistryHeaderProps> = ({
+export const ServiceRegistryHeader: FunctionComponent<
+  ServiceRegistryHeaderProps
+> = ({
   onConnectToRegistry,
   onDeleteRegistry,
   breadcrumbId,
@@ -47,16 +48,23 @@ export const ServiceRegistryHeader: FunctionComponent<ServiceRegistryHeaderProps
     setIsOpen(!isOpen);
   };
 
-  const { artifactId } = useSharedContext() || {}
+  const { artifactId } = useSharedContext() || {};
 
   const dropdownItems = [
     <DropdownItem
-      key="connect-registry"
-      onClick={() => onConnectToRegistry && onConnectToRegistry(serviceRegistryDetails)}
+      key='connect-registry'
+      onClick={() =>
+        onConnectToRegistry && onConnectToRegistry(serviceRegistryDetails)
+      }
     >
       {t('srs.view_connection_information')}
     </DropdownItem>,
-    <DropdownItem key="delete-registry" onClick={() => onDeleteRegistry && onDeleteRegistry(serviceRegistryDetails)}>
+    <DropdownItem
+      key='delete-registry'
+      onClick={() =>
+        onDeleteRegistry && onDeleteRegistry(serviceRegistryDetails)
+      }
+    >
       {t('srs.delete_registry')}
     </DropdownItem>,
   ];
@@ -67,28 +75,37 @@ export const ServiceRegistryHeader: FunctionComponent<ServiceRegistryHeaderProps
         {showBreadcrumb ? (
           <Breadcrumb>
             <BreadcrumbItem>
-              <Link to={`${basename}` || '/'}> {t('srs.service_registry_breadcrumb')}</Link>
+              <Link to={`${basename}` || '/'}>
+                {' '}
+                {t('srs.service_registry_breadcrumb')}
+              </Link>
             </BreadcrumbItem>
             <BreadcrumbItem isActive={true}>
-              {artifactId ? (<Link to={`${basename}/t/${serviceRegistryDetails?.id}`}>{serviceRegistryDetails?.name}</Link>) : (serviceRegistryDetails?.name)}
+              {artifactId ? (
+                <Link to={`${basename}/t/${serviceRegistryDetails?.id}`}>
+                  {serviceRegistryDetails?.name}
+                </Link>
+              ) : (
+                serviceRegistryDetails?.name
+              )}
             </BreadcrumbItem>
-            {artifactId && (<BreadcrumbItem>{artifactId}</BreadcrumbItem>)}
+            {artifactId && <BreadcrumbItem>{artifactId}</BreadcrumbItem>}
           </Breadcrumb>
         ) : (
           <TextContent>
-            <Text component="h1"> {t('srs.service_registry_instances')}</Text>
+            <Text component='h1'> {t('srs.service_registry_instances')}</Text>
           </TextContent>
         )}
       </section>
       <PageSection variant={PageSectionVariants.light}>
         {breadcrumbId && (
           <Level>
-            <Title headingLevel='h1'>
-              {serviceRegistryDetails?.name}
-            </Title>
+            <Title headingLevel='h1'>{serviceRegistryDetails?.name}</Title>
             <Dropdown
               onSelect={onSelect}
-              toggle={<KebabToggle onToggle={onToggle} id="toggle-service-registry" />}
+              toggle={
+                <KebabToggle onToggle={onToggle} id='toggle-service-registry' />
+              }
               isOpen={isOpen}
               isPlain
               dropdownItems={dropdownItems}

@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactText, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Registry } from '@rhoas/registry-management-sdk';
 import { MASDrawer, MASDrawerProps } from '@app/components';
@@ -8,11 +8,11 @@ export type ServiceRegistryDrawerProps = Omit<
   MASDrawerProps,
   'drawerHeaderProps' | 'panelBodyContent' | '[data-ouia-app-id]'
 > & {
-  activeTab?: React.ReactText;
+  activeTab?: ReactText;
   registry: Registry | undefined;
 };
 
-const ServiceRegistryDrawer: React.FC<ServiceRegistryDrawerProps> = ({
+const ServiceRegistryDrawer: FC<ServiceRegistryDrawerProps> = ({
   isExpanded,
   isLoading,
   onClose,
@@ -24,7 +24,9 @@ const ServiceRegistryDrawer: React.FC<ServiceRegistryDrawerProps> = ({
   const { t } = useTranslation();
   const { registryUrl, name } = registry || {};
 
-  const panelBodyContent = <ConnectionInfo registryApisUrl={registryUrl} registryInstance={registry}/>;
+  const panelBodyContent = (
+    <ConnectionInfo registryApisUrl={registryUrl} registryInstance={registry} />
+  );
 
   return (
     <MASDrawer

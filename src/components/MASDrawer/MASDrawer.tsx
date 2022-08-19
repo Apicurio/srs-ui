@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import {
   Drawer,
   DrawerProps,
@@ -37,10 +37,10 @@ export type MASDrawerProps = DrawerProps & {
   };
   ['data-ouia-app-id']?: string;
   notRequiredDrawerContentBackground?: boolean | undefined;
-  inlineAlertMessage?: React.ReactNode;
+  inlineAlertMessage?: ReactNode;
 };
 
-export const MASDrawer: React.FC<MASDrawerProps> = ({
+export const MASDrawer: FC<MASDrawerProps> = ({
   onClose,
   isLoading = true,
   drawerPanelContentProps,
@@ -53,11 +53,15 @@ export const MASDrawer: React.FC<MASDrawerProps> = ({
   'data-ouia-app-id': dataOuiaAppId,
   inlineAlertMessage,
 }: MASDrawerProps) => {
-  const { widths, ...restDrawerPanelContentProps } = drawerPanelContentProps || {};
+  const { widths, ...restDrawerPanelContentProps } =
+    drawerPanelContentProps || {};
   const { text, title } = drawerHeaderProps || {};
 
   const panelContent = (
-    <DrawerPanelContent widths={widths || { default: 'width_50' }} {...restDrawerPanelContentProps}>
+    <DrawerPanelContent
+      widths={widths || { default: 'width_50' }}
+      {...restDrawerPanelContentProps}
+    >
       {isLoading ? (
         <MASLoading />
       ) : (
@@ -65,7 +69,10 @@ export const MASDrawer: React.FC<MASDrawerProps> = ({
           <DrawerHead>
             <TextContent>
               {text?.label && (
-                <Text component={text?.component || TextVariants.small} className={text?.className || 'pf-u-mb-0'}>
+                <Text
+                  component={text?.component || TextVariants.small}
+                  className={text?.className || 'pf-u-mb-0'}
+                >
                   {text?.label}
                 </Text>
               )}
@@ -93,12 +100,21 @@ export const MASDrawer: React.FC<MASDrawerProps> = ({
   );
 
   return (
-    <Drawer isExpanded={isExpanded} onExpand={onExpand} data-ouia-app-id={dataOuiaAppId}>
+    <Drawer
+      isExpanded={isExpanded}
+      onExpand={onExpand}
+      data-ouia-app-id={dataOuiaAppId}
+    >
       <DrawerContent
         panelContent={panelContent}
-        className={notRequiredDrawerContentBackground ? 'pf-m-no-background' : ''}
+        className={
+          notRequiredDrawerContentBackground ? 'pf-m-no-background' : ''
+        }
       >
-        <DrawerContentBody className="pf-u-display-flex pf-u-flex-direction-column"> {children}</DrawerContentBody>
+        <DrawerContentBody className='pf-u-display-flex pf-u-flex-direction-column'>
+          {' '}
+          {children}
+        </DrawerContentBody>
       </DrawerContent>
     </Drawer>
   );

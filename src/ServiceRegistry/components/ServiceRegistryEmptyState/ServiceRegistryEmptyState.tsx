@@ -11,7 +11,9 @@ export type ServiceRegistryEmptyStateProps = {
   onCreateserviceRegistry: () => void;
 };
 
-const ServiceRegistryEmptyState: React.FC<ServiceRegistryEmptyStateProps> = ({ onCreateserviceRegistry }) => {
+const ServiceRegistryEmptyState: React.FC<ServiceRegistryEmptyStateProps> = ({
+  onCreateserviceRegistry,
+}) => {
   const { t } = useTranslation();
 
   const qsContext: QuickStartContextValues =
@@ -35,7 +37,9 @@ const ServiceRegistryEmptyState: React.FC<ServiceRegistryEmptyStateProps> = ({ o
                     key='btn-quick-start'
                     onClick={() =>
                       qsContext.setActiveQuickStart &&
-                      qsContext.setActiveQuickStart('getting-started-service-registry')
+                      qsContext.setActiveQuickStart(
+                        'getting-started-service-registry'
+                      )
                     }
                   />,
                 ]}

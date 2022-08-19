@@ -45,7 +45,7 @@
     "@storybook/addons": "6.5.9",
     "@storybook/react": "6.5.9",
     "@types/jest": "27.5.2",
-    "@types/react": "^18.0.16",
+    "@types/react": "17.0.47",
     "@types/react-dom": "18.0.6",
     "@types/react-router-dom": "5.3.3",
     "@types/victory": "33.1.5",

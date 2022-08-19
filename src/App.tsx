@@ -67,6 +67,7 @@ const App: FunctionComponent = () => {
                 ),
               'service-registry': () =>
                 import(
+                  //'@rhoas/app-services-ui-components/locales/en/service-registry.json'
                   '@rhoas/app-services-ui-components/locales/en/common.json'
                 ),
             },
