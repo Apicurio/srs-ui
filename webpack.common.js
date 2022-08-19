@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
-const {dependencies, federatedModuleName} = require("./package.json");
+const {dependencies, federatedModuleName, peerDependencies} = require("./package.json");
 delete dependencies.serve; // Needed for nodeshift bug
 const webpack = require('webpack');
 const ChunkMapper = require('@redhat-cloud-services/frontend-components-config/chunk-mapper');
@@ -26,7 +26,7 @@ module.exports = (env, argv) => {
             {
               loader: 'ts-loader',
               options: {
-                transpileOnly: true,
+                transpileOnly: false,
                 experimentalWatchApi: true,
               }
             }
@@ -126,31 +126,33 @@ module.exports = (env, argv) => {
         name: federatedModuleName,
         filename: `${federatedModuleName}${isProduction ? '.[chunkhash:8]' : ''}.js`,
         exposes: {
-          "./ServiceRegistry":"./src/app/ServiceRegistry/ServiceRegistryFederated",
-          "./ApicurioRegistry":"./src/app/ServiceRegistry/ApicurioRegistryFederated",
-          "./ServiceRegistryMapping":"./src/app/ServiceRegistry/components/ServiceRegistryMapping/ServiceRegistryMappingFederated"
+          "./ServiceRegistry":"./src/ServiceRegistry/ServiceRegistryFederated",
+          "./ApicurioRegistry":"./src/ServiceRegistry/ApicurioRegistryFederated",
+          "./ServiceRegistryMapping":"./src/ServiceRegistry/components/ServiceRegistryMapping/ServiceRegistryMappingFederated"
         },
         shared: {
           ...dependencies,
+          ...peerDependencies,
           react: {
-            eager: true,
             singleton: true,
-            requiredVersion: dependencies["react"],
+            requiredVersion: peerDependencies["react"],
           },
           "react-dom": {
-            eager: true,
             singleton: true,
-            requiredVersion: dependencies["react-dom"],
+            requiredVersion: peerDependencies["react-dom"],
           },
           "react-router-dom": {
             singleton: true,
-            eager: true,
-            requiredVersion: dependencies["react-router-dom"],
+            requiredVersion: peerDependencies["react-router-dom"],
           },
           "@rhoas/app-services-ui-shared": {
-            eager: true,
             singleton: true,
-            requiredVersion: dependencies["@rhoas/app-services-ui-shared"]
+            requiredVersion: peerDependencies["@rhoas/app-services-ui-shared"]
+          },
+          "@rhoas/app-services-ui-components": {
+            singleton: true,
+            requiredVersion:
+            peerDependencies["@rhoas/app-services-ui-components"],
           },
           '@patternfly/quickstarts': {
             singleton: true,
