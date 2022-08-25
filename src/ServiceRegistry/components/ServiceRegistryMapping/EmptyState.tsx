@@ -21,15 +21,15 @@ export const EmptyState: FC<EmptyStateProps> = ({
   topicName,
   basename,
 }: EmptyStateProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("service-registry");
 
   return (
     <PFEmptyState className='pf-u-pt-2xl pf-u-pt-3xl-on-md'>
       <EmptyStateIcon icon={WrenchIcon} />
       <Title headingLevel='h2' size='lg'>
-        {t('srs.empty_state_title')}
+        {t('empty_state_title')}
       </Title>
-      <EmptyStateBody>{t('srs.empty_state_body')}</EmptyStateBody>
+      <EmptyStateBody>{t('empty_state_body')}</EmptyStateBody>
       <EmptyStateSecondaryActions>
         <ClipboardCopy
           isReadOnly
@@ -52,7 +52,7 @@ export const EmptyState: FC<EmptyStateProps> = ({
       </EmptyStateSecondaryActions>
       <EmptyStateSecondaryActions>
         <Link to={basename}>
-          {t('srs.go_to_service_registry_instance_helper_text')}{' '}
+          {t('go_to_service_registry_instance_helper_text')}{' '}
           <ArrowRightIcon />
         </Link>
       </EmptyStateSecondaryActions>

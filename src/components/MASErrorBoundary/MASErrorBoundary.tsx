@@ -49,14 +49,14 @@ class MASErrorBoundary extends Component<Props, State> {
               className: 'icon-color',
             }}
             titleProps={{
-              title: t('common.something_went_wrong'),
+              title: t('common:something_went_wrong'),
             }}
             emptyStateBodyProps={{
               body: t('unexpected_error'),
             }}
           >
             <Button onClick={this.onClickButton}>
-              {t('common.go_to_kafka_instances')}
+              {t('common:go_to_kafka_instances')}
             </Button>
           </MASEmptyState>
         </PageSection>

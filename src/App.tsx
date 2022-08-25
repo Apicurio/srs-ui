@@ -15,6 +15,7 @@ import {
   AlertProvider,
   PaginationProvider,
   ServiceRegistryModalLoader,
+  ModalProvider,
 } from '@app/components';
 import {
   KeycloakAuthProvider,
@@ -25,8 +26,15 @@ import {
   Config,
   ConfigContext,
   BasenameContext,
+  QuotaContext,
+  // QuotaType,
+  // QuotaValue
 } from '@rhoas/app-services-ui-shared';
-import { I18nProvider, ModalProvider } from '@rhoas/app-services-ui-components';
+import {
+  I18nProvider,
+  ModalProvider as SharedModalProvider,
+} from '@rhoas/app-services-ui-components';
+import { SharedContext } from '@app/context';
 import '@app/App.css';
 
 declare const __BASE_PATH__: string;
@@ -56,47 +64,65 @@ const App: FunctionComponent = () => {
         } as Config
       }
     >
-      <BasenameContext.Provider value={{ getBasename: () => '' }}>
-        <I18nProvider
-          lng='en'
-          resources={{
-            en: {
-              common: () =>
-                import(
-                  '@rhoas/app-services-ui-components/locales/en/common.json'
-                ),
-              'service-registry': () =>
-                import(
-                  //'@rhoas/app-services-ui-components/locales/en/service-registry.json'
-                  '@rhoas/app-services-ui-components/locales/en/common.json'
-                ),
-            },
+      <QuotaContext.Provider
+        value={{
+          getQuota: () =>
+            Promise.resolve({
+              data: new Map(),
+              loading: false,
+              isServiceDown: false,
+            }),
+        }}
+      >
+        <SharedContext.Provider
+          value={{
+            preCreateInstance: () => Promise.resolve(true),
           }}
         >
-          <AlertProvider>
-            <KeycloakContext.Provider
-              value={{ keycloak, profile: keycloak?.profile }}
+          <BasenameContext.Provider value={{ getBasename: () => '' }}>
+            <I18nProvider
+              lng='en'
+              resources={{
+                en: {
+                  common: () =>
+                    import(
+                      '@rhoas/app-services-ui-components/locales/en/common.json'
+                    ),
+                  'service-registry': () =>
+                    import(
+                      '@rhoas/app-services-ui-components/locales/en/service-registry.json'
+                    ),
+                },
+              }}
             >
-              <KeycloakAuthProvider>
-                <Router>
-                  <Suspense fallback={<MASLoading />}>
-                    <MASErrorBoundary>
-                      <PaginationProvider>
-                        <ModalProvider>
-                          <AppLayout>
-                            <AppRoutes />
-                          </AppLayout>
-                          <ServiceRegistryModalLoader />
-                        </ModalProvider>
-                      </PaginationProvider>
-                    </MASErrorBoundary>
-                  </Suspense>
-                </Router>
-              </KeycloakAuthProvider>
-            </KeycloakContext.Provider>
-          </AlertProvider>
-        </I18nProvider>
-      </BasenameContext.Provider>
+              <AlertProvider>
+                <KeycloakContext.Provider
+                  value={{ keycloak, profile: keycloak?.profile }}
+                >
+                  <KeycloakAuthProvider>
+                    <Router>
+                      <Suspense fallback={<MASLoading />}>
+                        <MASErrorBoundary>
+                          <PaginationProvider>
+                            <SharedModalProvider>
+                              <ModalProvider>
+                                <AppLayout>
+                                  <AppRoutes />
+                                </AppLayout>
+                                <ServiceRegistryModalLoader />
+                              </ModalProvider>
+                            </SharedModalProvider>
+                          </PaginationProvider>
+                        </MASErrorBoundary>
+                      </Suspense>
+                    </Router>
+                  </KeycloakAuthProvider>
+                </KeycloakContext.Provider>
+              </AlertProvider>
+            </I18nProvider>
+          </BasenameContext.Provider>
+        </SharedContext.Provider>
+      </QuotaContext.Provider>
     </ConfigContext.Provider>
   );
 };

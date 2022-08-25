@@ -16,7 +16,7 @@ const ServiceRegistryToolbar: FC<ServiceRegistryToolbarProps> = ({
   perPage,
   handleCreateModal,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["service-registry","common"]);
 
   const onClearAllFilters = () => {};
 
@@ -28,7 +28,7 @@ const ServiceRegistryToolbar: FC<ServiceRegistryToolbarProps> = ({
           onClick={handleCreateModal}
           data-testid={'tableServiceRegistry-buttonCreateServiceRegistry'}
         >
-          {t('srs.create_service_registry')}
+          {t('create_service_registry')}
         </Button>
       ),
     },
@@ -44,14 +44,14 @@ const ServiceRegistryToolbar: FC<ServiceRegistryToolbarProps> = ({
           perPage={perPage}
           isCompact={true}
           titles={{
-            paginationTitle: t('common.minimal_pagination'),
-            perPageSuffix: t('common.per_page_suffix'),
-            toFirstPage: t('common.to_first_page'),
-            toPreviousPage: t('common.to_previous_page'),
-            toLastPage: t('common.to_last_page'),
-            toNextPage: t('common.to_next_page'),
-            optionsToggle: t('common.options_toggle'),
-            currPage: t('common.curr_page'),
+            paginationTitle: t('minimal_pagination'),
+            perPageSuffix: t('per_page_suffix'),
+            toFirstPage: t('to_first_page'),
+            toPreviousPage: t('to_previous_page'),
+            toLastPage: t('to_last_page'),
+            toNextPage: t('to_next_page'),
+            optionsToggle: t('options_toggle'),
+            currPage: t('curr_page'),
           }}
         />
       ),

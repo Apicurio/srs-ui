@@ -21,7 +21,7 @@ const ServiceRegistryDrawer: FC<ServiceRegistryDrawerProps> = ({
   notRequiredDrawerContentBackground,
   registry,
 }: ServiceRegistryDrawerProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("service-registry");
   const { registryUrl, name } = registry || {};
 
   const panelBodyContent = (
@@ -35,7 +35,7 @@ const ServiceRegistryDrawer: FC<ServiceRegistryDrawerProps> = ({
       onClose={onClose}
       panelBodyContent={panelBodyContent}
       drawerHeaderProps={{
-        text: { label: t('srs.service_registry_instance_name') },
+        text: { label: t('service_registry_instance_name') },
         title: { value: name, headingLevel: 'h1' },
       }}
       data-ouia-app-id={dataOuiaAppId}

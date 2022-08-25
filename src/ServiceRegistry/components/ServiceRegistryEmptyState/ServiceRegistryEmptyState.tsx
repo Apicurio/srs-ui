@@ -14,7 +14,7 @@ export type ServiceRegistryEmptyStateProps = {
 const ServiceRegistryEmptyState: React.FC<ServiceRegistryEmptyStateProps> = ({
   onCreateserviceRegistry,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("service-registry");
 
   const qsContext: QuickStartContextValues =
     React.useContext(QuickStartContext);
@@ -23,12 +23,12 @@ const ServiceRegistryEmptyState: React.FC<ServiceRegistryEmptyStateProps> = ({
     <PageSection padding={{ default: 'noPadding' }} isFilled>
       <MASEmptyState
         emptyStateProps={{ variant: MASEmptyStateVariant.NoItems }}
-        titleProps={{ title: t('srs.empty_state_registry_title') }}
+        titleProps={{ title: t('empty_state_registry_title') }}
         emptyStateBodyProps={{
           body: (
             <>
               <Trans
-                i18nKey='srs.empty_state_registry_description'
+                i18nKey='empty_state_registry_description'
                 components={[
                   <Button
                     variant={ButtonVariant.link}
@@ -48,7 +48,7 @@ const ServiceRegistryEmptyState: React.FC<ServiceRegistryEmptyStateProps> = ({
           ),
         }}
         buttonProps={{
-          title: t('srs.create_service_registry'),
+          title: t('create_service_registry'),
           variant: ButtonVariant.primary,
           onClick: onCreateserviceRegistry,
         }}

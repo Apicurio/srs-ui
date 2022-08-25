@@ -34,7 +34,7 @@ export const ServiceRegistryHeader: FunctionComponent<
   breadcrumbId,
   serviceRegistryDetails,
 }: ServiceRegistryHeaderProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("service-registry");
   let showBreadcrumb = false;
   const [isOpen, setIsOpen] = useState<boolean>();
   const { getBasename } = useBasename() || {};
@@ -57,7 +57,7 @@ export const ServiceRegistryHeader: FunctionComponent<
         onConnectToRegistry && onConnectToRegistry(serviceRegistryDetails)
       }
     >
-      {t('srs.view_connection_information')}
+      {t('view_connection_information')}
     </DropdownItem>,
     <DropdownItem
       key='delete-registry'
@@ -65,7 +65,7 @@ export const ServiceRegistryHeader: FunctionComponent<
         onDeleteRegistry && onDeleteRegistry(serviceRegistryDetails)
       }
     >
-      {t('srs.delete_registry')}
+      {t('delete_registry')}
     </DropdownItem>,
   ];
 
@@ -77,7 +77,7 @@ export const ServiceRegistryHeader: FunctionComponent<
             <BreadcrumbItem>
               <Link to={`${basename}` || '/'}>
                 {' '}
-                {t('srs.service_registry_breadcrumb')}
+                {t('service_registry_breadcrumb')}
               </Link>
             </BreadcrumbItem>
             <BreadcrumbItem isActive={true}>
@@ -93,7 +93,7 @@ export const ServiceRegistryHeader: FunctionComponent<
           </Breadcrumb>
         ) : (
           <TextContent>
-            <Text component='h1'> {t('srs.service_registry_instances')}</Text>
+            <Text component='h1'> {t('service_registry_instances')}</Text>
           </TextContent>
         )}
       </section>

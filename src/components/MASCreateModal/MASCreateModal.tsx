@@ -61,7 +61,7 @@ export const MASCreateModal: React.FunctionComponent<MASCreateModalProps> = ({
           onClick={handleModalToggle}
           data-testid={dataTestIdCancel}
         >
-          {t('common.cancel')}
+          {t('common:cancel')}
         </Button>,
       ]}
     >

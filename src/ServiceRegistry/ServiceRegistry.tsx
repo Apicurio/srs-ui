@@ -20,20 +20,23 @@ import {
   ModalType,
   usePagination,
 } from '@app/components';
-import { useTimeout } from '@app/hooks';
+import { useInterval } from '@app/hooks';
 import { MAX_POLL_INTERVAL } from '@app/constants';
 import { InstanceType } from '@app/utils';
 import { useSharedContext } from '@app/context';
 import './ServiceRegistry.css';
 
 export const ServiceRegistry: FunctionComponent = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['service-registry']);
   const auth = useAuth();
   const {
     srs: { apiBasePath: basePath },
   } = useConfig() || { srs: { apiBasePath: '' } };
 
-  const { showModal } = useModal();
+  const { showModal: showCreateServiceRegistryModal } =
+    useModal<ModalType.CreateServiceRegistry>();
+  const { showModal: showDeleteServiceRegistryModal } =
+    useModal<ModalType.DeleteServiceRegistry>();
   const { preCreateInstance, shouldOpenCreateModal, renderDownloadArtifacts } =
     useSharedContext() || {};
   const { page = 1, perPage = 10 } = usePagination() || {};
@@ -112,7 +115,7 @@ export const ServiceRegistry: FunctionComponent = () => {
     }
   };
 
-  useTimeout(() => fetchRegistries(), MAX_POLL_INTERVAL);
+  useInterval(() => fetchRegistries(), MAX_POLL_INTERVAL);
 
   const onConnectToRegistry = (instance: Registry | undefined) => {
     setIsExpandedDrawer(true);
@@ -125,19 +128,19 @@ export const ServiceRegistry: FunctionComponent = () => {
 
   const onDeleteRegistry = (registry: Registry | undefined) => {
     const { status } = registry || {};
-    showModal(ModalType.DeleteServiceRegistry, {
+    showDeleteServiceRegistryModal(ModalType.DeleteServiceRegistry, {
       status,
       registry,
       fetchServiceRegistries: fetchRegistries,
       confirmButtonProps: {
-        label: t('common.delete'),
+        label: t('common:delete'),
       },
       renderDownloadArtifacts,
     });
   };
 
   const openCreateModal = () => {
-    showModal(ModalType.CreateServiceRegistry, {
+    showCreateServiceRegistryModal(ModalType.CreateServiceRegistry, {
       fetchServiceRegistries: fetchRegistries,
       hasUserTrialInstance,
     });

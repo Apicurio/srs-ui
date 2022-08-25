@@ -24,10 +24,9 @@ import {
 } from '@rhoas/app-services-ui-shared';
 import {
   MASDeleteModal,
-  useModal,
   BaseModalProps,
   DeleteServiceRegistryProps,
-} from '@app/components';
+ } from '@app/components';
 import { isServiceApiError } from '@app/utils';
 
 const DeleteServiceRegistry: FunctionComponent<
@@ -40,8 +39,9 @@ const DeleteServiceRegistry: FunctionComponent<
   fetchServiceRegistries,
   shouldRedirect,
   renderDownloadArtifacts,
+  hideModal
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['service-registry', 'common']);
   const { addAlert } = useAlert();
   const history = useHistory();
   const auth = useAuth();
@@ -49,8 +49,6 @@ const DeleteServiceRegistry: FunctionComponent<
     srs: { apiBasePath: basePath },
   } = useConfig();
   const basename = useBasename();
-  const { hideModal } = useModal();
-
   const selectedInstanceName = registry?.name;
 
   const [instanceNameInput, setInstanceNameInput] = useState<string>();
@@ -103,7 +101,7 @@ const DeleteServiceRegistry: FunctionComponent<
       message = error.response?.data.reason;
     }
     addAlert({
-      title: t('common.something_went_wrong'),
+      title: t('common:something_went_wrong'),
       variant: AlertVariant.danger,
       description: message,
     });
@@ -126,7 +124,7 @@ const DeleteServiceRegistry: FunctionComponent<
         .then(() => {
           setLoading(false);
           addAlert({
-            title: t('srs.service_registry_deletion_success_message', { name }),
+            title: t('service_registry_deletion_success_message', { name }),
             variant: AlertVariant.success,
           });
           if (shouldRedirect) {
@@ -149,7 +147,7 @@ const DeleteServiceRegistry: FunctionComponent<
         <Text component={TextVariants.p}>
           <span
             dangerouslySetInnerHTML={{
-              __html: t('common.delete_service_registry_description', {
+              __html: t('delete_service_registry_description', {
                 name: selectedInstanceName,
               }),
             }}
@@ -160,16 +158,16 @@ const DeleteServiceRegistry: FunctionComponent<
         variant='info'
         isInline
         className='pf-u-mb-lg'
-        title={t('common.delete_instance_alert_header')}
+        title={t('delete_instance_alert_header')}
         actionLinks={
           <AlertActionLink onClick={onClickDownload}>
             {renderDownloadArtifacts &&
               registry &&
-              renderDownloadArtifacts(registry, t('common.download_artifacts'))}
+              renderDownloadArtifacts(registry, t('download_artifacts'))}
           </AlertActionLink>
         }
       >
-        {t('common.delete_instance_alert_body')}
+        {t('delete_instance_alert_body')}
       </Alert>
     </>
   );
@@ -190,7 +188,7 @@ const DeleteServiceRegistry: FunctionComponent<
       selectedItemData={registry}
       textInputProps={{
         showTextInput: status?.toLowerCase() === RegistryStatusValue.Ready,
-        label: t('common.service_registry_name_label', {
+        label: t('service_registry_name_label', {
           name: selectedInstanceName,
         }),
         value: instanceNameInput,

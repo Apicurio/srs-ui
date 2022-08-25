@@ -1,7 +1,6 @@
 import { FC } from 'react';
-import { ModalProvider } from '@rhoas/app-services-ui-components';
 import { ApicurioRegistry, ApicurioRegistryProps } from './ApicurioRegistry';
-import { ServiceRegistryModalLoader } from '@app/components';
+import { ServiceRegistryModalLoader, ModalProvider } from '@app/components';
 import { SharedContext, SharedContextrops } from '@app/context';
 
 type ApicurioRegistryFederatedProps = ApicurioRegistryProps & SharedContextrops;

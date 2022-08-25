@@ -75,7 +75,7 @@ const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({
       status,
       registry,
       confirmButtonProps: {
-        label: t('common.delete'),
+        label: t('common:delete'),
       },
       renderDownloadArtifacts,
     });

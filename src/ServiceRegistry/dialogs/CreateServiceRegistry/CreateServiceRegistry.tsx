@@ -14,7 +14,6 @@ import { Configuration, RegistriesApi } from '@rhoas/registry-management-sdk';
 import { NewServiceregistry, FormDataValidationState } from '@app/models';
 import {
   MASCreateModal,
-  useModal,
   CreateServiceRegistryProps,
   BaseModalProps,
 } from '@app/components';
@@ -40,10 +39,9 @@ import './CreateServiceRegistry.css';
 
 const CreateServiceRegistry: FunctionComponent<
   BaseModalProps & CreateServiceRegistryProps
-> = ({ fetchServiceRegistries, hasUserTrialInstance }) => {
+> = ({ fetchServiceRegistries, hasUserTrialInstance, hideModal }) => {
   const newServiceRegistry: NewServiceregistry = new NewServiceregistry();
-  const { hideModal } = useModal();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['service-registry', 'common']);
   const auth = useAuth();
   const {
     srs: { apiBasePath: basePath },
@@ -106,19 +104,16 @@ const CreateServiceRegistry: FunctionComponent<
     if (name && name.length > MAX_SERVICE_REGISTRY_NAME_LENGTH) {
       setNameValidated({
         fieldState: 'error',
-        message: t(
-          'srs.service_registry_name_length_is_greater_than_expected',
-          {
-            maxLength: MAX_SERVICE_REGISTRY_NAME_LENGTH,
-          }
-        ),
+        message: t('service_registry_name_length_is_greater_than_expected', {
+          maxLength: MAX_SERVICE_REGISTRY_NAME_LENGTH,
+        }),
       });
     } else if (isValid && nameValidated.fieldState === 'error') {
       setNameValidated({ fieldState: 'default', message: '' });
     } else if (!isValid) {
       setNameValidated({
         fieldState: 'error',
-        message: t('common.input_filed_invalid_helper_text'),
+        message: t('input_filed_invalid_helper_text'),
       });
     }
   };
@@ -154,13 +149,13 @@ const CreateServiceRegistry: FunctionComponent<
       isValid = false;
       setNameValidated({
         fieldState: 'error',
-        message: t('common.this_is_a_required_field'),
+        message: t('common:this_is_a_required_field'),
       });
     } else if (!/^[a-z]([-a-z0-9]*[a-z0-9])?$/.test(name.trim())) {
       isValid = false;
       setNameValidated({
         fieldState: 'error',
-        message: t('common.input_filed_invalid_helper_text'),
+        message: t('input_filed_invalid_helper_text'),
       });
     }
 
@@ -168,12 +163,9 @@ const CreateServiceRegistry: FunctionComponent<
       isValid = false;
       setNameValidated({
         fieldState: 'error',
-        message: t(
-          'srs.service_registry_name_length_is_greater_than_expected',
-          {
-            maxLength: MAX_SERVICE_REGISTRY_NAME_LENGTH,
-          }
-        ),
+        message: t('service_registry_name_length_is_greater_than_expected', {
+          maxLength: MAX_SERVICE_REGISTRY_NAME_LENGTH,
+        }),
       });
     }
 
@@ -229,7 +221,7 @@ const CreateServiceRegistry: FunctionComponent<
           <FormAlert>
             <Alert
               variant='danger'
-              title={t('common.form_invalid_alert')}
+              title={t('common:form_invalid_alert')}
               aria-live='polite'
               isInline
             />
@@ -241,7 +233,7 @@ const CreateServiceRegistry: FunctionComponent<
           fieldId='text-input-name'
           helperTextInvalid={message}
           validated={fieldState}
-          helperText={t('common.input_filed_invalid_helper_text')}
+          helperText={t('input_filed_invalid_helper_text')}
         >
           <TextInput
             isRequired
@@ -262,7 +254,7 @@ const CreateServiceRegistry: FunctionComponent<
     <MASCreateModal
       id='modalCreateSRegistry'
       isModalOpen={true}
-      title={t('srs.create_service_registry_instance')}
+      title={t('create_service_registry_instance')}
       handleModalToggle={handleCreateModal}
       onCreate={createServiceRegistry}
       isFormValid={isFormValid}

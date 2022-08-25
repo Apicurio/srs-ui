@@ -45,7 +45,7 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
   basename,
   topicName,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("service-registry");
   const auth = useAuth();
   const {
     srs: { apiBasePath: basePath },
@@ -136,7 +136,7 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
         <StackItem>
           <Card>
             <CardTitle component='h2'>
-              {t('srs.service_registry_instance')}
+              {t('service_registry_instance')}
             </CardTitle>
             <CardBody>
               <Grid hasGutter rowSpan={2}>
@@ -145,8 +145,8 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
                   <Select
                     id='registry-mapping-select'
                     variant={SelectVariant.typeahead}
-                    typeAheadAriaLabel={t('srs.select_instance')}
-                    placeholderText={t('srs.select_instance')}
+                    typeAheadAriaLabel={t('select_instance')}
+                    placeholderText={t('select_instance')}
                     onToggle={onToggle}
                     onSelect={onSelectInstance}
                     selections={selectedRegistry}
@@ -161,7 +161,7 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
                 </GridItem>
                 <GridItem>
                   <Link to={basename}>
-                    {t('srs.create_service_registry_helper_text')}
+                    {t('create_service_registry_helper_text')}
                   </Link>
                 </GridItem>
               </Grid>

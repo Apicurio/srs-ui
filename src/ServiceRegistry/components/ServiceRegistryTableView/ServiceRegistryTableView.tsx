@@ -70,7 +70,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   const { addAlert } = useAlert() || {};
   const { getBasename } = useBasename() || {};
   const basename = getBasename && getBasename();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['service-registry', 'common']);
   const auth = useAuth();
 
   const [activeRow, setActiveRow] = useState<string>();
@@ -79,10 +79,10 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   const [isOrgAdmin, setIsOrgAdmin] = useState<boolean>();
 
   const tableColumns = [
-    { title: t('common.name') },
-    { title: t('common.owner') },
-    { title: t('common.status') },
-    { title: t('common.time_created') },
+    { title: t('common:name') },
+    { title: t('common:owner') },
+    { title: t('common:status') },
+    { title: t('common:time_created') },
   ];
 
   useEffect(() => {
@@ -134,7 +134,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
           removeRegistryFromList(registryName);
           addAlert &&
             addAlert({
-              title: t('srs.service_registry_successfully_deleted', {
+              title: t('service_registry_successfully_deleted', {
                 name: registryName,
               }),
               variant: AlertVariant.success,
@@ -165,12 +165,12 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
           if (status === RegistryStatusValue.Ready) {
             addAlert &&
               addAlert({
-                title: t('srs.registry_successfully_created'),
+                title: t('registry_successfully_created'),
                 variant: AlertVariant.success,
                 description: (
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: t('srs.registry_success_message', { name }),
+                      __html: t('registry_success_message', { name }),
                     }}
                   />
                 ),
@@ -179,12 +179,12 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
           } else if (status === RegistryStatusValue.Failed) {
             addAlert &&
               addAlert({
-                title: t('srs.registry_not_created'),
+                title: t('registry_not_created'),
                 variant: AlertVariant.danger,
                 description: (
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: t('srs.registry_failed_message', { name }),
+                      __html: t('registry_failed_message', { name }),
                     }}
                   />
                 ),
@@ -247,7 +247,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
                 <br />
                 {instance_type === InstanceType?.eval && (
                   <Trans
-                    i18nKey='srs.expires_in'
+                    i18nKey='service-registry:expires_in'
                     components={{
                       time: (
                         <FormatDate
@@ -305,14 +305,14 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     }
     const resolver: (IAction | ISeparator)[] = [
       {
-        title: t('srs.view_connection_information'),
+        title: t('view_connection_information'),
         id: 'connect-instance',
         ['data-testid']: 'tableRegistry-actionConnection',
         onClick: (event: any) =>
           onSelectKebabDropdownOption(event, originalData, 'connect-instance'),
       },
       {
-        title: t('srs.delete_registry'),
+        title: t('delete_registry'),
         id: 'delete-instance',
         ['data-testid']: 'tableRegistry-actionDelete',
         onClick: (event: any) =>
@@ -321,7 +321,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
         ...additionalProps,
         tooltipProps: {
           position: 'left',
-          content: t('common.no_permission_to_delete_service_registry'),
+          content: t('no_permission_to_delete_service_registry'),
         },
       },
     ];
@@ -417,7 +417,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
           tableProps={{
             cells: tableColumns,
             rows: preparedTableCells(),
-            'aria-label': t('common.registry_instance_list'),
+            'aria-label': t('registry_instance_list'),
             actionResolver: actionResolver,
             onSort: onSort,
             sortBy: getSortBy(),
@@ -434,10 +434,10 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
               variant: MASEmptyStateVariant.NoResult,
             }}
             titleProps={{
-              title: t('common.no_results_found'),
+              title: t('no_results_found'),
             }}
             emptyStateBodyProps={{
-              body: t('common.adjust_your_filters_and_try_again'),
+              body: t('adjust_your_filters_and_try_again'),
             }}
           />
         )}
@@ -449,14 +449,14 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
             page={page}
             perPage={perPage}
             titles={{
-              paginationTitle: t('common.full_pagination'),
-              perPageSuffix: t('common.per_page_suffix'),
-              toFirstPage: t('common.to_first_page'),
-              toPreviousPage: t('common.to_previous_page'),
-              toLastPage: t('common.to_last_page'),
-              toNextPage: t('common.to_next_page'),
-              optionsToggle: t('common.options_toggle'),
-              currPage: t('common.curr_page'),
+              paginationTitle: t('full_pagination'),
+              perPageSuffix: t('per_page_suffix'),
+              toFirstPage: t('to_first_page'),
+              toPreviousPage: t('to_previous_page'),
+              toLastPage: t('to_last_page'),
+              toNextPage: t('to_next_page'),
+              optionsToggle: t('options_toggle'),
+              currPage: t('curr_page'),
             }}
           />
         )}

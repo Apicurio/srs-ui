@@ -11,7 +11,7 @@ export type UnauthrizedUserProps = {
 const UnauthrizedUser: FC<UnauthrizedUserProps> = ({
   getAccessToServiceRegistry,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("service-registry");
 
   return (
     <>
@@ -19,12 +19,12 @@ const UnauthrizedUser: FC<UnauthrizedUserProps> = ({
       <PageSection padding={{ default: 'noPadding' }} isFilled>
         <MASEmptyState
           emptyStateProps={{ variant: MASEmptyStateVariant.NoAccess }}
-          titleProps={{ title: t('srs.unauthorized_empty_state_title') }}
+          titleProps={{ title: t('unauthorized_empty_state_title') }}
           emptyStateBodyProps={{
-            body: t('srs.unauthorized_empty_state_body'),
+            body: t('unauthorized_empty_state_body'),
           }}
           buttonProps={{
-            title: t('srs.get_access_to_service_registry'),
+            title: t('get_access_to_service_registry'),
             variant: ButtonVariant.primary,
             onClick: getAccessToServiceRegistry,
           }}

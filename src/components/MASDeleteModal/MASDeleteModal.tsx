@@ -66,7 +66,7 @@ export const MASDeleteModal: FunctionComponent<MASDeleteModalProps> = ({
   textInputProps,
   checkboxProps,
 }: MASDeleteModalProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('service-registry');
 
   const {
     variant = ModalVariant.small,
@@ -170,8 +170,8 @@ export const MASDeleteModal: FunctionComponent<MASDeleteModalProps> = ({
             <Checkbox
               label={
                 isDownloaded
-                  ? t('common.checkbox_label_after_the_download_click')
-                  : t('common.checkbox_label_before_the_download_click')
+                  ? t('checkbox_label_after_the_download_click')
+                  : t('checkbox_label_before_the_download_click')
               }
               aria-label='uncontrolled checkbox example'
               id={id}

@@ -1,1 +1,1 @@
-export * from './useTimeOut';
+export * from './useInterval';

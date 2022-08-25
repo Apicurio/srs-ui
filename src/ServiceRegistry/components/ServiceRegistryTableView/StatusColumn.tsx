@@ -16,16 +16,16 @@ const StatusColumn: FunctionComponent<StatusColumnProps> = ({
   status,
   instanceName,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common']);
 
   const getStatus = () => {
     const filteredstatus = statusOptions.filter(
       (st) => st.value?.toLowerCase() === status?.toLowerCase()
     );
     if (filteredstatus.length === 1) {
-      return t(`common.${filteredstatus[0].value?.toLowerCase()}`);
+      return t(`common:${filteredstatus[0].value?.toLowerCase()}`);
     } else {
-      return t('common.creation_pending');
+      return t('common:creation_pending');
     }
   };
 

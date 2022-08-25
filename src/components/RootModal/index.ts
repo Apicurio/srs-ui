@@ -1,3 +1,4 @@
 export * from './ServiceRegistryModalLoader';
-export * from './modal-context';
+export * from './ModalContext';
 export * from './types';
+export * from "./modal";

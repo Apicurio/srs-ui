@@ -16,7 +16,7 @@ export const QuotaAlert: FC<QuotaAlertProps> = ({
   loadingQuota,
   hasUserTrialInstance,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('service-registry');
   const { data, isServiceDown } = quota || {};
   const srsQuota = data?.get(QuotaType?.srs);
 
@@ -25,7 +25,7 @@ export const QuotaAlert: FC<QuotaAlertProps> = ({
       <Alert
         className='pf-u-mb-md'
         variant={AlertVariant.info}
-        title={t('common.instance_checking_message')}
+        title={t('instance_checking_message')}
         aria-live='polite'
         isInline
         customIcon={
@@ -45,37 +45,37 @@ export const QuotaAlert: FC<QuotaAlertProps> = ({
   //trial quota flows
   //if user has no standard quota and already has a trial instance
   if (!srsQuota && hasUserTrialInstance) {
-    titleKey = 'common.trial_service_registry_title';
+    titleKey = 'trial_service_registry_title';
     variant = AlertVariant.warning;
-    messageKey = 'common.deploy_one_instance_alert_message';
+    messageKey = 'deploy_one_instance_alert_message';
   }
   //if user has no standard quota and trial instances are available
   else if (!srsQuota && !hasUserTrialInstance) {
     variant = AlertVariant.info;
-    titleKey = 'common.trial_quota_service_registry_title';
+    titleKey = 'trial_quota_service_registry_title';
   }
   //standard quota flows
   //if user has standard quota but all allowed instances are already provisioned
   else if (srsQuota && srsQuota?.remaining === 0) {
     variant = AlertVariant.warning;
-    titleKey = 'common.standard_service_registry_alert_title';
-    messageKey = 'common.standard_service_registry_alert_message';
+    titleKey = 'standard_service_registry_alert_title';
+    messageKey = 'standard_service_registry_alert_message';
   }
 
   //if kafka creation failed for quota related
   if (hasServiceRegistryCreationFailed) {
     variant = AlertVariant.danger;
-    titleKey = 'common.service_registry_creation_failed_alert_title';
+    titleKey = 'service_registry_creation_failed_alert_title';
     messageKey = srsQuota
-      ? 'common.standard_service_registry_creation_failed_alert_message'
-      : 'common.trial_service_registry_creation_failed_alert_message';
+      ? 'standard_service_registry_creation_failed_alert_message'
+      : 'trial_service_registry_creation_failed_alert_message';
   }
 
   //if service down or any error
   if (isServiceDown) {
-    titleKey = 'common.something_went_wrong';
+    titleKey = 'common:something_went_wrong';
     variant = AlertVariant.danger;
-    messageKey = 'common.ams_service_down_message';
+    messageKey = 'ams_service_down_message';
   }
 
   return (

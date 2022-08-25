@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { ModalProvider } from '@rhoas/app-services-ui-components';
 import { ServiceRegistry } from './ServiceRegistry';
 import {
   ServiceRegistryModalLoader,
   PaginationProvider,
+  ModalProvider,
 } from '@app/components';
 import { SharedContext, SharedContextrops } from '@app/context';
 
@@ -24,12 +24,12 @@ const ServiceRegistryFederated: FC<ServiceRegistryFederatedProps> = ({
         renderDownloadArtifacts,
       }}
     >
-      <ModalProvider>
-        <PaginationProvider>
+      <PaginationProvider>
+        <ModalProvider>
           <ServiceRegistry />
           <ServiceRegistryModalLoader />
-        </PaginationProvider>
-      </ModalProvider>
+        </ModalProvider>
+      </PaginationProvider>
     </SharedContext.Provider>
   );
 };
