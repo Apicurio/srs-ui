@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { css } from '@patternfly/react-styles';
 
 export const Loading: FC = () => {
-  const { t } = useTranslation("service-registry");
+  const { t } = useTranslation('service-registry');
 
   return (
     <PFEmptyState className={css('pf-u-pt-2xl pf-u-pt-3xl-on-md')}>

@@ -1,4 +1,4 @@
-import { useState, useEffect, FunctionComponent } from 'react';
+import { useState, useEffect, FunctionComponent, useCallback } from 'react';
 import {
   Alert,
   Form,
@@ -71,18 +71,19 @@ const CreateServiceRegistry: FunctionComponent<
     hasServiceRegistryCreationFailed ||
     (srsQuota && srsQuota?.remaining === 0);
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setNameValidated({ fieldState: 'default' });
     setRegistryFormData(newServiceRegistry);
     setIsFormValid(true);
-  };
-  const manageQuota = async () => {
+  }, []);
+
+  const manageQuota = useCallback(async () => {
     if (getQuota) {
       await getQuota().then((res) => {
         setQuota(res);
       });
     }
-  };
+  }, [getQuota]);
 
   useEffect(() => {
     manageQuota();
@@ -172,13 +173,14 @@ const CreateServiceRegistry: FunctionComponent<
     return isValid;
   };
 
-  const createServiceRegistry = async () => {
+  const createServiceRegistry = useCallback(async () => {
     const isValid = validateCreateForm();
     const accessToken = await auth?.srs.getToken();
     if (!isValid) {
       setIsFormValid(false);
       return;
     }
+
     if (accessToken) {
       const api = new RegistriesApi(
         new Configuration({
@@ -186,6 +188,7 @@ const CreateServiceRegistry: FunctionComponent<
           basePath,
         })
       );
+
       try {
         setCreationInProgress(true);
         await api.createRegistry({ name: registryFormData.name }).then(() => {
@@ -199,19 +202,22 @@ const CreateServiceRegistry: FunctionComponent<
         handleServerError(error);
       }
     }
-  };
+  }, [registryFormData.name, hideModal]);
 
-  const handleCreateModal = () => {
+  const handleCreateModal = useCallback(() => {
     resetForm();
     hideModal();
-  };
+  }, [resetForm, hideModal]);
 
-  const onFormSubmit: FormProps['onSubmit'] = (event) => {
-    event.preventDefault();
-    createServiceRegistry();
-  };
+  const onFormSubmit: FormProps['onSubmit'] = useCallback(
+    (event) => {
+      event.preventDefault();
+      createServiceRegistry();
+    },
+    [createServiceRegistry]
+  );
 
-  const createForm = () => {
+  const CreateRegistryForm = () => {
     const { message, fieldState } = nameValidated;
     const { name } = registryFormData;
 
@@ -271,7 +277,10 @@ const CreateServiceRegistry: FunctionComponent<
         hasUserTrialInstance={hasUserTrialInstance}
       />
       <Flex direction={{ default: 'column', lg: 'row' }}>
-        <FlexItem flex={{ default: 'flex_2' }}> {createForm()}</FlexItem>
+        <FlexItem flex={{ default: 'flex_2' }}>
+          {' '}
+          <CreateRegistryForm />
+        </FlexItem>
         <Divider isVertical />
         <FlexItem
           flex={{ default: 'flex_1' }}

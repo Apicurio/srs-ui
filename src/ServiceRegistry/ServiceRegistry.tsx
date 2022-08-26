@@ -1,4 +1,4 @@
-import { useEffect, useState, FunctionComponent } from 'react';
+import { useEffect, useState, FunctionComponent, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import {
@@ -85,7 +85,7 @@ export const ServiceRegistry: FunctionComponent = () => {
     fetchRegistries();
   }, [page, perPage]);
 
-  const updateServiceRegistryInstance = () => {
+  const updateServiceRegistryInstance = useCallback(() => {
     if (registryItems && registryItems?.length > 0) {
       const selectedRegistryItem = registryItems?.filter(
         (registry) => registry?.id === selectedRegistryInstance?.id
@@ -96,9 +96,9 @@ export const ServiceRegistry: FunctionComponent = () => {
       };
       selectedRegistryItem && setSelectedRegistryInstance(newState);
     }
-  };
+  }, [registryItems]);
 
-  const fetchRegistries = async () => {
+  const fetchRegistries = useCallback(async () => {
     const accessToken = await auth?.srs.getToken();
     if (basePath && accessToken) {
       const api = new RegistriesApi(
@@ -107,26 +107,27 @@ export const ServiceRegistry: FunctionComponent = () => {
           basePath,
         })
       );
+
       await api.getRegistries(page, perPage).then((res) => {
         const registry = res?.data;
         setRegistries(registry);
         setRegistryItems(registry?.items);
       });
     }
-  };
+  }, [page, perPage, basePath]);
 
   useInterval(() => fetchRegistries(), MAX_POLL_INTERVAL);
 
-  const onConnectToRegistry = (instance: Registry | undefined) => {
+  const onConnectToRegistry = useCallback((instance: Registry | undefined) => {
     setIsExpandedDrawer(true);
     setSelectedRegistryInstance(instance);
-  };
+  }, []);
 
-  const onCloseDrawer = () => {
+  const onCloseDrawer = useCallback(() => {
     setIsExpandedDrawer(false);
-  };
+  }, []);
 
-  const onDeleteRegistry = (registry: Registry | undefined) => {
+  const onDeleteRegistry = useCallback((registry: Registry | undefined) => {
     const { status } = registry || {};
     showDeleteServiceRegistryModal(ModalType.DeleteServiceRegistry, {
       status,
@@ -137,16 +138,16 @@ export const ServiceRegistry: FunctionComponent = () => {
       },
       renderDownloadArtifacts,
     });
-  };
+  }, []);
 
-  const openCreateModal = () => {
+  const openCreateModal = useCallback(() => {
     showCreateServiceRegistryModal(ModalType.CreateServiceRegistry, {
       fetchServiceRegistries: fetchRegistries,
       hasUserTrialInstance,
     });
-  };
+  }, []);
 
-  const createServiceRegistry = async () => {
+  const createServiceRegistry = useCallback(async () => {
     let open;
     if (preCreateInstance) {
       // Callback before opening create dialog
@@ -154,19 +155,19 @@ export const ServiceRegistry: FunctionComponent = () => {
       open = await preCreateInstance(true);
     }
     open && openCreateModal();
-  };
+  }, [preCreateInstance]);
 
-  if (registryItems === undefined) {
-    return (
-      <PageSection
-        variant={PageSectionVariants.light}
-        padding={{ default: 'noPadding' }}
-      >
-        <MASLoading />
-      </PageSection>
-    );
-  } else {
-    if (!registryItems?.length) {
+  switch (true) {
+    case registryItems === undefined:
+      return (
+        <PageSection
+          variant={PageSectionVariants.light}
+          padding={{ default: 'noPadding' }}
+        >
+          <MASLoading />
+        </PageSection>
+      );
+    case !registryItems?.length:
       return (
         <>
           <ServiceRegistryHeader />
@@ -175,7 +176,7 @@ export const ServiceRegistry: FunctionComponent = () => {
           />
         </>
       );
-    } else {
+    default:
       return (
         <ServiceRegistryDrawer
           isExpanded={isExpandedDrawer}
@@ -192,7 +193,7 @@ export const ServiceRegistry: FunctionComponent = () => {
             <ServiceRegistryTableView
               page={page}
               perPage={perPage}
-              serviceRegistryItems={registryItems}
+              serviceRegistryItems={registryItems || []}
               total={registries?.total}
               onViewConnection={onConnectToRegistry}
               onDelete={onDeleteRegistry}
@@ -209,6 +210,5 @@ export const ServiceRegistry: FunctionComponent = () => {
           </main>
         </ServiceRegistryDrawer>
       );
-    }
   }
 };

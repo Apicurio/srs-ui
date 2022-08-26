@@ -21,7 +21,7 @@ const ServiceRegistryDrawer: FC<ServiceRegistryDrawerProps> = ({
   notRequiredDrawerContentBackground,
   registry,
 }: ServiceRegistryDrawerProps) => {
-  const { t } = useTranslation("service-registry");
+  const { t } = useTranslation('service-registry');
   const { registryUrl, name } = registry || {};
 
   const panelBodyContent = (

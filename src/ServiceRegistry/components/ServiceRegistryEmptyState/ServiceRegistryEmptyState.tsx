@@ -1,4 +1,4 @@
-import React from 'react';
+import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { PageSection, ButtonVariant, Button } from '@patternfly/react-core';
 import { MASEmptyState, MASEmptyStateVariant } from '@app/components';
@@ -14,10 +14,9 @@ export type ServiceRegistryEmptyStateProps = {
 const ServiceRegistryEmptyState: React.FC<ServiceRegistryEmptyStateProps> = ({
   onCreateserviceRegistry,
 }) => {
-  const { t } = useTranslation("service-registry");
+  const { t } = useTranslation('service-registry');
 
-  const qsContext: QuickStartContextValues =
-    React.useContext(QuickStartContext);
+  const qsContext: QuickStartContextValues = useContext(QuickStartContext);
 
   return (
     <PageSection padding={{ default: 'noPadding' }} isFilled>
@@ -28,6 +27,7 @@ const ServiceRegistryEmptyState: React.FC<ServiceRegistryEmptyStateProps> = ({
           body: (
             <>
               <Trans
+                ns='service-registry'
                 i18nKey='empty_state_registry_description'
                 components={[
                   <Button

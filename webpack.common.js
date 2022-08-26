@@ -66,20 +66,6 @@ module.exports = (env, argv) => {
             }
           ]
         },
-        {
-          test: /\.(json)$/i,
-          include: path.resolve(__dirname, 'src/locales'),
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 5000,
-                outputPath: 'locales',
-                name: isProduction ? '[contenthash:8].[ext]' : '[name].[ext]',
-              }
-            }
-          ]
-        }
       ]
     },
     output: {
@@ -98,11 +84,6 @@ module.exports = (env, argv) => {
       new CopyPlugin({
         patterns: [
           {from: './src/public/favicon.png', to: 'images'},
-        ]
-      }),
-      new CopyPlugin({
-        patterns: [
-          {from: './src/locales', to: 'locales'},
         ]
       }),
       new MiniCssExtractPlugin({
@@ -140,6 +121,10 @@ module.exports = (env, argv) => {
           "react-dom": {
             singleton: true,
             requiredVersion: peerDependencies["react-dom"],
+          },
+          "react-i18next": {
+            singleton: true,
+            requiredVersion: peerDependencies["react-i18next"],
           },
           "react-router-dom": {
             singleton: false, // consoledot needs this to be off to be able to upgrade the router to v6. We don't need this to be a singleton, so let's keep this off

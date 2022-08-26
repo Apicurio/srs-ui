@@ -34,11 +34,12 @@ export const ServiceRegistryHeader: FunctionComponent<
   breadcrumbId,
   serviceRegistryDetails,
 }: ServiceRegistryHeaderProps) => {
-  const { t } = useTranslation("service-registry");
+  const { t } = useTranslation(['service-registry']);
   let showBreadcrumb = false;
   const [isOpen, setIsOpen] = useState<boolean>();
   const { getBasename } = useBasename() || {};
   const basename = getBasename && getBasename();
+  const { artifactId } = useSharedContext() || {};
 
   const onToggle = (isOpen: boolean) => {
     setIsOpen(isOpen);
@@ -47,8 +48,6 @@ export const ServiceRegistryHeader: FunctionComponent<
   const onSelect = () => {
     setIsOpen(!isOpen);
   };
-
-  const { artifactId } = useSharedContext() || {};
 
   const dropdownItems = [
     <DropdownItem

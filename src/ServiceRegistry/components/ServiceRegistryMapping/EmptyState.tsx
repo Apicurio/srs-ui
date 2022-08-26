@@ -21,7 +21,7 @@ export const EmptyState: FC<EmptyStateProps> = ({
   topicName,
   basename,
 }: EmptyStateProps) => {
-  const { t } = useTranslation("service-registry");
+  const { t } = useTranslation('service-registry');
 
   return (
     <PFEmptyState className='pf-u-pt-2xl pf-u-pt-3xl-on-md'>
@@ -52,8 +52,7 @@ export const EmptyState: FC<EmptyStateProps> = ({
       </EmptyStateSecondaryActions>
       <EmptyStateSecondaryActions>
         <Link to={basename}>
-          {t('go_to_service_registry_instance_helper_text')}{' '}
-          <ArrowRightIcon />
+          {t('go_to_service_registry_instance_helper_text')} <ArrowRightIcon />
         </Link>
       </EmptyStateSecondaryActions>
     </PFEmptyState>

@@ -11,7 +11,7 @@ export type UnauthrizedUserProps = {
 const UnauthrizedUser: FC<UnauthrizedUserProps> = ({
   getAccessToServiceRegistry,
 }) => {
-  const { t } = useTranslation("service-registry");
+  const { t } = useTranslation('service-registry');
 
   return (
     <>

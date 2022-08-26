@@ -26,7 +26,7 @@ import {
   MASDeleteModal,
   BaseModalProps,
   DeleteServiceRegistryProps,
- } from '@app/components';
+} from '@app/components';
 import { isServiceApiError } from '@app/utils';
 
 const DeleteServiceRegistry: FunctionComponent<
@@ -39,7 +39,7 @@ const DeleteServiceRegistry: FunctionComponent<
   fetchServiceRegistries,
   shouldRedirect,
   renderDownloadArtifacts,
-  hideModal
+  hideModal,
 }) => {
   const { t } = useTranslation(['service-registry', 'common']);
   const { addAlert } = useAlert();

@@ -247,7 +247,8 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
                 <br />
                 {instance_type === InstanceType?.eval && (
                   <Trans
-                    i18nKey='service-registry:expires_in'
+                    ns='service-registry'
+                    i18nKey='expires_in'
                     components={{
                       time: (
                         <FormatDate
@@ -369,7 +370,7 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
             : SortByDirection.desc,
       };
     }
-    return;
+    return undefined;
   };
 
   const onSort = (

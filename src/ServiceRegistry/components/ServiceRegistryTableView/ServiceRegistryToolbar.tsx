@@ -16,7 +16,7 @@ const ServiceRegistryToolbar: FC<ServiceRegistryToolbarProps> = ({
   perPage,
   handleCreateModal,
 }) => {
-  const { t } = useTranslation(["service-registry","common"]);
+  const { t } = useTranslation(['service-registry', 'common']);
 
   const onClearAllFilters = () => {};
 

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import {
   TextContent,
   Text,
@@ -55,9 +55,9 @@ export const ConnectionInfo: FC<ConnectionInfoProps> = ({
     },
   ];
 
-  const handleCreateServiceAccountModal = () => {
+  const handleCreateServiceAccountModal = useCallback(() => {
     showModal(ModalType.KasCreateServiceAccount, {});
-  };
+  }, []);
 
   return (
     <div className='mas--details__drawer--tab-content'>

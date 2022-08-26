@@ -21,7 +21,7 @@ const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({
   render,
   breadcrumbId,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['service-registry']);
   const auth = useAuth();
   const {
     srs: { apiBasePath: basePath },

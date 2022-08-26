@@ -45,7 +45,7 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
   basename,
   topicName,
 }) => {
-  const { t } = useTranslation("service-registry");
+  const { t } = useTranslation('service-registry');
   const auth = useAuth();
   const {
     srs: { apiBasePath: basePath },
