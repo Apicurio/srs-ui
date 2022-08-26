@@ -28,7 +28,7 @@ export const AlertProvider: FunctionComponent<{ children: ReactNode }> = ({
     setTimers([...timers, ...timeOuts]);
     return () =>
       timers.forEach((timer) => timer?.timeOut && clearTimeout(timer.timeOut));
-  }, [alerts]);
+  }, [alerts, timers]);
 
   const createId = () => new Date().getTime();
 

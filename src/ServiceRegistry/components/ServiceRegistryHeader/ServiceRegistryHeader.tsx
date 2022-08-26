@@ -35,7 +35,7 @@ export const ServiceRegistryHeader: FunctionComponent<
   serviceRegistryDetails,
 }: ServiceRegistryHeaderProps) => {
   const { t } = useTranslation(['service-registry']);
-  let showBreadcrumb = false;
+  const showBreadcrumb = false;
   const [isOpen, setIsOpen] = useState<boolean>();
   const { getBasename } = useBasename() || {};
   const basename = getBasename && getBasename();

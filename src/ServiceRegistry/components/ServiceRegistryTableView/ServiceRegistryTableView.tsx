@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
@@ -95,16 +95,19 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
     auth?.isOrgAdmin()?.then((isAdmin) => setIsOrgAdmin(isAdmin));
   }, [auth]);
 
-  const removeRegistryFromList = (name: string) => {
-    const index = deletedRegistries.findIndex((r) => r === name);
-    if (index > -1) {
-      const newDeletedRegistries = Object.assign([], deletedRegistries);
-      newDeletedRegistries.splice(index, 1);
-      setDeletedRegistries(newDeletedRegistries);
-    }
-  };
+  const removeRegistryFromList = useCallback(
+    (name: string) => {
+      const index = deletedRegistries.findIndex((r) => r === name);
+      if (index > -1) {
+        const newDeletedRegistries = Object.assign([], deletedRegistries);
+        newDeletedRegistries.splice(index, 1);
+        setDeletedRegistries(newDeletedRegistries);
+      }
+    },
+    [deletedRegistries]
+  );
 
-  const addAlertAfterSuccessDeletion = () => {
+  const addAlertAfterSuccessDeletion = useCallback(() => {
     if (currentUserRegistries) {
       // filter all registry with status as deprovision or deleting
       const deprovisonedRegistries: Registry[] = currentUserRegistries.filter(
@@ -142,9 +145,15 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
         }
       });
     }
-  };
+  }, [
+    addAlert,
+    currentUserRegistries,
+    deletedRegistries,
+    removeRegistryFromList,
+    t,
+  ]);
 
-  const addAlertAfterSuccessCreation = () => {
+  const addAlertAfterSuccessCreation = useCallback(() => {
     const lastItemsState: Registry[] = JSON.parse(JSON.stringify(instances));
     if (instances && instances.length > 0) {
       const completedOrFailedItems = Object.assign(
@@ -204,14 +213,22 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
       )
     );
     setInstances(incompleteRegistry);
-  };
+  }, [addAlert, instances, serviceRegistryItems, t]);
 
   useEffect(() => {
     // handle success alert for deletion
     addAlertAfterSuccessDeletion();
+
     // handle success alert for creation
     addAlertAfterSuccessCreation();
-  }, [page, perPage, serviceRegistryItems, currentUserRegistries]);
+  }, [
+    page,
+    perPage,
+    serviceRegistryItems,
+    currentUserRegistries,
+    addAlertAfterSuccessDeletion,
+    addAlertAfterSuccessCreation,
+  ]);
 
   const renderNameLink = (name: string, row: IRowData) => {
     return (

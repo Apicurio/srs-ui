@@ -1,4 +1,10 @@
-import { useEffect, useState, memo, FunctionComponent } from 'react';
+import {
+  useEffect,
+  useState,
+  memo,
+  FunctionComponent,
+  useCallback,
+} from 'react';
 import { Link } from 'react-router-dom';
 import {
   Select,
@@ -60,18 +66,7 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [registry, setRegistry] = useState<Registry>();
 
-  useEffect(() => {
-    fetchRegistries();
-  }, []);
-
-  useEffect(() => {
-    const filteredRegistry = registryItems?.filter(
-      (r) => r.name === selectedRegistry
-    )[0];
-    setRegistry(filteredRegistry);
-  }, [selectedRegistry]);
-
-  const fetchRegistries = async () => {
+  const fetchRegistries = useCallback(async () => {
     let page = 1;
     const pageSize = 100;
 
@@ -105,7 +100,18 @@ export const ServiceRegistryMapping: React.FC<ServiceRegistryMappingProps> = ({
     })();
 
     setRegistryItems(items);
-  };
+  }, [auth?.srs, basePath]);
+
+  useEffect(() => {
+    fetchRegistries();
+  }, [fetchRegistries]);
+
+  useEffect(() => {
+    const filteredRegistry = registryItems?.filter(
+      (r) => r.name === selectedRegistry
+    )[0];
+    setRegistry(filteredRegistry);
+  }, [selectedRegistry, registryItems]);
 
   const onToggle = (isOpen: boolean) => {
     setIsOpen(isOpen);

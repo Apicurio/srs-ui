@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
@@ -34,7 +34,7 @@ const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({
   const [registry, setRegistry] = useState<Registry | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const fetchRegistry = async () => {
+  const fetchRegistry = useCallback(async () => {
     const accessToken = await auth?.srs.getToken();
     setLoading(true);
     const api = new RegistriesApi(
@@ -54,11 +54,11 @@ const ApicurioRegistry: React.FC<ApicurioRegistryProps> = ({
           setLoading(false);
         });
     }
-  };
+  }, [auth?.srs, basePath, tenantId]);
 
   useEffect(() => {
     fetchRegistry();
-  }, []);
+  }, [fetchRegistry]);
 
   const onConnectToRegistry = () => {
     setIsExpandedDrawer(true);

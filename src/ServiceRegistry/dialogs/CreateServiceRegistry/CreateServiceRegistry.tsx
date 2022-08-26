@@ -1,4 +1,10 @@
-import { useState, useEffect, FunctionComponent, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  FunctionComponent,
+  useCallback,
+  useMemo,
+} from 'react';
 import {
   Alert,
   Form,
@@ -40,7 +46,10 @@ import './CreateServiceRegistry.css';
 const CreateServiceRegistry: FunctionComponent<
   BaseModalProps & CreateServiceRegistryProps
 > = ({ fetchServiceRegistries, hasUserTrialInstance, hideModal }) => {
-  const newServiceRegistry: NewServiceregistry = new NewServiceregistry();
+  const newServiceRegistry: NewServiceregistry = useMemo(
+    () => new NewServiceregistry(),
+    []
+  );
   const { t } = useTranslation(['service-registry', 'common']);
   const auth = useAuth();
   const {
@@ -75,7 +84,7 @@ const CreateServiceRegistry: FunctionComponent<
     setNameValidated({ fieldState: 'default' });
     setRegistryFormData(newServiceRegistry);
     setIsFormValid(true);
-  }, []);
+  }, [newServiceRegistry]);
 
   const manageQuota = useCallback(async () => {
     if (getQuota) {
@@ -87,7 +96,7 @@ const CreateServiceRegistry: FunctionComponent<
 
   useEffect(() => {
     manageQuota();
-  }, []);
+  }, [manageQuota]);
 
   useEffect(() => {
     if (nameValidated.fieldState !== 'error') {
@@ -119,31 +128,34 @@ const CreateServiceRegistry: FunctionComponent<
     }
   };
 
-  const handleServerError = (error: unknown) => {
-    let reason: string | undefined;
-    let code: string | undefined;
-    if (isServiceApiError(error)) {
-      reason = error.response?.data.reason;
-      code = error.response?.data.code;
-    }
-    if (
-      code === ErrorCodes.FAILED_TO_CHECK_QUOTA ||
-      code === ErrorCodes.USER_ALREADY_HAVE_TRIAL_INSTANCE ||
-      code === ErrorCodes.INSUFFICIENT_QUOTA ||
-      code === ErrorCodes.INSUFFICIENT_STANDARD_QUOTA
-    ) {
-      setHasServiceRegistryCreationFailed(true);
-    } else {
-      addAlert &&
-        addAlert({
-          title: t('something_went_wrong'),
-          variant: AlertVariant.danger,
-          description: reason,
-        });
-    }
-  };
+  const handleServerError = useCallback(
+    (error: unknown) => {
+      let reason: string | undefined;
+      let code: string | undefined;
+      if (isServiceApiError(error)) {
+        reason = error.response?.data.reason;
+        code = error.response?.data.code;
+      }
+      if (
+        code === ErrorCodes.FAILED_TO_CHECK_QUOTA ||
+        code === ErrorCodes.USER_ALREADY_HAVE_TRIAL_INSTANCE ||
+        code === ErrorCodes.INSUFFICIENT_QUOTA ||
+        code === ErrorCodes.INSUFFICIENT_STANDARD_QUOTA
+      ) {
+        setHasServiceRegistryCreationFailed(true);
+      } else {
+        addAlert &&
+          addAlert({
+            title: t('something_went_wrong'),
+            variant: AlertVariant.danger,
+            description: reason,
+          });
+      }
+    },
+    [addAlert, t]
+  );
 
-  const validateCreateForm = () => {
+  const validateCreateForm = useCallback(() => {
     let isValid = true;
     const { name } = registryFormData;
     if (!name || name.trim() === '') {
@@ -171,7 +183,7 @@ const CreateServiceRegistry: FunctionComponent<
     }
 
     return isValid;
-  };
+  }, [registryFormData, t]);
 
   const createServiceRegistry = useCallback(async () => {
     const isValid = validateCreateForm();
@@ -202,7 +214,16 @@ const CreateServiceRegistry: FunctionComponent<
         handleServerError(error);
       }
     }
-  }, [registryFormData.name, hideModal]);
+  }, [
+    hideModal,
+    auth?.srs,
+    basePath,
+    fetchServiceRegistries,
+    handleServerError,
+    resetForm,
+    validateCreateForm,
+    registryFormData,
+  ]);
 
   const handleCreateModal = useCallback(() => {
     resetForm();

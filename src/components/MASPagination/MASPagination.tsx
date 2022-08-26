@@ -49,14 +49,20 @@ const MASPagination: FunctionComponent<PaginationProps> = ({
 }) => {
   const { setPage, setPerPage, perPage, page } = usePagination() || {};
 
-  const onSetPage = useCallback((_: unknown, newPage: number) => {
-    setPage && setPage(newPage);
-  }, []);
+  const onSetPage = useCallback(
+    (_: unknown, newPage: number) => {
+      setPage && setPage(newPage);
+    },
+    [setPage]
+  );
 
-  const onPerPageSelect = useCallback((_: unknown, newPerPage: number) => {
-    setPage && setPage(1);
-    setPerPage && setPerPage(newPerPage);
-  }, []);
+  const onPerPageSelect = useCallback(
+    (_: unknown, newPerPage: number) => {
+      setPage && setPage(1);
+      setPerPage && setPerPage(newPerPage);
+    },
+    [setPerPage, setPage]
+  );
 
   return (
     <PFPagination

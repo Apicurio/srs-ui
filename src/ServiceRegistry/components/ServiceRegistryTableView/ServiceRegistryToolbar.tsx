@@ -18,7 +18,9 @@ const ServiceRegistryToolbar: FC<ServiceRegistryToolbarProps> = ({
 }) => {
   const { t } = useTranslation(['service-registry', 'common']);
 
-  const onClearAllFilters = () => {};
+  const onClearAllFilters = () => {
+    return;
+  };
 
   const toolbarItems: ToolbarItemProps[] = [
     {

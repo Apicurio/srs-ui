@@ -58,7 +58,7 @@ const routes: AppRouteConfig[] = [
 
 const RouteWithTitleUpdates = ({
   component: Component,
-  isAsync = false,
+  // isAsync = false,
   title,
   ...rest
 }: IAppRoute) => {

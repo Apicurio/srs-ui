@@ -60,44 +60,6 @@ export const ServiceRegistry: FunctionComponent = () => {
     (r) => r?.instance_type === InstanceType?.eval && r.owner === loggedInUser
   );
 
-  useEffect(() => {
-    fetchRegistries();
-  }, []);
-
-  useEffect(() => {
-    auth?.getUsername()?.then((username) => setLoggedInUser(username));
-  }, [auth]);
-
-  useEffect(() => {
-    updateServiceRegistryInstance();
-  }, [registryItems]);
-
-  useEffect(() => {
-    const openModal = async () => {
-      const shouldOpen =
-        shouldOpenCreateModal && (await shouldOpenCreateModal());
-      shouldOpen && openCreateModal();
-    };
-    openModal();
-  }, [shouldOpenCreateModal]);
-
-  useEffect(() => {
-    fetchRegistries();
-  }, [page, perPage]);
-
-  const updateServiceRegistryInstance = useCallback(() => {
-    if (registryItems && registryItems?.length > 0) {
-      const selectedRegistryItem = registryItems?.filter(
-        (registry) => registry?.id === selectedRegistryInstance?.id
-      )[0];
-      const newState: any = {
-        ...selectedRegistryInstance,
-        ...selectedRegistryItem,
-      };
-      selectedRegistryItem && setSelectedRegistryInstance(newState);
-    }
-  }, [registryItems]);
-
   const fetchRegistries = useCallback(async () => {
     const accessToken = await auth?.srs.getToken();
     if (basePath && accessToken) {
@@ -114,7 +76,52 @@ export const ServiceRegistry: FunctionComponent = () => {
         setRegistryItems(registry?.items);
       });
     }
-  }, [page, perPage, basePath]);
+  }, [page, perPage, basePath, auth?.srs]);
+
+  const updateServiceRegistryInstance = useCallback(() => {
+    if (registryItems && registryItems?.length > 0) {
+      const selectedRegistryItem = registryItems?.filter(
+        (registry) => registry?.id === selectedRegistryInstance?.id
+      )[0];
+      const newState: any = {
+        ...selectedRegistryInstance,
+        ...selectedRegistryItem,
+      };
+      selectedRegistryItem && setSelectedRegistryInstance(newState);
+    }
+  }, [registryItems, selectedRegistryInstance]);
+
+  const openCreateModal = useCallback(() => {
+    showCreateServiceRegistryModal(ModalType.CreateServiceRegistry, {
+      fetchServiceRegistries: fetchRegistries,
+      hasUserTrialInstance,
+    });
+  }, [fetchRegistries, hasUserTrialInstance, showCreateServiceRegistryModal]);
+
+  useEffect(() => {
+    fetchRegistries();
+  }, [fetchRegistries]);
+
+  useEffect(() => {
+    auth?.getUsername()?.then((username) => setLoggedInUser(username));
+  }, [auth]);
+
+  useEffect(() => {
+    updateServiceRegistryInstance();
+  }, [updateServiceRegistryInstance]);
+
+  useEffect(() => {
+    const openModal = async () => {
+      const shouldOpen =
+        shouldOpenCreateModal && (await shouldOpenCreateModal());
+      shouldOpen && openCreateModal();
+    };
+    openModal();
+  }, [shouldOpenCreateModal, openCreateModal]);
+
+  useEffect(() => {
+    fetchRegistries();
+  }, [page, perPage, fetchRegistries]);
 
   useInterval(() => fetchRegistries(), MAX_POLL_INTERVAL);
 
@@ -127,25 +134,26 @@ export const ServiceRegistry: FunctionComponent = () => {
     setIsExpandedDrawer(false);
   }, []);
 
-  const onDeleteRegistry = useCallback((registry: Registry | undefined) => {
-    const { status } = registry || {};
-    showDeleteServiceRegistryModal(ModalType.DeleteServiceRegistry, {
-      status,
-      registry,
-      fetchServiceRegistries: fetchRegistries,
-      confirmButtonProps: {
-        label: t('common:delete'),
-      },
+  const onDeleteRegistry = useCallback(
+    (registry: Registry | undefined) => {
+      const { status } = registry || {};
+      showDeleteServiceRegistryModal(ModalType.DeleteServiceRegistry, {
+        status,
+        registry,
+        fetchServiceRegistries: fetchRegistries,
+        confirmButtonProps: {
+          label: t('common:delete'),
+        },
+        renderDownloadArtifacts,
+      });
+    },
+    [
+      fetchRegistries,
       renderDownloadArtifacts,
-    });
-  }, []);
-
-  const openCreateModal = useCallback(() => {
-    showCreateServiceRegistryModal(ModalType.CreateServiceRegistry, {
-      fetchServiceRegistries: fetchRegistries,
-      hasUserTrialInstance,
-    });
-  }, []);
+      showDeleteServiceRegistryModal,
+      t,
+    ]
+  );
 
   const createServiceRegistry = useCallback(async () => {
     let open;
@@ -155,7 +163,7 @@ export const ServiceRegistry: FunctionComponent = () => {
       open = await preCreateInstance(true);
     }
     open && openCreateModal();
-  }, [preCreateInstance]);
+  }, [preCreateInstance, openCreateModal]);
 
   switch (true) {
     case registryItems === undefined:

@@ -57,7 +57,7 @@ export const ConnectionInfo: FC<ConnectionInfoProps> = ({
 
   const handleCreateServiceAccountModal = useCallback(() => {
     showModal(ModalType.KasCreateServiceAccount, {});
-  }, []);
+  }, [showModal]);
 
   return (
     <div className='mas--details__drawer--tab-content'>
