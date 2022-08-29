@@ -47,6 +47,7 @@ const ServiceRegistryEmptyState: React.FC<ServiceRegistryEmptyStateProps> = ({ o
           title: t('srs.create_service_registry'),
           variant: ButtonVariant.primary,
           onClick: onCreateserviceRegistry,
+          'data-testid': 'emptyServiceRegistry-buttonCreateServiceRegistry'
         }}
       />
     </PageSection>
