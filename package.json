@@ -35,7 +35,7 @@
   "devDependencies": {
     "@patternfly/react-charts": "6.77.1",
     "@rhoas/api-mock": "0.37.0",
-    "@rhoas/app-services-ui-components": "1.40.6",
+    "@rhoas/app-services-ui-components": "2.9.3",
     "@storybook/addon-actions": "6.5.9",
     "@storybook/addon-info": "5.3.21",
     "@storybook/addon-links": "6.5.9",
@@ -124,7 +124,7 @@
     "@patternfly/react-core": "4.202.16",
     "@patternfly/react-icons": "4.53.16",
     "@patternfly/react-table": "4.71.16",
-    "@rhoas/app-services-ui-components": "1.40.6",
+    "@rhoas/app-services-ui-components": "2.9.3",
     "@rhoas/app-services-ui-shared": "0.16.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
