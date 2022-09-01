@@ -71,11 +71,6 @@ npm run bundle-profile:analyze
 
 # Start the express server (run a production build first)
 npm run start
-
-# Parse src folder for internationalized strings
-# This will go through and make JSON files for internationalized strings in src/locales and add default values (i.e. the key name or string). You may need to manually edit the default values.
-# Japanese files will need to be updated manually if you want non-English test data to work with.
-npm run i18n
 ```
 
 ## Integration
