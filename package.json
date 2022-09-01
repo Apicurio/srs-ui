@@ -116,7 +116,7 @@
     "i18next-pseudo": "2.2.1",
     "keycloak-js": "^14.0.0",
     "react-i18next": "11.17.4",
-    "sirv-cli": "1.0.14"
+    "sirv-cli": "2.0.2"
   },
   "peerDependencies": {
     "@patternfly/patternfly": "4.206.3",
