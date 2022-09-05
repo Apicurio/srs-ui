@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
@@ -16,12 +16,7 @@ import {
   PaginationVariant,
 } from '@patternfly/react-core';
 import { Registry, RegistryStatusValue } from '@rhoas/registry-management-sdk';
-import {
-  useBasename,
-  useAlert,
-  AlertVariant,
-  useAuth,
-} from '@rhoas/app-services-ui-shared';
+import { useBasename, useAuth } from '@rhoas/app-services-ui-shared';
 import { getFormattedDate, InstanceType } from '@app/utils';
 import {
   MASEmptyState,
@@ -37,6 +32,7 @@ import {
 } from './ServiceRegistryToolbar';
 import { add } from 'date-fns';
 import { FormatDate } from '@rhoas/app-services-ui-components';
+import { useServiceRegistryStatusAlerts } from './useRegistryStatusAlert';
 
 export type ServiceRegistryTableViewProps = ServiceRegistryToolbarProps & {
   serviceRegistryItems: Registry[];
@@ -61,22 +57,22 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   setOrderBy,
   isDrawerOpen,
   loggedInUser,
-  currentUserRegistries,
   total = 0,
   page,
   perPage,
   handleCreateModal,
 }) => {
-  const { addAlert } = useAlert() || {};
   const { getBasename } = useBasename() || {};
   const basename = getBasename && getBasename();
   const { t } = useTranslation(['service-registry', 'common']);
   const auth = useAuth();
 
   const [activeRow, setActiveRow] = useState<string>();
-  const [deletedRegistries, setDeletedRegistries] = useState<string[]>([]);
-  const [instances, setInstances] = useState<Array<Registry>>([]);
   const [isOrgAdmin, setIsOrgAdmin] = useState<boolean>();
+
+  useServiceRegistryStatusAlerts(
+    serviceRegistryItems?.filter((i) => i.owner === loggedInUser)
+  );
 
   const tableColumns = [
     { title: t('common:name') },
@@ -94,141 +90,6 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
   useEffect(() => {
     auth?.isOrgAdmin()?.then((isAdmin) => setIsOrgAdmin(isAdmin));
   }, [auth]);
-
-  const removeRegistryFromList = useCallback(
-    (name: string) => {
-      const index = deletedRegistries.findIndex((r) => r === name);
-      if (index > -1) {
-        const newDeletedRegistries = Object.assign([], deletedRegistries);
-        newDeletedRegistries.splice(index, 1);
-        setDeletedRegistries(newDeletedRegistries);
-      }
-    },
-    [deletedRegistries]
-  );
-
-  const addAlertAfterSuccessDeletion = useCallback(() => {
-    if (currentUserRegistries) {
-      // filter all registry with status as deprovision or deleting
-      const deprovisonedRegistries: Registry[] = currentUserRegistries.filter(
-        (r) =>
-          r.status === RegistryStatusValue.Deprovision ||
-          r.status === RegistryStatusValue.Deleting
-      );
-
-      // filter all new registry which is not in deleteRegistry state
-      const notPresentRegistries = deprovisonedRegistries
-        .filter((r) => deletedRegistries.findIndex((dr) => dr === r.name) < 0)
-        .map((r) => r.name || '');
-
-      // create new array by merging old and new registry with status as deprovion
-      const allDeletedRegistries: string[] = [
-        ...deletedRegistries,
-        ...notPresentRegistries,
-      ];
-      setDeletedRegistries(allDeletedRegistries);
-
-      // add alert for deleted registry which are completely deleted from the response
-      allDeletedRegistries.forEach((registryName) => {
-        const registryIndex = currentUserRegistries?.findIndex(
-          (item) => item.name === registryName
-        );
-        if (registryIndex < 0) {
-          removeRegistryFromList(registryName);
-          addAlert &&
-            addAlert({
-              title: t('service_registry_successfully_deleted', {
-                name: registryName,
-              }),
-              variant: AlertVariant.success,
-            });
-        }
-      });
-    }
-  }, [
-    addAlert,
-    currentUserRegistries,
-    deletedRegistries,
-    removeRegistryFromList,
-    t,
-  ]);
-
-  const addAlertAfterSuccessCreation = useCallback(() => {
-    const lastItemsState: Registry[] = JSON.parse(JSON.stringify(instances));
-    if (instances && instances.length > 0) {
-      const completedOrFailedItems = Object.assign(
-        [],
-        serviceRegistryItems
-      ).filter(
-        (item: Registry) =>
-          item.status === RegistryStatusValue.Ready ||
-          item.status === RegistryStatusValue.Failed
-      );
-      lastItemsState.forEach((item: Registry) => {
-        const filteredInstances: Registry[] = completedOrFailedItems.filter(
-          (cfItem: Registry) => item.id === cfItem.id
-        );
-        if (filteredInstances && filteredInstances.length > 0) {
-          const { status, name } = filteredInstances[0];
-
-          if (status === RegistryStatusValue.Ready) {
-            addAlert &&
-              addAlert({
-                title: t('registry_successfully_created'),
-                variant: AlertVariant.success,
-                description: (
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: t('registry_success_message', { name }),
-                    }}
-                  />
-                ),
-                dataTestId: 'toastCreateRegistry-success',
-              });
-          } else if (status === RegistryStatusValue.Failed) {
-            addAlert &&
-              addAlert({
-                title: t('registry_not_created'),
-                variant: AlertVariant.danger,
-                description: (
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: t('registry_failed_message', { name }),
-                    }}
-                  />
-                ),
-                dataTestId: 'toastCreateRegistry-failed',
-              });
-          }
-        }
-      });
-    }
-
-    const incompleteRegistry = Object.assign(
-      [],
-      serviceRegistryItems?.filter(
-        (r: Registry) =>
-          r.status === RegistryStatusValue.Provisioning ||
-          r.status === RegistryStatusValue.Accepted
-      )
-    );
-    setInstances(incompleteRegistry);
-  }, [addAlert, instances, serviceRegistryItems, t]);
-
-  useEffect(() => {
-    // handle success alert for deletion
-    addAlertAfterSuccessDeletion();
-
-    // handle success alert for creation
-    addAlertAfterSuccessCreation();
-  }, [
-    page,
-    perPage,
-    serviceRegistryItems,
-    currentUserRegistries,
-    addAlertAfterSuccessDeletion,
-    addAlertAfterSuccessCreation,
-  ]);
 
   const renderNameLink = (name: string, row: IRowData) => {
     return (
@@ -467,14 +328,14 @@ const ServiceRegistryTableView: React.FC<ServiceRegistryTableViewProps> = ({
             page={page}
             perPage={perPage}
             titles={{
-              paginationTitle: t('full_pagination'),
-              perPageSuffix: t('per_page_suffix'),
-              toFirstPage: t('to_first_page'),
-              toPreviousPage: t('to_previous_page'),
-              toLastPage: t('to_last_page'),
-              toNextPage: t('to_next_page'),
-              optionsToggle: t('options_toggle'),
-              currPage: t('curr_page'),
+              paginationTitle: t('common:full_pagination'),
+              perPageSuffix: t('common:per_page_suffix'),
+              toFirstPage: t('common:to_first_page'),
+              toPreviousPage: t('common:to_previous_page'),
+              toLastPage: t('common:to_last_page'),
+              toNextPage: t('common:to_next_page'),
+              optionsToggle: t('common:options_toggle'),
+              currPage: t('common:curr_page'),
             }}
           />
         )}
