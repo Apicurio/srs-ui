@@ -35,11 +35,15 @@ export const ServiceRegistryHeader: FunctionComponent<
   serviceRegistryDetails,
 }: ServiceRegistryHeaderProps) => {
   const { t } = useTranslation(['service-registry']);
-  const showBreadcrumb = false;
+  let showBreadcrumb = false;
   const [isOpen, setIsOpen] = useState<boolean>();
   const { getBasename } = useBasename() || {};
   const basename = getBasename && getBasename();
   const { artifactId } = useSharedContext() || {};
+
+  if (breadcrumbId != undefined) {
+    showBreadcrumb = true;
+  }
 
   const onToggle = (isOpen: boolean) => {
     setIsOpen(isOpen);
