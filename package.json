@@ -102,7 +102,7 @@
   },
   "dependencies": {
     "@patternfly/react-styles": "4.92.6",
-    "@redhat-cloud-services/frontend-components-config": "4.7.0",
+    "@redhat-cloud-services/frontend-components-config": "4.7.1",
     "@rhoas/registry-management-sdk": "0.55.1",
     "@testing-library/dom": "9.2.0",
     "@testing-library/jest-dom": "5.16.5",
