@@ -41,7 +41,7 @@
     "@patternfly/react-core": "4.276.8",
     "@patternfly/react-icons": "4.93.6",
     "@patternfly/react-table": "4.113.0",
-    "@rhoas/api-mock": "0.55.1",
+    "@rhoas/api-mock": "1.0.2",
     "@rhoas/app-services-ui-components": "2.20.9",
     "@rhoas/app-services-ui-shared": "0.16.6",
     "@storybook/addon-actions": "7.0.2",
@@ -103,7 +103,7 @@
   "dependencies": {
     "@patternfly/react-styles": "4.92.6",
     "@redhat-cloud-services/frontend-components-config": "4.7.2",
-    "@rhoas/registry-management-sdk": "0.55.1",
+    "@rhoas/registry-management-sdk": "1.0.2",
     "@testing-library/dom": "9.2.0",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.5",
