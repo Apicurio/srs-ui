@@ -50,7 +50,7 @@
     "@storybook/addons": "7.0.20",
     "@storybook/react": "7.0.20",
     "@types/jest": "27.5.2",
-    "@types/react": "17.0.61",
+    "@types/react": "17.0.62",
     "@types/react-dom": "18.2.5",
     "@types/react-router-dom": "5.3.3",
     "@types/victory": "33.1.5",
