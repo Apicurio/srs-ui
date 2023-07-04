@@ -34,7 +34,7 @@
     "build:storybook": "build-storybook"
   },
   "devDependencies": {
-    "@babel/core": "7.22.5",
+    "@babel/core": "7.22.6",
     "@patternfly/patternfly": "4.224.2",
     "@patternfly/quickstarts": "2.4.1",
     "@patternfly/react-charts": "6.94.19",
@@ -110,7 +110,7 @@
     "@testing-library/user-event": "14.4.3",
     "date-fns": "2.30.0",
     "dayjs": "1.11.9",
-    "i18next": "23.2.6",
+    "i18next": "23.2.7",
     "i18next-browser-languagedetector": "7.1.0",
     "i18next-http-backend": "2.2.1",
     "i18next-pseudo": "2.2.1",
