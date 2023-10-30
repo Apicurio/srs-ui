@@ -36,7 +36,7 @@
   "devDependencies": {
     "@babel/core": "7.22.8",
     "@patternfly/patternfly": "4.224.2",
-    "@patternfly/quickstarts": "2.4.1",
+    "@patternfly/quickstarts": "2.4.3",
     "@patternfly/react-charts": "6.94.19",
     "@patternfly/react-core": "4.276.8",
     "@patternfly/react-icons": "4.93.6",
