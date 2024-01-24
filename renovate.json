@@ -1,5 +1,1 @@
-{
-  "extends": [ "github>redhat-developer/app-services-renovate-config" ],
-  "separateMajorMinor": true,
-  "separateMultipleMajor": true
-}
+{ "enabled": false }
